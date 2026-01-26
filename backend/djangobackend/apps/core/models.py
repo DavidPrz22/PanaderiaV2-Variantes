@@ -163,6 +163,19 @@ class ConversionesUnidades(models.Model):
     def __str__(self):
         return f"1 {self.unidad_origen.abreviatura} = {self.factor_conversion} {self.unidad_destino.abreviatura}"
 
+class AtributosProductos(models.TextChoices):
+    CANTIDAD = 'Cantidad', 'Cantidad'
+    TAMAÑO = 'Tamaño', 'Tamaño'
+    SABOR = 'Sabor', 'Sabor'
+    COLOR = 'Color', 'Color'
+
+
+class Grupos(models.Model):
+    nombre_grupo = models.CharField(max_length=100, null=False, blank=False)
+    descripcion = models.TextField(max_length=255, null=True, blank=True)
+    cantidad = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    unidad = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
+
 
 class TiposPrioridades(models.TextChoices):
     BAJO = 'Bajo', 'Bajo'

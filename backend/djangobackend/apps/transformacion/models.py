@@ -17,8 +17,8 @@ class Transformacion(models.Model):
 
 class EjecutarTransformacion(models.Model):
     transformacion = models.ForeignKey(Transformacion, on_delete=models.CASCADE, related_name='ejecuciones')
-    producto_origen = models.ForeignKey('inventario.ProductosElaborados', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_origen')
-    producto_destino = models.ForeignKey('inventario.ProductosElaborados', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_destino')
+    producto_origen = models.ForeignKey('inventario.ProductosElaboradosVariante', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_origen')
+    producto_destino = models.ForeignKey('inventario.ProductosElaboradosVariante', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_destino')
     fecha_ejecucion = models.DateTimeField(auto_now_add=True)
 
 # Create your models here.

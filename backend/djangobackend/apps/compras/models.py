@@ -44,8 +44,8 @@ class OrdenesCompra(models.Model):
 
 class DetalleOrdenesCompra(models.Model):
     orden_compra = models.ForeignKey(OrdenesCompra, on_delete=models.CASCADE, null=False, blank=False, related_name='detalles')
-    materia_prima = models.ForeignKey('inventario.MateriasPrimas', on_delete=models.CASCADE, null=True)
-    producto_reventa = models.ForeignKey('inventario.ProductosReventa', on_delete=models.CASCADE, null=True)
+    variante_materia_prima = models.ForeignKey('inventario.MateriasPrimasVariantes', on_delete=models.CASCADE, null=True)
+    variante_producto_reventa = models.ForeignKey('inventario.ProductosReventaVariante', on_delete=models.CASCADE, null=True)
     cantidad_solicitada = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     cantidad_recibida = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     unidad_medida_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
@@ -58,15 +58,15 @@ class DetalleOrdenesCompra(models.Model):
         return self.cantidad_solicitada - self.cantidad_recibida
 
     def __str__(self):
-        if self.materia_prima:
-            return f"Detalle OC {self.id} - {self.materia_prima.nombre}"
-        return f"Detalle OC {self.id} - {self.producto_reventa.nombre_producto}"
+        if self.variante_materia_prima:
+            return f"Detalle OC {self.id} - {self.variante_materia_prima.nombre_variante}"
+        return f"Detalle OC {self.id} - {self.variante_producto_reventa.nombre_variante}"
 
     
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(Q(materia_prima__isnull=False) & Q(producto_reventa__isnull=True)) | (Q(materia_prima__isnull=True) & Q(producto_reventa__isnull=False)),
+                check=(Q(variante_materia_prima__isnull=False) & Q(variante_producto_reventa__isnull=True)) | (Q(variante_materia_prima__isnull=True) & Q(variante_producto_reventa__isnull=False)),
                 name='detalle_orden_compra_un_solo_tipo_de_producto'
             )
         ]
@@ -197,16 +197,16 @@ class DetalleCompras(models.Model):
     )
     
     # Tipo de producto (solo uno debe tener valor)
-    materia_prima = models.ForeignKey(
-        'inventario.MateriasPrimas', 
+    variante_materia_prima = models.ForeignKey(
+        'inventario.MateriasPrimasVariantes', 
         on_delete=models.CASCADE, 
         null=True,
         blank=True,
         help_text="Materia prima recibida"
     )
     
-    producto_reventa = models.ForeignKey(
-        'inventario.ProductosReventa', 
+    variante_producto_reventa = models.ForeignKey(
+        'inventario.ProductosReventaVariante', 
         on_delete=models.CASCADE, 
         null=True,
         blank=True,

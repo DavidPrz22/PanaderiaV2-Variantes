@@ -268,8 +268,8 @@ class DetalleVenta(models.Model):
     venta = models.ForeignKey(Ventas, on_delete=models.CASCADE, related_name='detalles')
     
     # Un detalle debe estar asociado a un producto, pero solo a uno de los dos tipos.
-    producto_elaborado = models.ForeignKey(ProductosElaborados, on_delete=models.PROTECT, null=True, blank=True)
-    producto_reventa = models.ForeignKey(ProductosReventa, on_delete=models.PROTECT, null=True, blank=True)
+    producto_elaborado = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.PROTECT, null=True, blank=True)
+    producto_reventa = models.ForeignKey(ProductosReventaVariante, on_delete=models.PROTECT, null=True, blank=True)
 
     # --- Campos de la Venta ---
     unidad_medida_venta = models.ForeignKey(UnidadesDeMedida, on_delete=models.PROTECT)
@@ -285,9 +285,9 @@ class DetalleVenta(models.Model):
     def __str__(self):
         producto_nombre = ""
         if self.producto_elaborado:
-            producto_nombre = self.producto_elaborado.nombre
+            producto_nombre = self.producto_elaborado.nombre_variante
         elif self.producto_reventa:
-            producto_nombre = self.producto_reventa.nombre
+            producto_nombre = self.producto_reventa.nombre_variante
         return f"Venta #{self.venta.id} - {self.cantidad_vendida} x {producto_nombre}"
 
     def clean(self):
@@ -356,7 +356,9 @@ class OrdenVenta(models.Model):
     usuario_creador = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     notas_generales = models.TextField(max_length=255, null=True, blank=True)
     monto_descuento_usd = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, default=0)
+    monto_descuento_ves = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, default=0)
     monto_impuestos_usd = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, default=0)
+    monto_impuestos_ves = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, default=0)
     monto_total_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     monto_total_ves = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     tasa_cambio_aplicada = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
@@ -369,12 +371,14 @@ class OrdenVenta(models.Model):
 
 class DetallesOrdenVenta(models.Model):
     orden_venta_asociada = models.ForeignKey(OrdenVenta, on_delete=models.CASCADE, null=False, blank=False, related_name='productos')
-    producto_elaborado = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, null=True, blank=True)
-    producto_reventa = models.ForeignKey(ProductosReventa, on_delete=models.CASCADE, null=True, blank=True)
+    producto_elaborado = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
+    producto_reventa = models.ForeignKey(ProductosReventaVariante, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_solicitada = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     unidad_medida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
     precio_unitario_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
+    precio_unitario_ves = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     subtotal_linea_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
+    subtotal_linea_ves = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     descuento_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True)
     impuesto_porcentaje = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True)
 
@@ -405,6 +409,7 @@ class OrdenConsumoLoteDetalle(models.Model):
     lote_producto_reventa = models.ForeignKey(LotesProductosReventa, null=True, blank=True, on_delete=models.PROTECT)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3)
     costo_parcial_usd = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    costo_parcial_ves = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
     def __str__(self):
         return f"Lote Usado en Orden de Venta #{self.id}"

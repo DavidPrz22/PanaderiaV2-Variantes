@@ -1,5 +1,5 @@
 from django.db import models
-from apps.inventario.models import ProductosElaborados, MateriasPrimas, LotesMateriasPrimas, LotesProductosElaborados
+from apps.inventario.models import ProductosElaborados, MateriasPrimas, LotesMateriasPrimas, LotesProductosElaborados, ProductosElaboradosVariante
 from apps.core.models import UnidadesDeMedida
 from django.db.models import Q
 from apps.users.models import User
@@ -8,7 +8,7 @@ from apps.users.models import User
 
 class Recetas(models.Model):
     nombre = models.CharField(max_length=255, null=True, blank=True)
-    producto_elaborado = models.OneToOneField(ProductosElaborados, on_delete=models.SET_NULL, related_name='receta_producto_elaborado', null=True, blank=True, unique=True)
+    producto_elaborado_variante = models.OneToOneField(ProductosElaboradosVariante, on_delete=models.CASCADE, related_name='receta_producto_elaborado_variante', null=True, blank=True, unique=True)
     rendimiento = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, help_text="Cantidad de producto que genera esta receta")
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     fecha_modificacion = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -21,14 +21,14 @@ class Recetas(models.Model):
 class RecetasDetalles(models.Model):
     receta = models.ForeignKey(Recetas, on_delete=models.CASCADE, null=True, blank=True, related_name='componentes')
     componente_materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    componente_producto_intermedio = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, related_name='receta_componente_producto_intermedio', null=True, blank=True)
+    componente_producto_intermedio = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, related_name='receta_componente_producto_intermedio', null=True, blank=True)
     cantidad = models.DecimalField(max_digits=10, decimal_places=3, default=0.00)
 
     def __str__(self):
         if self.componente_materia_prima:
             return f"{self.receta.nombre} - {self.componente_materia_prima.nombre} - {self.componente_materia_prima.id}"
         else:
-            return f"{self.receta.nombre} - {self.componente_producto_intermedio.nombre_producto} - {self.componente_producto_intermedio.id}"
+            return f"{self.receta.nombre} - {self.componente_producto_intermedio.producto_elaborado_variante.nombre_variante} - {self.componente_producto_intermedio.id}"
 
     class Meta:
         unique_together = [
@@ -50,11 +50,11 @@ class RelacionesRecetas(models.Model):
     subreceta = models.ForeignKey(Recetas, on_delete=models.CASCADE, null=False, blank=False, related_name='subreceta')
 
     def __str__(self):
-        return f"Master: {self.receta_principal.nombre} - Sub: {self.subreceta.nombre}"
+        return f"Master: {self.receta_principal.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - Sub: {self.subreceta.producto_elaborado_variante.producto_elaborado_variante.nombre_variante}"
 
 
 class Produccion(models.Model):
-    producto_elaborado = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, null=False, blank=False)
+    producto_elaborado_variante = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False)
     cantidad_producida = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     fecha_produccion = models.DateField(null=False, blank=False, auto_now_add=True)
     fecha_expiracion = models.DateField(null=True, blank=True)
@@ -63,19 +63,19 @@ class Produccion(models.Model):
     unidad_medida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.producto_elaborado.nombre_producto} - {self.fecha_produccion}"
+        return f"{self.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - {self.fecha_produccion}"
 
 
 class DetalleProduccionCosumos(models.Model):
     produccion = models.ForeignKey(Produccion, on_delete=models.CASCADE, null=False, blank=False)
     materia_prima_consumida = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    producto_intermedio_consumido = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, null=True, blank=True)
+    producto_intermedio_consumido = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     costo_consumo_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=0)
 
 
     def __str__(self):
-        return f"{self.produccion.producto_elaborado.nombre_producto} - {self.materia_prima_consumida.nombre if self.materia_prima_consumida else self.producto_intermedio_consumido.nombre_producto} - {self.cantidad_consumida}"
+        return f"{self.produccion.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - {self.materia_prima_consumida.nombre if self.materia_prima_consumida else self.producto_intermedio_consumido.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - {self.cantidad_consumida}"
 
     class Meta:
         constraints = [
@@ -90,7 +90,7 @@ class DetalleProduccionCosumos(models.Model):
 class DetalleProduccionLote(models.Model):
     detalle_produccion = models.ForeignKey(DetalleProduccionCosumos, on_delete=models.CASCADE, related_name='lotes')
     lote_materia_prima = models.ForeignKey(LotesMateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    lote_producto_intermedio = models.ForeignKey(LotesProductosElaborados, on_delete=models.CASCADE, null=True, blank=True)
+    lote_producto_intermedio = models.ForeignKey(LotesProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3)
     costo_parcial_usd = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
@@ -104,14 +104,14 @@ class DetalleProduccionLote(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.detalle_produccion.produccion.producto_elaborado.nombre_producto} - {self.lote_materia_prima.id or self.lote_producto_intermedio.id} - {self.cantidad_consumida}"
+        return f"{self.detalle_produccion.produccion.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - {self.lote_materia_prima.id or self.lote_producto_intermedio.id} - {self.cantidad_consumida}"
 
 class DefinicionTransformacion(models.Model):
     nombre = models.CharField(max_length=255, null=False, blank=False)
-    producto_elaborado_entrada = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_entrada')
+    producto_elaborado_entrada = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_entrada')
     cantidad_entrada = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
     unidad_medida_entrada = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_entrada')
-    producto_elaborado_salida = models.ForeignKey(ProductosElaborados, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_salida')
+    producto_elaborado_salida = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_salida')
     unidad_medida_salida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_salida')
     cantidad_salida = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
     usuario_creacion = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -119,7 +119,7 @@ class DefinicionTransformacion(models.Model):
     activo = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.nombre} - {self.producto_elaborado_entrada.nombre_producto} - {self.producto_elaborado_salida.nombre_producto}"
+        return f"{self.nombre} - {self.producto_elaborado_entrada.producto_elaborado_variante.producto_elaborado_variante.nombre_variante} - {self.producto_elaborado_salida.producto_elaborado_variante.producto_elaborado_variante.nombre_variante}"
 
 class LogTransformacion(models.Model):
     definicion_transformacion = models.ForeignKey(DefinicionTransformacion, on_delete=models.CASCADE)
