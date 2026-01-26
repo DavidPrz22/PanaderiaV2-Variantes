@@ -1,5 +1,5 @@
 from django.db import models
-from apps.inventario.models import ProductosElaborados, MateriasPrimas, LotesMateriasPrimas, LotesProductosElaborados, ProductosElaboradosVariante
+from apps.inventario.models import ProductosElaborados, MateriasPrimas, LotesMateriasPrimas, LotesProductosElaborados, ProductosElaboradosVariantes
 from apps.core.models import UnidadesDeMedida
 from django.db.models import Q
 from apps.users.models import User
@@ -8,7 +8,7 @@ from apps.users.models import User
 
 class Recetas(models.Model):
     nombre = models.CharField(max_length=255, null=True, blank=True)
-    producto_elaborado_variante = models.OneToOneField(ProductosElaboradosVariante, on_delete=models.CASCADE, related_name='receta_producto_elaborado_variante', null=True, blank=True, unique=True)
+    producto_elaborado_variante = models.OneToOneField(ProductosElaboradosVariantes, on_delete=models.CASCADE, related_name='receta_producto_elaborado_variante', null=True, blank=True, unique=True)
     rendimiento = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, help_text="Cantidad de producto que genera esta receta")
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     fecha_modificacion = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -21,7 +21,7 @@ class Recetas(models.Model):
 class RecetasDetalles(models.Model):
     receta = models.ForeignKey(Recetas, on_delete=models.CASCADE, null=True, blank=True, related_name='componentes')
     componente_materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    componente_producto_intermedio = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, related_name='receta_componente_producto_intermedio', null=True, blank=True)
+    componente_producto_intermedio = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, related_name='receta_componente_producto_intermedio', null=True, blank=True)
     cantidad = models.DecimalField(max_digits=10, decimal_places=3, default=0.00)
 
     def __str__(self):
@@ -54,11 +54,12 @@ class RelacionesRecetas(models.Model):
 
 
 class Produccion(models.Model):
-    producto_elaborado_variante = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False)
+    producto_elaborado_variante = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=False, blank=False)
     cantidad_producida = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     fecha_produccion = models.DateField(null=False, blank=False, auto_now_add=True)
     fecha_expiracion = models.DateField(null=True, blank=True)
     costo_total_componentes_usd = models.DecimalField(max_digits=10, decimal_places=3)
+    costo_total_componentes_ves = models.DecimalField(max_digits=10, decimal_places=3)
     usuario_creacion = models.ForeignKey(User, on_delete=models.CASCADE)
     unidad_medida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -69,7 +70,7 @@ class Produccion(models.Model):
 class DetalleProduccionCosumos(models.Model):
     produccion = models.ForeignKey(Produccion, on_delete=models.CASCADE, null=False, blank=False)
     materia_prima_consumida = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    producto_intermedio_consumido = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
+    producto_intermedio_consumido = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     costo_consumo_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=0)
 
@@ -90,7 +91,7 @@ class DetalleProduccionCosumos(models.Model):
 class DetalleProduccionLote(models.Model):
     detalle_produccion = models.ForeignKey(DetalleProduccionCosumos, on_delete=models.CASCADE, related_name='lotes')
     lote_materia_prima = models.ForeignKey(LotesMateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
-    lote_producto_intermedio = models.ForeignKey(LotesProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
+    lote_producto_intermedio = models.ForeignKey(LotesProductosElaborados, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3)
     costo_parcial_usd = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
@@ -108,10 +109,10 @@ class DetalleProduccionLote(models.Model):
 
 class DefinicionTransformacion(models.Model):
     nombre = models.CharField(max_length=255, null=False, blank=False)
-    producto_elaborado_entrada = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_entrada')
+    producto_elaborado_entrada = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_entrada')
     cantidad_entrada = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
     unidad_medida_entrada = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_entrada')
-    producto_elaborado_salida = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_salida')
+    producto_elaborado_salida = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_salida')
     unidad_medida_salida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_salida')
     cantidad_salida = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
     usuario_creacion = models.ForeignKey(User, on_delete=models.CASCADE)

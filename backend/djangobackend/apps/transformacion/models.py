@@ -17,8 +17,8 @@ class Transformacion(models.Model):
 
 class EjecutarTransformacion(models.Model):
     transformacion = models.ForeignKey(Transformacion, on_delete=models.CASCADE, related_name='ejecuciones')
-    producto_origen = models.ForeignKey('inventario.ProductosElaboradosVariante', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_origen')
-    producto_destino = models.ForeignKey('inventario.ProductosElaboradosVariante', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_destino')
+    producto_origen = models.ForeignKey('inventario.ProductosElaboradosVariantes', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_origen')
+    producto_destino = models.ForeignKey('inventario.ProductosElaboradosVariantes', on_delete=models.CASCADE, related_name='ejecutar_transformacion_producto_destino')
     fecha_ejecucion = models.DateTimeField(auto_now_add=True)
 
 # Create your models here.
@@ -31,4 +31,4 @@ class LotesConsumidosTransformacion(models.Model):
     cantidad_creada = models.DecimalField(max_digits=10, decimal_places=3)
     
     def __str__(self):
-        return f"Transformación #{self.transformacion.nombre_transformacion} - Lote #{self.lote_producto_elaborado.id}"
+        return f"Transformación #{self.transformacion.nombre_transformacion} - Lote #{self.lote_producto_elaborado_consumido.id}"

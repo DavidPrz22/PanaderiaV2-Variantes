@@ -45,7 +45,7 @@ class OrdenesCompra(models.Model):
 class DetalleOrdenesCompra(models.Model):
     orden_compra = models.ForeignKey(OrdenesCompra, on_delete=models.CASCADE, null=False, blank=False, related_name='detalles')
     variante_materia_prima = models.ForeignKey('inventario.MateriasPrimasVariantes', on_delete=models.CASCADE, null=True)
-    variante_producto_reventa = models.ForeignKey('inventario.ProductosReventaVariante', on_delete=models.CASCADE, null=True)
+    variante_producto_reventa = models.ForeignKey('inventario.ProductosReventaVariantes', on_delete=models.CASCADE, null=True)
     cantidad_solicitada = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     cantidad_recibida = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     unidad_medida_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
@@ -206,7 +206,7 @@ class DetalleCompras(models.Model):
     )
     
     variante_producto_reventa = models.ForeignKey(
-        'inventario.ProductosReventaVariante', 
+        'inventario.ProductosReventaVariantes', 
         on_delete=models.CASCADE, 
         null=True,
         blank=True,
@@ -252,15 +252,15 @@ class DetalleCompras(models.Model):
         constraints = [
             models.CheckConstraint(
                 check=(
-                    Q(materia_prima__isnull=False, producto_reventa__isnull=True) | 
-                    Q(materia_prima__isnull=True, producto_reventa__isnull=False)
+                    Q(variante_materia_prima__isnull=False, variante_producto_reventa__isnull=True) | 
+                    Q(variante_materia_prima__isnull=True, variante_producto_reventa__isnull=False)
                 ),
                 name='detalle_compra_un_solo_tipo_de_producto'
             )
         ]
     
     def __str__(self):
-        producto = self.materia_prima or self.producto_reventa
+        producto = self.variante_materia_prima or self.variante_producto_reventa
         return f"Detalle Compra #{self.compra.id} - {producto}"
     
     def save(self, *args, **kwargs):

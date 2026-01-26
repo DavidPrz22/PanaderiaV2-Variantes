@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
 from apps.users.models import User
-from apps.inventario.models import UnidadesDeMedida, ProductosElaborados, ProductosReventa, LotesProductosElaborados, LotesProductosReventa
+from apps.inventario.models import UnidadesDeMedida, ProductosElaborados, ProductosReventa, LotesProductosElaborados, LotesProductosReventa, ProductosElaboradosVariantes, ProductosReventaVariantes
 from apps.core.models import MetodosDePago, EstadosOrdenVenta
 
 
@@ -268,8 +268,8 @@ class DetalleVenta(models.Model):
     venta = models.ForeignKey(Ventas, on_delete=models.CASCADE, related_name='detalles')
     
     # Un detalle debe estar asociado a un producto, pero solo a uno de los dos tipos.
-    producto_elaborado = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.PROTECT, null=True, blank=True)
-    producto_reventa = models.ForeignKey(ProductosReventaVariante, on_delete=models.PROTECT, null=True, blank=True)
+    producto_elaborado = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.PROTECT, null=True, blank=True)
+    producto_reventa = models.ForeignKey(ProductosReventaVariantes, on_delete=models.PROTECT, null=True, blank=True)
 
     # --- Campos de la Venta ---
     unidad_medida_venta = models.ForeignKey(UnidadesDeMedida, on_delete=models.PROTECT)
@@ -371,8 +371,8 @@ class OrdenVenta(models.Model):
 
 class DetallesOrdenVenta(models.Model):
     orden_venta_asociada = models.ForeignKey(OrdenVenta, on_delete=models.CASCADE, null=False, blank=False, related_name='productos')
-    producto_elaborado = models.ForeignKey(ProductosElaboradosVariante, on_delete=models.CASCADE, null=True, blank=True)
-    producto_reventa = models.ForeignKey(ProductosReventaVariante, on_delete=models.CASCADE, null=True, blank=True)
+    producto_elaborado = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=True, blank=True)
+    producto_reventa = models.ForeignKey(ProductosReventaVariantes, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_solicitada = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
     unidad_medida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
     precio_unitario_usd = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)

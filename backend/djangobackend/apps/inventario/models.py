@@ -495,8 +495,8 @@ class ProductosElaborados(ComponentesStockManagement, ProductosStockManagement):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(Q(es_intermediario=True) & Q(precio_venta_usd__isnull=True) & Q(unidad_venta__isnull=True) & Q(vendible_por_medida_real__isnull=True))|
-                    (Q(es_intermediario=False) & Q(precio_venta_usd__isnull=False) & Q(unidad_venta__isnull=False) & Q(vendible_por_medida_real__isnull=False)),
+                check=(Q(es_intermediario=True) & Q(unidad_venta__isnull=True) & Q(vendible_por_medida_real__isnull=True))|
+                    (Q(es_intermediario=False) & Q(unidad_venta__isnull=False) & Q(vendible_por_medida_real__isnull=False)),
                 name='intermedio_o_producto'
             )
         ]
