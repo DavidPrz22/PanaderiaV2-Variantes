@@ -400,7 +400,7 @@ class LotesMateriasPrimas(models.Model):
         choices=LotesStatus.choices, 
         default=LotesStatus.DISPONIBLE
     )
-    activo = models.BooleanField(default=True) ## ELIMINAR DESPUES SIN USAR
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Lote {self.id} - {self.materia_prima.nombre} - {self.stock_actual_lote}"

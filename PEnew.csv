@@ -1,4 +1,0 @@
-nombre_producto,SKU,descripcion,unidad_produccion_id,unidad_venta_id,precio_venta_usd,punto_reorden,categoria_id,es_intermediario,tipo_medida_fisica,vendible_por_medida_real
-Buttermilk Casero,PE-INT-055,Mezcla de leche y vinagre para repostería.,5,5,,500.0,7,True,VOLUMEN,
-Masa Torta Húmeda de Chocolate,PE-INT-056,Mezcla líquida base para tortas de chocolate.,2,2,,1000.0,5,True,PESO,
-Torta Húmeda de Chocolate,PE-FIN-056,Torta oscura y jugosa de chocolate (10 porciones).,6,6,18.5,50.0,12,False,UNIDAD,False

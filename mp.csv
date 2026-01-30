@@ -1,8 +1,0 @@
-"nombre","descripcion","SKU","categoria_id","unidad_medida_base_id","nombre_empaque_estandar","cantidad_empaque_estandar","unidad_medida_empaque_estandar_id","precio_compra_usd","punto_reorden"
-"Cacao en Polvo","Cacao puro en polvo para repostería.","MP-DUL-0003","12","2","Bolsa 1kg","1000","2","15.0","500"
-"Polvo de Hornear","Levadura química para repostería.","MP-ESP-0004","11","2","Pote 500g","500","2","3.5","100"
-"Bicarbonato de Sodio","Agente leudante para repostería.","MP-ESP-0005","11","2","Bolsa 500g","500","2","2.0","100"
-"Vinagre Blanco","Vinagre de alcohol para cocina.","MP-ESP-0006","11","5","Botella 1L","1000","5","1.5","200"
-"Aceite de Girasol","Aceite vegetal refinado.","MP-ESP-0007","11","2","Botella 1L","915","1","2.5","500"
-"Harina de Trigo Todo Uso","Harina de trigo versátil para repostería.","MP-HAR-0002","3","2","Saco 45kg","45000","2","22.0","5000"
-"Leche Líquida Completa","Leche pasteurizada líquida.","MP-LAC-0004","2","5","Cartón 1L","1000","5","1.2","500"
