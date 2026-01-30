@@ -1,29 +1,57 @@
-Refactor the Materia Prima feature to use the new components and adapt the feature to the new model
+# Plan de Refactorización: Materia Prima
 
-- Update the materias Prima Page to use new components
+Este plan detalla la migración de la funcionalidad de Materia Prima para utilizar los nuevos componentes y adaptarse al nuevo modelo de datos.
 
-1. Replace the current use of the materia prima form with the new form component called MateriaPrimaCreateForm
-2. Make a /new route for the new form component called MateriaPrimaCreateForm
-3. Cover the use case of updating a materia prima with the new form component called MateriaPrimaCreateForm, cover both the update and the create case
-4. Replace the current use of the materia prima details panel with the new details panel component called MateriaPrimaDetailsPanel
-5. Replace the current use of the materia prima lot table within the materia prima details panel with the new lot table component called LotesTableMP
-6. Utilize the current data available by the api and react query to populate the new components
-7. Check and types and schema available in the types folder to ensure the new components are using the correct types
-8. Get rid of mock data from the new components
-9. Create types to cover the new models and structure for the forms
+## Ubicación de Componentes y Recursos
 
-- Success Criteria:
+- **Formulario de Creación/Edición**: `src/features/MateriaPrima/components/MateriaPrimaCreateForm.tsx` (Componente: `CreateMateriaPrimaPanel`)
+- **Panel de Detalles**: `src/features/MateriaPrima/components/MateriaPrimaDetailsPanel.tsx` (Componente: `MateriaPrimaDetailsPanel`)
+- **Tabla de Lotes**: `src/features/MateriaPrima/components/Lotes/LotesTableMP.tsx` (Componente: `LotesTableMP`)
+- **Esquemas de Validación**: `src/features/MateriaPrima/schemas/schemas.ts`
+- **Tipos TypeScript**: `src/features/MateriaPrima/types/types.ts`
 
-1. The materias primas page should be updated to use the new components
-2. The materia prima form should be updated to use the new form component
-3. The materia prima details panel should be updated to use the new details panel component
-4. The materia prima lot table should be updated to use the new lot table component
-5. The new components should be populated with the current data available by the api and react query
-6. The new components should not use mock data
+## Pasos de Implementación
 
-- Don'ts:
+1. **Actualizar la Página Principal de Materias Primas**
+   - Modificar el contenedor principal para integrar los nuevos componentes.
+   - Reemplazar el uso actual del formulario por `CreateMateriaPrimaPanel`.
+   - Reemplazar el panel de detalles actual por `MateriaPrimaDetailsPanel`.
 
-1. Don't modify the current data available by the api and react query
+2. **Configuración de Rutas**
+   - Implementar la ruta `/new` para abrir directamente el formulario de creación.
+   - Asegurar que la navegación sea fluida entre la lista, los detalles y el formulario.
 
+3. **Migración de Funcionalidad de Edición**
+   - Adaptar `CreateMateriaPrimaPanel` para manejar el estado de edición.
+   - Cargar los datos existentes de la materia prima en el formulario al editar.
+   - Asegurar que las variantes se carguen y puedan ser modificadas correctamente.
 
-Use SKILLS available in the SKILLS folder to properly implement the feature
+4. **Integración de la Tabla de Lotes**
+   - Reemplazar la tabla de lotes genérica en el panel de detalles por `LotesTableMP`.
+   - Asegurar que `LotesTableMP` reciba los props correctos desde el panel de detalles.
+
+5. **Vinculación de Datos (API & React Query)**
+   - Utilizar los hooks de React Query existentes para alimentar los componentes.
+   - Mapear la respuesta de la API al formato esperado por los nuevos componentes.
+   - Implementar las mutaciones necesarias para crear y actualizar (POST/PATCH).
+
+6. **Validación y Tipado**
+   - Validar que todos los componentes utilicen los tipos definidos en `types/types.ts`.
+   - Aplicar las validaciones de Zod definidas en `schemas/schemas.ts` en los formularios.
+
+7. **Limpieza y Pulido**
+   - Eliminar cualquier uso de datos mock (`lotesMateriasPrimasMock`, etc.) dentro de los componentes.
+   - Verificar la consistencia visual y la responsividad del nuevo diseño.
+
+## Criterios de Aceptación
+
+1. La página de materias primas utiliza exclusivamente los nuevos componentes.
+2. Es posible crear, ver detalles y editar una materia prima con éxito.
+3. La tabla de lotes muestra la información correcta y actualizada desde la API.
+4. No hay errores de TypeScript ni de validación en los formularios.
+5. Se ha eliminado por completo el uso de datos estáticos/mock.
+
+## Restricciones
+
+- **No modificar** la estructura actual de los endpoints de la API ni los hooks base de React Query a menos que sea estrictamente necesario para la compatibilidad con el nuevo modelo.
+- Seguir las guías de diseño establecidas en el proyecto.
