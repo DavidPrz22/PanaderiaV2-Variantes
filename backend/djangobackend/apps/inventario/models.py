@@ -358,7 +358,7 @@ class MateriasPrimas(ComponentesStockManagement):
     nombre = models.CharField(max_length=100, null=False, blank=False, unique=True)
     unidad_medida_base = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='materias_primas_unidad_base')
     stock_actual = models.DecimalField(max_digits=20, decimal_places=2, default=0)
-
+    SKU = models.CharField(max_length=100, null=True, blank=True, unique=True)
     punto_reorden = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=False, blank=False)
 
     categoria = models.ForeignKey(CategoriasMateriaPrima, on_delete=models.CASCADE)
@@ -373,7 +373,7 @@ class MateriasPrimasVariantes(models.Model):
     materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=False, blank=False)
     nombre_variante = models.CharField(max_length=100, null=False, blank=False)
     unidad_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
-
+    SKU_variante = models.CharField(max_length=100, null=True, blank=True, unique=True)
     precio_compra_divisa = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     precio_compra_local = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
 

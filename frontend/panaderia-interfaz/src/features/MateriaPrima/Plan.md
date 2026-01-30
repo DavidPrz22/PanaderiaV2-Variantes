@@ -10,6 +10,7 @@ Refactor the Materia Prima feature to use the new components and adapt the featu
 6. Utilize the current data available by the api and react query to populate the new components
 7. Check and types and schema available in the types folder to ensure the new components are using the correct types
 8. Get rid of mock data from the new components
+9. Create types to cover the new models and structure for the forms
 
 - Success Criteria:
 
@@ -23,7 +24,6 @@ Refactor the Materia Prima feature to use the new components and adapt the featu
 - Don'ts:
 
 1. Don't modify the current data available by the api and react query
-2. Don't modify the current types and schema available in the types folder
 
 
 Use SKILLS available in the SKILLS folder to properly implement the feature
