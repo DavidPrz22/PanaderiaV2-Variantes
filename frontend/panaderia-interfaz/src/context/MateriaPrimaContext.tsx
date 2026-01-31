@@ -2,10 +2,6 @@ import { createContext, useContext, useState, useRef, useEffect } from "react";
 import {
   type childrenProp,
   type LoteMateriaPrimaFormResponse,
-  type MateriaPrimaListServer,
-  type MateriaPrimaList,
-  type CategoriaMateriaPrima,
-  type UnidadMedida,
 } from "../features/MateriaPrima/types/types";
 
 type MateriaPrimaContextType = {
@@ -13,8 +9,6 @@ type MateriaPrimaContextType = {
   setShowMateriaprimaForm: (value: boolean) => void;
   showMateriaprimaDetalles: boolean;
   setShowMateriaprimaDetalles: (value: boolean) => void;
-  materiaprimaDetalles: MateriaPrimaListServer | null;
-  setMateriaprimaDetalles: (value: MateriaPrimaListServer | null) => void;
   materiaprimaId: number | null;
   setMateriaprimaId: (value: number | null) => void;
   registroDelete: boolean | null;
@@ -31,12 +25,6 @@ type MateriaPrimaContextType = {
   ) => void;
   showLotesMateriaPrimaDetalles: boolean;
   setShowLotesMateriaPrimaDetalles: (value: boolean) => void;
-  listaMateriaPrimaCached: MateriaPrimaList[];
-  setListaMateriaPrimaCached: (value: MateriaPrimaList[]) => void;
-  listaMateriaPrimaFilteredInputSearch: MateriaPrimaList[];
-  setListaMateriaPrimaFilteredInputSearch: (value: MateriaPrimaList[]) => void;
-  listaMateriaPrimaFiltered: MateriaPrimaList[];
-  setListaMateriaPrimaFiltered: (value: MateriaPrimaList[]) => void;
   filteredApplied: boolean;
   setFilteredApplied: (value: boolean) => void;
   searchInputRef: React.RefObject<HTMLInputElement | null>;
@@ -52,20 +40,12 @@ type MateriaPrimaContextType = {
   setShouldRefreshList: (value: boolean) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  categoriasMateriaPrima: CategoriaMateriaPrima[];
-  setCategoriasMateriaPrima: (value: CategoriaMateriaPrima[]) => void;
-  unidadesMedida: UnidadMedida[];
-  setUnidadesMedida: (value: UnidadMedida[]) => void;
 };
 
 const MateriaPrimaContextProvider =
   createContext<MateriaPrimaContextType | null>(null);
 
 export function MateriaPrimaProvider({ children }: childrenProp) {
-  const [categoriasMateriaPrima, setCategoriasMateriaPrima] = useState<
-    CategoriaMateriaPrima[]
-  >([]);
-  const [unidadesMedida, setUnidadesMedida] = useState<UnidadMedida[]>([]);
 
   const [showMateriaprimaForm, setShowMateriaprimaForm] = useState(false);
   const [showMateriaprimaDetalles, setShowMateriaprimaDetalles] =
@@ -74,18 +54,7 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
   const [showLotesMateriaPrimaDetalles, setShowLotesMateriaPrimaDetalles] =
     useState(false);
 
-  const [listaMateriaPrimaCached, setListaMateriaPrimaCached] = useState<
-    MateriaPrimaList[]
-  >([]);
-  const [listaMateriaPrimaFiltered, setListaMateriaPrimaFiltered] = useState<
-    MateriaPrimaList[]
-  >([]);
   const [filteredApplied, setFilteredApplied] = useState<boolean>(false);
-
-  const [
-    listaMateriaPrimaFilteredInputSearch,
-    setListaMateriaPrimaFilteredInputSearch,
-  ] = useState<MateriaPrimaList[]>([]);
 
   const [MPFilteredInputSearchApplied, setMPFilteredInputSearchApplied] =
     useState<boolean>(false);
@@ -94,8 +63,7 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
     boolean | null
   >(null);
 
-  const [materiaprimaDetalles, setMateriaprimaDetalles] =
-    useState<MateriaPrimaListServer | null>(null);
+
   const [materiaprimaId, setMateriaprimaId] = useState<number | null>(null);
 
   const [registroDelete, setRegistroDelete] = useState<boolean | null>(null);
@@ -130,8 +98,6 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
         setShowMateriaprimaForm,
         showMateriaprimaDetalles,
         setShowMateriaprimaDetalles,
-        materiaprimaDetalles,
-        setMateriaprimaDetalles,
         materiaprimaId,
         setMateriaprimaId,
         registroDelete,
@@ -146,12 +112,6 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
         setLotesMateriaPrimaDetalles,
         showLotesMateriaPrimaDetalles,
         setShowLotesMateriaPrimaDetalles,
-        listaMateriaPrimaCached,
-        setListaMateriaPrimaCached,
-        listaMateriaPrimaFilteredInputSearch,
-        setListaMateriaPrimaFilteredInputSearch,
-        listaMateriaPrimaFiltered,
-        setListaMateriaPrimaFiltered,
         filteredApplied,
         setFilteredApplied,
         searchInputRef,
@@ -167,10 +127,6 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
         setShouldRefreshList,
         currentPage,
         setCurrentPage,
-        categoriasMateriaPrima,
-        setCategoriasMateriaPrima,
-        unidadesMedida,
-        setUnidadesMedida,
       }}
     >
       {children}

@@ -1,57 +1,23 @@
-# Plan de Refactorización: Materia Prima
+## Implement Update and Delete CRUD for MateriaPrima
 
-Este plan detalla la migración de la funcionalidad de Materia Prima para utilizar los nuevos componentes y adaptarse al nuevo modelo de datos.
+### Backend (Django)
+1. **ViewSet Update Logic**: Override `update` and `partial_update` in `MateriaPrimaViewSet` to handle nested `variantes`.
+    - Implement a syncing mechanism:
+        - Update existing variants.
+        - Create new variants.
+        - Delete variants that are not present in the request data.
+2. **ViewSet Delete Logic**: Ensure `destroy` in `MateriaPrimaViewSet` handles deletions correctly (cascade is handled by DB, but check if custom logic is needed for notifications).
 
-## Ubicación de Componentes y Recursos
-
-- **Formulario de Creación/Edición**: `src/features/MateriaPrima/components/MateriaPrimaCreateForm.tsx` (Componente: `CreateMateriaPrimaPanel`)
-- **Panel de Detalles**: `src/features/MateriaPrima/components/MateriaPrimaDetailsPanel.tsx` (Componente: `MateriaPrimaDetailsPanel`)
-- **Tabla de Lotes**: `src/features/MateriaPrima/components/Lotes/LotesTableMP.tsx` (Componente: `LotesTableMP`)
-- **Esquemas de Validación**: `src/features/MateriaPrima/schemas/schemas.ts`
-- **Tipos TypeScript**: `src/features/MateriaPrima/types/types.ts`
-
-## Pasos de Implementación
-
-1. **Actualizar la Página Principal de Materias Primas**
-   - Modificar el contenedor principal para integrar los nuevos componentes.
-   - Reemplazar el uso actual del formulario por `CreateMateriaPrimaPanel`.
-   - Reemplazar el panel de detalles actual por `MateriaPrimaDetailsPanel`.
-
-2. **Configuración de Rutas**
-   - Implementar la ruta `/new` para abrir directamente el formulario de creación.
-   - Asegurar que la navegación sea fluida entre la lista, los detalles y el formulario.
-
-3. **Migración de Funcionalidad de Edición**
-   - Adaptar `CreateMateriaPrimaPanel` para manejar el estado de edición.
-   - Cargar los datos existentes de la materia prima en el formulario al editar.
-   - Asegurar que las variantes se carguen y puedan ser modificadas correctamente.
-
-4. **Integración de la Tabla de Lotes**
-   - Reemplazar la tabla de lotes genérica en el panel de detalles por `LotesTableMP`.
-   - Asegurar que `LotesTableMP` reciba los props correctos desde el panel de detalles.
-
-5. **Vinculación de Datos (API & React Query)**
-   - Utilizar los hooks de React Query existentes para alimentar los componentes.
-   - Mapear la respuesta de la API al formato esperado por los nuevos componentes.
-   - Implementar las mutaciones necesarias para crear y actualizar (POST/PATCH).
-
-6. **Validación y Tipado**
-   - Validar que todos los componentes utilicen los tipos definidos en `types/types.ts`.
-   - Aplicar las validaciones de Zod definidas en `schemas/schemas.ts` en los formularios.
-
-7. **Limpieza y Pulido**
-   - Eliminar cualquier uso de datos mock (`lotesMateriasPrimasMock`, etc.) dentro de los componentes.
-   - Verificar la consistencia visual y la responsividad del nuevo diseño.
-
-## Criterios de Aceptación
-
-1. La página de materias primas utiliza exclusivamente los nuevos componentes.
-2. Es posible crear, ver detalles y editar una materia prima con éxito.
-3. La tabla de lotes muestra la información correcta y actualizada desde la API.
-4. No hay errores de TypeScript ni de validación en los formularios.
-5. Se ha eliminado por completo el uso de datos estáticos/mock.
-
-## Restricciones
-
-- **No modificar** la estructura actual de los endpoints de la API ni los hooks base de React Query a menos que sea estrictamente necesario para la compatibilidad con el nuevo modelo.
-- Seguir las guías de diseño establecidas en el proyecto.
+### Frontend (React)
+1. **API Integration**:
+    - Verify `handleCreateUpdateMateriaPrima` in `api.ts` correctly sends `PUT`/`PATCH` requests with the ID.
+    - Verify `handleDeleteMateriaPrima` in `api.ts` correctly sends `DELETE` requests.
+2. **Mutation Hooks**:
+    - Refine `useCreateUpdateMateriaPrimaMutation` to handle the `id` argument for updates.
+    - Ensure cache invalidation for both the list and details query.
+3. **Components & UI**:
+    - **Form Update**: Update `MateriaPrimaCreateForm` to pass the `materiaprimaId` to the mutation when `updateRegistro` is true.
+    - **Delete Confirmation**: Create a `ConfirmDeleteModal` component for MateriaPrima.
+    - **Details Panel**: Add a "Delete" button next to "Edit" in `MateriaPrimaDetailsPanel`.
+    - **Table Actions**: (Optional) Add a dropdown menu in `Tablerow` for quick Edit/Delete actions.
+4. Make sure that create form has accurate data in each form field when updateRegistro is true, for example, if the materia prima has 3 variants, the form should have 3 variants, and if the materia prima has 2 variants, the form should have 2 variants with the correct data in each field. Also, make sure that the form is reset after the update is successful.

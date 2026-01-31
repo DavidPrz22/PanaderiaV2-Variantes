@@ -2,7 +2,6 @@ import { ArrowLeft, Edit, Trash2, Package, Calendar, DollarSign } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,36 +13,27 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { LoteMateriaPrima, proveedoresMock } from "@/types/lotes";
-import { MateriaPrima, unidadesMedida } from "@/types/materiaPrima";
+import { useMateriaPrimaContext } from "@/context/MateriaPrimaContext";
+import type { LoteMateriaPrimaFormResponse } from "../../types/types";
+import { useDeleteLoteMateriaPrimaMutation } from "../../hooks/mutations/materiaPrimaMutations";
+import { useMateriaPrimaDetallesQuery } from "../../hooks/queries/materiaPrimaqueries";
 
 interface LoteDetailsPanelProps {
-  lote: LoteMateriaPrima;
-  materiaPrima: MateriaPrima;
+  lote: LoteMateriaPrimaFormResponse;
   onClose: () => void;
   onEdit: () => void;
-  onDelete: () => void;
+  onDeleteSuccess: () => void;
 }
 
-const getProveedorNombre = (proveedorId: string) => {
-  const proveedor = proveedoresMock.find((p) => p.id === proveedorId);
-  return proveedor?.nombre || "";
-};
-
-const getUnidadAbreviatura = (unidadId: string) => {
-  const unidad = unidadesMedida.find((u) => u.id === unidadId);
-  return unidad?.abreviatura || "";
-};
-
 const getStatusBadgeVariant = (estado: string) => {
-  switch (estado) {
-    case "Disponible":
+  switch (estado.toUpperCase()) {
+    case "DISPONIBLE":
       return "default";
-    case "Inactivo":
+    case "INACTIVO":
       return "secondary";
-    case "Agotado":
+    case "AGOTADO":
       return "outline";
-    case "Expirado":
+    case "EXPIRADO":
       return "destructive";
     default:
       return "secondary";
@@ -52,13 +42,19 @@ const getStatusBadgeVariant = (estado: string) => {
 
 export const LoteDetailsPanel = ({
   lote,
-  materiaPrima,
   onClose,
   onEdit,
-  onDelete,
+  onDeleteSuccess,
 }: LoteDetailsPanelProps) => {
-  const unidadBase = getUnidadAbreviatura(materiaPrima.unidadMedidaBase);
-  const variante = materiaPrima.variantes.find((v) => v.id === lote.varianteId);
+  const { materiaprimaId } = useMateriaPrimaContext();
+  const { data: materiaprimaDetalles } = useMateriaPrimaDetallesQuery(materiaprimaId!);
+
+  const deleteMutation = useDeleteLoteMateriaPrimaMutation(
+    materiaprimaDetalles?.id,
+    onDeleteSuccess
+  );
+
+  const unidadBase = materiaprimaDetalles?.unidad_medida_base?.abreviatura || "";
 
   return (
     <div className="h-full bg-background flex flex-col">
@@ -71,7 +67,7 @@ export const LoteDetailsPanel = ({
           <div>
             <h2 className="text-xl font-semibold">Detalles del Lote</h2>
             <p className="text-sm text-muted-foreground">
-              {materiaPrima.nombre}
+              {materiaprimaDetalles?.nombre}
             </p>
           </div>
         </div>
@@ -97,7 +93,7 @@ export const LoteDetailsPanel = ({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={onDelete}>
+                <AlertDialogAction onClick={() => lote.id && deleteMutation.mutate(lote.id)}>
                   Eliminar
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -120,13 +116,10 @@ export const LoteDetailsPanel = ({
               <Badge variant={getStatusBadgeVariant(lote.estado)}>
                 {lote.estado}
               </Badge>
-              {variante && (
-                <Badge variant="outline">{variante.nombreVariante}</Badge>
-              )}
             </div>
           </div>
 
-          <Separator />
+          <div className="h-px bg-border my-4" />
 
           {/* Stock Information */}
           <div className="space-y-4">
@@ -137,7 +130,7 @@ export const LoteDetailsPanel = ({
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground">Stock Actual Lote</p>
                 <p className="text-3xl font-bold">
-                  {lote.stockActualLote}
+                  {lote.stock_actual_lote}
                   <span className="text-base font-normal text-muted-foreground ml-1">
                     {unidadBase}
                   </span>
@@ -146,7 +139,7 @@ export const LoteDetailsPanel = ({
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground">Cantidad Recibida</p>
                 <p className="text-3xl font-bold">
-                  {lote.cantidadRecibida}
+                  {lote.cantidad_recibida}
                   <span className="text-base font-normal text-muted-foreground ml-1">
                     {unidadBase}
                   </span>
@@ -155,7 +148,7 @@ export const LoteDetailsPanel = ({
             </div>
           </div>
 
-          <Separator />
+          <div className="h-px bg-border my-4" />
 
           {/* Dates */}
           <div className="space-y-4">
@@ -167,20 +160,20 @@ export const LoteDetailsPanel = ({
                 <span className="text-muted-foreground">Fecha de Recepción</span>
                 <span className="font-medium flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {lote.fechaRecepcion}
+                  {lote.fecha_recepcion.toString()}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b items-center">
                 <span className="text-muted-foreground">Fecha de Caducidad</span>
                 <span className="font-medium flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {lote.fechaCaducidad}
+                  {lote.fecha_caducidad.toString()}
                 </span>
               </div>
             </div>
           </div>
 
-          <Separator />
+          <div className="h-px bg-border my-4" />
 
           {/* Proveedor */}
           <div className="space-y-4">
@@ -190,12 +183,12 @@ export const LoteDetailsPanel = ({
             <div className="flex justify-between py-2 border-b">
               <span className="text-muted-foreground">Nombre</span>
               <span className="font-medium">
-                {getProveedorNombre(lote.proveedorId)}
+                {lote.proveedor.nombre_comercial || `${lote.proveedor.nombre_proveedor} ${lote.proveedor.apellido_proveedor}`}
               </span>
             </div>
           </div>
 
-          <Separator />
+          <div className="h-px bg-border my-4" />
 
           {/* Costs */}
           <div className="space-y-4">
@@ -209,7 +202,7 @@ export const LoteDetailsPanel = ({
                   Costo Unitario Divisa
                 </p>
                 <p className="text-2xl font-bold text-primary">
-                  ${lote.costoUnitarioDivisa.toFixed(2)}
+                  ${lote.costo_unitario_usd.toFixed(2)}
                 </p>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
@@ -217,7 +210,8 @@ export const LoteDetailsPanel = ({
                   Costo Unitario Local
                 </p>
                 <p className="text-2xl font-bold">
-                  {lote.costoUnitarioLocal.toFixed(2)}
+                  {/* Assuming local cost = usd for now as not in response */}
+                  {lote.costo_unitario_usd.toFixed(2)}
                 </p>
               </div>
             </div>

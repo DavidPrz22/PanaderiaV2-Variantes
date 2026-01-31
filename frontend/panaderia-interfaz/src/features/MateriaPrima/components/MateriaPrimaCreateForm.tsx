@@ -1,304 +1,151 @@
-import { useState } from "react";
-import { ArrowLeft, Plus, Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
-import { unidadesMedida, categoriasMateriaPrima } from "@/types/materiaPrima";
-import { VarianteForm, VarianteFormData } from "./VarianteForm";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useMateriaPrimaContext } from "@/context/MateriaPrimaContext";
+import { materiaPrimaSchema, type TMateriaPrimaSchema } from "../schemas/schemas";
+import { type TMateriaPrima } from "../schemas/zod-types";
+import { useCreateUpdateMateriaPrimaMutation } from "../hooks/mutations/materiaPrimaMutations";
+
+import { useUnidadesMedidaQuery, useCategoriasQuery } from "@/hooks/useQueryHooks";
+import { useMateriaPrimaDetallesQuery } from "../hooks/queries/materiaPrimaqueries";
+
+import { FormHeader } from "./form-sections/FormHeader";
+import { GeneralInformation } from "./form-sections/GeneralInformation";
+import { VariantesSection } from "./form-sections/VariantesSection";
+import { ActionBar } from "./form-sections/ActionBar";
 
 interface CreateMateriaPrimaPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: MateriaPrimaFormData) => void;
   fullScreen?: boolean;
 }
 
-export interface MateriaPrimaFormData {
-  nombre: string;
-  unidadMedidaBase: string;
-  puntoReorden: string;
-  categoria: string;
-  descripcion: string;
-  variantes: VarianteFormData[];
-}
-
-const createEmptyVariante = (): VarianteFormData => ({
-  id: crypto.randomUUID(),
-  nombreVariante: "",
-  unidadCompra: "",
-  precioCompraDivisa: "",
-  precioCompraLocal: "",
-  nombreEmpaqueEstandar: "",
-  cantidadEmpaqueEstandar: "",
-  unidadMedidaEmpaqueEstandar: "",
+const createEmptyVariante = () => ({
+  nombre_variante: "",
+  unidad_compra: 0,
+  precio_compra_divisa: 0,
+  precio_compra_local: 0,
+  nombre_empaque_estandar: "",
+  cantidad_empaque_estandar: 0,
+  unidad_medida_empaque_estandar: null,
 });
 
-const initialFormState: MateriaPrimaFormData = {
-  nombre: "",
-  unidadMedidaBase: "",
-  puntoReorden: "",
-  categoria: "",
-  descripcion: "",
-  variantes: [createEmptyVariante()],
+const createVarianteDetalle = (materiaprimaDetalles: TMateriaPrima) => {
+  return materiaprimaDetalles.variantes.map((variante) => ({
+    id: variante.id,
+    nombre_variante: variante.nombre_variante,
+    SKU_variante: variante.SKU_variante || "",
+    unidad_compra: variante.unidad_compra.id,
+    precio_compra_divisa: variante.precio_compra_divisa || 0,
+    precio_compra_local: variante.precio_compra_local || 0,
+    nombre_empaque_estandar: variante.nombre_empaque_estandar || "",
+    cantidad_empaque_estandar: variante.cantidad_empaque_estandar || 0,
+    unidad_medida_empaque_estandar: variante.unidad_medida_empaque_estandar?.id || null,
+  }));
 };
 
 export const CreateMateriaPrimaPanel = ({
   isOpen,
   onClose,
-  onSave,
   fullScreen = false,
 }: CreateMateriaPrimaPanelProps) => {
-  const { toast } = useToast();
-  const [formData, setFormData] =
-    useState<MateriaPrimaFormData>(initialFormState);
+  const { materiaprimaId, updateRegistro } = useMateriaPrimaContext();
 
-  const handleInputChange = (
-    field: keyof Omit<MateriaPrimaFormData, "variantes">,
-    value: string
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const { data: unidadesMedida = [] } = useUnidadesMedidaQuery();
+  const { data: categoriasMateriaPrima = [] } = useCategoriasQuery();
+  const { data: materiaprimaDetalles } = useMateriaPrimaDetallesQuery(
+    materiaprimaId!,
+    !!updateRegistro && !!materiaprimaId
+  );
 
-  const handleVarianteUpdate = (index: number, data: VarianteFormData) => {
-    setFormData((prev) => ({
-      ...prev,
-      variantes: prev.variantes.map((v, i) => (i === index ? data : v)),
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    setError,
+    formState: { errors, isDirty },
+    control,
+  } = useForm<TMateriaPrimaSchema>({
+    resolver: zodResolver(materiaPrimaSchema),
+    values: updateRegistro && materiaprimaDetalles
+      ? {
+        nombre: materiaprimaDetalles.nombre,
+        SKU: materiaprimaDetalles.SKU || "",
+        punto_reorden: materiaprimaDetalles.punto_reorden,
+        unidad_medida_base: materiaprimaDetalles.unidad_medida_base.id,
+        categoria: materiaprimaDetalles.categoria.id,
+        descripcion: materiaprimaDetalles.descripcion || "",
+        variantes: createVarianteDetalle(materiaprimaDetalles),
+      }
+      : {
+        nombre: "",
+        SKU: "",
+        punto_reorden: 0,
+        unidad_medida_base: 0,
+        categoria: 0,
+        descripcion: "",
+        variantes: [createEmptyVariante()],
+      },
+  });
 
-  const handleVarianteRemove = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      variantes: prev.variantes.filter((_, i) => i !== index),
-    }));
-  };
+  const { mutateAsync: createUpdateMateriaPrima, isPending } = useCreateUpdateMateriaPrimaMutation(
+    setError
+  );
 
-  const handleAddVariante = () => {
-    setFormData((prev) => ({
-      ...prev,
-      variantes: [...prev.variantes, createEmptyVariante()],
-    }));
-  };
+  console.log(errors);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "variantes",
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
 
-    if (!formData.nombre.trim()) {
-      toast({
-        title: "Error",
-        description: "El nombre es requerido",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    if (!formData.unidadMedidaBase) {
-      toast({
-        title: "Error",
-        description: "La unidad de medida base es requerida",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!formData.categoria) {
-      toast({
-        title: "Error",
-        description: "La categoría es requerida",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const hasValidVariante = formData.variantes.some(
-      (v) => v.nombreVariante.trim() && v.unidadCompra
-    );
-
-    if (!hasValidVariante) {
-      toast({
-        title: "Error",
-        description:
-          "Debe agregar al menos una variante con nombre y unidad de compra",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    onSave(formData);
-    setFormData(initialFormState);
-    toast({
-      title: "Éxito",
-      description: "Materia prima creada correctamente",
-    });
-    onClose();
-  };
-
-  const handleClose = () => {
-    setFormData(initialFormState);
+  const onSubmit = async (data: TMateriaPrimaSchema) => {
+    await createUpdateMateriaPrima({ data, id: updateRegistro && materiaprimaId ? materiaprimaId : undefined });
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={`${fullScreen ? "h-full" : "w-[480px] border-l"} bg-background flex flex-col`}>
-      {/* Header */}
-      <div className="flex items-center gap-4 p-6 border-b">
-        <Button variant="ghost" size="icon" onClick={handleClose}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <div>
-          <h2 className="text-xl font-semibold">Nueva Materia Prima</h2>
-          <p className="text-sm text-muted-foreground">
-            Complete los campos para registrar una nueva materia prima
-          </p>
-        </div>
-      </div>
+    <div
+      className={`${fullScreen ? "h-full" : "w-[520px] border-l shadow-2xl"
+        } bg-background bg-blue-50/10 flex flex-col`}
+    >
+      <FormHeader updateRegistro={!!updateRegistro} onClose={onClose} />
 
-      <ScrollArea className="flex-1">
-        <form onSubmit={handleSubmit} className="p-8 space-y-6 max-w-4xl mx-auto">
-          {/* Main Fields */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="nombre">Nombre *</Label>
-              <Input
-                id="nombre"
-                value={formData.nombre}
-                onChange={(e) => handleInputChange("nombre", e.target.value)}
-                placeholder="Nombre de la materia prima"
-                required
-              />
-            </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-8 space-y-8 w-4xl max-w-4xl self-center "
+      >
+        <GeneralInformation
+          register={register}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
+          unidadesMedida={unidadesMedida}
+          categoriasMateriaPrima={categoriasMateriaPrima}
+        />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="unidadMedidaBase">Unidad Medida Base *</Label>
-                <Select
-                  value={formData.unidadMedidaBase}
-                  onValueChange={(value) =>
-                    handleInputChange("unidadMedidaBase", value)
-                  }
-                >
-                  <SelectTrigger id="unidadMedidaBase">
-                    <SelectValue placeholder="Seleccionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {unidadesMedida.map((unidad) => (
-                      <SelectItem key={unidad.id} value={unidad.id}>
-                        {unidad.nombre} ({unidad.abreviatura})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+        <VariantesSection
+          fields={fields}
+          append={append}
+          remove={remove}
+          register={register}
+          control={control}
+          errors={errors}
+          unidadesMedida={unidadesMedida}
+          setValue={setValue}
+          createEmptyVariante={createEmptyVariante}
+        />
 
-              <div className="space-y-2">
-                <Label htmlFor="puntoReorden">Punto de Reorden</Label>
-                <Input
-                  id="puntoReorden"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.puntoReorden}
-                  onChange={(e) =>
-                    handleInputChange("puntoReorden", e.target.value)
-                  }
-                  placeholder="0.00"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="categoria">Categoría *</Label>
-              <Select
-                value={formData.categoria}
-                onValueChange={(value) =>
-                  handleInputChange("categoria", value)
-                }
-              >
-                <SelectTrigger id="categoria">
-                  <SelectValue placeholder="Seleccionar categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoriasMateriaPrima.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="descripcion">Descripción</Label>
-              <Textarea
-                id="descripcion"
-                value={formData.descripcion}
-                onChange={(e) =>
-                  handleInputChange("descripcion", e.target.value)
-                }
-                placeholder="Descripción opcional"
-                rows={3}
-              />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Variantes Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium">Variantes de Compra</h3>
-                <p className="text-sm text-muted-foreground">
-                  Define las presentaciones de compra
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleAddVariante}
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                Agregar
-              </Button>
-            </div>
-
-            <div className="space-y-4">
-              {formData.variantes.map((variante, index) => (
-                <VarianteForm
-                  key={variante.id}
-                  variante={variante}
-                  index={index}
-                  onUpdate={handleVarianteUpdate}
-                  onRemove={handleVarianteRemove}
-                  canRemove={formData.variantes.length > 1}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="pt-4">
-            <Button type="submit" className="w-full">
-              <Save className="h-4 w-4 mr-2" />
-              Guardar Materia Prima
-            </Button>
-          </div>
-        </form>
-      </ScrollArea>
+        <ActionBar
+          isPending={isPending}
+          isDirty={isDirty}
+          updateRegistro={!!updateRegistro}
+        />
+      </form>
     </div>
   );
 };

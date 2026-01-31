@@ -370,13 +370,12 @@ class MateriasPrimas(ComponentesStockManagement):
 
 
 class MateriasPrimasVariantes(models.Model):
-    materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=False, blank=False)
+    materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=False, blank=False, related_name='variantes')
     nombre_variante = models.CharField(max_length=100, null=False, blank=False)
     unidad_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
     SKU_variante = models.CharField(max_length=100, null=True, blank=True, unique=True)
     precio_compra_divisa = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     precio_compra_local = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
-
     nombre_empaque_estandar = models.CharField(max_length=100, null=True, blank=True)
     cantidad_empaque_estandar = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     unidad_medida_empaque_estandar = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, related_name='materias_primas_empaque', null=True, blank=True)

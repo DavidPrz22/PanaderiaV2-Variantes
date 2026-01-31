@@ -2,6 +2,7 @@ import { z } from "zod";
 
 
 const varianteSchema = z.object({
+  id: z.number().optional(),
   nombre_variante: z.string().min(6, "El nombre debe tener al menos 6 caracteres"),
   SKU_variante: z.string().optional().nullable().refine((value) => value === null || value === undefined || value.length >= 6, "El SKU debe tener al menos 6 caracteres"),
   unidad_compra: z.coerce
@@ -9,7 +10,7 @@ const varianteSchema = z.object({
       required_error: "La unidad de compra es requerida",
       invalid_type_error: "La unidad de compra no es válida",
     })
-    .min(1, "La unidad de compra es requerida"),
+    .min(0, "La unidad de compra es requerida"),
   precio_compra_divisa: z.coerce.number().min(0, "El precio de compra debe ser mayor a 0").optional().nullable(),
   precio_compra_local: z.coerce.number().min(0, "El precio de compra debe ser mayor a 0").optional().nullable(),
   nombre_empaque_estandar: z.string().optional().nullable(),
@@ -19,6 +20,7 @@ const varianteSchema = z.object({
       required_error: "La unidad de medida es requerida",
       invalid_type_error: "La unidad de medida no es válida",
     })
+    .min(0, "La unidad de medida es requerida")
     .optional()
     .nullable(),
 })

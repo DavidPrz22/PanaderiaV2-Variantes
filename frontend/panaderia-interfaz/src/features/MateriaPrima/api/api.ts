@@ -1,61 +1,29 @@
 import apiClient from "../../../api/client";
 import type { AxiosError } from "axios";
 import {
-  type UnidadMedida,
-  type CategoriaMateriaPrima,
   type LoteMateriaPrimaFormSumit,
-  type MateriaPrimaListServer,
   type LoteMateriaPrimaFormResponse,
-  type MateriaPrimaList,
-  type Proveedor,
   type LoteMateriaPrimaPagination,
-  type MateriaPrimaPagination,
+
 } from "../types/types";
 
 import type { TMateriaPrimaSchema } from "../schemas/schemas";
+import { type TMateriaPrima, MateriaPrimaSchema, MateriaPrimaPaginationSchema, type TMateriaPrimaPagination } from "../schemas/zod-types";
 
-// UNIDADES DE MEDIDA API CALL
-export const fetchUnidadesMedida = async (): Promise<UnidadMedida[]> => {
-  try {
-    const response = await apiClient.get("/api/unidades-medida/");
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ detail?: string }>;
-    throw new Error(
-      axiosError.response?.data?.detail || "Failed to fetch unidades medida",
-    );
-  }
-};
 
-// CATEGORIAS DE MATERIA PRIMA API CALL
-export const fetchCategoriasMateriaPrima = async (): Promise<
-  CategoriaMateriaPrima[]
-> => {
-  try {
-    const response = await apiClient.get("/api/categorias-materiaprima/");
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ detail?: string }>;
-    throw new Error(
-      axiosError.response?.data?.detail || "Failed to fetch categorias",
-    );
-  }
-};
 
-// API CALL FOR MATERIA PRIMA to create/update materia prima
+// API CALL FOR MATERIA PRIMA to create materia prima
 export const handleCreateUpdateMateriaPrima = async (
   data: TMateriaPrimaSchema,
   id?: number,
 ) => {
-  const isUpdate = id !== undefined;
-  const url = isUpdate ? `/api/materiaprima/${id}/` : "/api/materiaprima/";
-  const method = isUpdate ? "put" : "post";
-
+  const url = id ? `/api/inventario/materiaprima/${id}/` : "/api/inventario/materiaprima/";
+  const method = id ? "put" : "post";
   try {
     const response = await apiClient[method](url, data);
     return response.data;
   } catch (error) {
-    const axiosError = error as AxiosError<Record<string, string[]>>;
+    const axiosError = error as AxiosError<{ detail?: string }>;
     if (axiosError.response) {
       return {
         errorData: axiosError.response.data,
@@ -67,16 +35,29 @@ export const handleCreateUpdateMateriaPrima = async (
   }
 };
 
+
+
 // API CALL FOR MATERIA PRIMA LIST
 export const handleMateriaPrimaList = async ({
   pageParam
 }: {
   pageParam?: string | null
-} = {}): Promise<MateriaPrimaPagination> => {
+} = {}): Promise<TMateriaPrimaPagination> => {
   try {
-    const url = pageParam || "/api/materiaprima/";
+    const url = pageParam || "/api/inventario/materiaprima/";
     const response = await apiClient.get(url);
-    return response.data;
+    console.log(response.data)
+    const valid = MateriaPrimaPaginationSchema.safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return {
+      count: 0,
+      next: null,
+      previous: null,
+      results: []
+    };
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
@@ -88,10 +69,15 @@ export const handleMateriaPrimaList = async ({
 // API CALL FOR MATERIA PRIMA LIST PK
 export const handleMateriaPrimaListPK = async (
   pk: number,
-): Promise<MateriaPrimaListServer> => {
+): Promise<TMateriaPrima> => {
   try {
-    const response = await apiClient.get(`/api/materiaprima/${pk}/`);
-    return response.data;
+    const response = await apiClient.get(`/api/inventario/materiaprima/${pk}/`);
+    const valid = MateriaPrimaSchema.safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return {} as TMateriaPrima;
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
@@ -103,7 +89,7 @@ export const handleMateriaPrimaListPK = async (
 // API CALL FOR DELETE MATERIA PRIMA
 export const handleDeleteMateriaPrima = async (pk: number) => {
   try {
-    const response = await apiClient.delete(`/api/materiaprima/${pk}/`);
+    const response = await apiClient.delete(`/api/inventario/materiaprima/${pk}/`);
 
     if (response.status === 204) {
       return { success: true };
@@ -122,7 +108,7 @@ export const handleLotesMateriaPrimaLotes = async (
 ): Promise<{ lotes: LoteMateriaPrimaFormResponse[]; success: boolean }> => {
   try {
     const response = await apiClient.get(
-      `/api/lotesmateriaprima/?materia_prima=${pk}`,
+      `/api/inventario/lotesmateriaprima/?materia_prima=${pk}`,
     );
     const dataResponse = response.data;
     console.log("Lotes fetched:", dataResponse);
@@ -145,8 +131,8 @@ export const handleCreateUpdateLoteMateriaPrima = async (
 ): Promise<{ lotes: LoteMateriaPrimaFormResponse; success: boolean }> => {
   const isUpdate = id !== undefined;
   const url = isUpdate
-    ? `/api/lotesmateriaprima/${id}/`
-    : "/api/lotesmateriaprima/";
+    ? `/api/inventario/lotesmateriaprima/${id}/`
+    : "/api/inventario/lotesmateriaprima/";
   const method = isUpdate ? "put" : "post";
 
   // Format dates to YYYY-MM-DD
@@ -167,18 +153,6 @@ export const handleCreateUpdateLoteMateriaPrima = async (
   }
 };
 
-// API CALL FOR PROVEEDORES
-export const handleProveedores = async (): Promise<Proveedor[]> => {
-  try {
-    const response = await apiClient.get("/api/compras/proveedores/");
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ detail?: string }>;
-    throw new Error(
-      axiosError.response?.data?.detail || "Failed to fetch proveedores",
-    );
-  }
-};
 
 // API CALL FOR DELETE LOTE MATERIA PRIMA
 export const handleDeleteLoteMateriaPrima = async (pk: number | undefined) => {
@@ -187,7 +161,7 @@ export const handleDeleteLoteMateriaPrima = async (pk: number | undefined) => {
   }
 
   try {
-    await apiClient.delete(`/api/lotesmateriaprima/${pk}/`);
+    await apiClient.delete(`/api/inventario/lotesmateriaprima/${pk}/`);
     return { success: true };
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
@@ -206,7 +180,7 @@ export const handleActivateLoteMateriaPrima = async (
   }
 
   try {
-    await apiClient.put(`/api/lotesmateriaprima/${pk}/activar/`);
+    await apiClient.put(`/api/inventario/lotesmateriaprima/${pk}/activar/`);
     return { success: true };
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
@@ -225,7 +199,7 @@ export const handleInactivateLoteMateriaPrima = async (
   }
 
   try {
-    await apiClient.put(`/api/lotesmateriaprima/${pk}/inactivar/`);
+    await apiClient.put(`/api/inventario/lotesmateriaprima/${pk}/inactivar/`);
     return { success: true };
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
@@ -255,7 +229,7 @@ export const getLotesMateriaPrima = async ({
   materia_prima_id?: number;
 } = {}): Promise<LoteMateriaPrimaPagination> => {
   try {
-    let url = pageParam || "/api/lotesmateriaprima/";
+    let url = pageParam || "/api/inventario/lotesmateriaprima/";
     if (!pageParam && materia_prima_id) {
       url += `?materia_prima=${materia_prima_id}`;
     }

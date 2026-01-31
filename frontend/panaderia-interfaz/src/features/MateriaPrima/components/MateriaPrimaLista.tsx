@@ -17,7 +17,6 @@ export default function MateriaPrimaLista({
   isLoadingDetalles: boolean;
 }) {
   const {
-    setListaMateriaPrimaCached,
     filteredApplied,
     MPFilteredInputSearchApplied,
     inputfilterDoubleApplied,
@@ -60,12 +59,6 @@ export default function MateriaPrimaLista({
     currentPage
   );
 
-  // Update cached list when pagination data changes
-  useEffect(() => {
-    const allResults = materiaPrimaPagination?.pages.flatMap(page => page.results) || [];
-    setListaMateriaPrimaCached(allResults);
-  }, [materiaPrimaPagination, setListaMateriaPrimaCached]);
-
   // Update context page when local page changes
   useEffect(() => {
     if (page !== currentPage) {
@@ -97,6 +90,7 @@ export default function MateriaPrimaLista({
             "Stock",
             "Punto de reorden",
             "Fecha de creación",
+            "Acciones",
           ]}
         />
 

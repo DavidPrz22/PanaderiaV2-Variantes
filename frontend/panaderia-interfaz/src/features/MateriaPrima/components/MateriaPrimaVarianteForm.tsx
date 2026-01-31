@@ -1,15 +1,7 @@
 import { Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { unidadesMedida } from "@/types/materiaPrima";
+import { useUnidadesMedidaQuery } from "@/hooks/useQueryHooks";
+import { FormInput, FormSelect } from "@/components/shared";
 
 export interface VarianteFormData {
   id: string;
@@ -41,60 +33,53 @@ export const VarianteForm = ({
     onUpdate(index, { ...variante, [field]: value });
   };
 
+  const { data: unidadesMedida } = useUnidadesMedidaQuery();
+
+  const unidadOptions = unidadesMedida?.map((u) => ({
+    value: u.id,
+    label: `${u.nombre_completo} (${u.abreviatura})`,
+  })) || [];
+
   return (
-    <div className="border rounded-lg p-4 space-y-4 bg-muted/30">
+    <div className="p-6 border rounded-xl space-y-6 relative bg-card shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
-        <h4 className="font-medium text-sm">Variante {index + 1}</h4>
+        <h4 className="font-semibold text-base tracking-tight">Variante {index + 1}</h4>
         {canRemove && (
           <Button
             type="button"
             variant="ghost"
             size="icon"
             onClick={() => onRemove(index)}
-            className="h-8 w-8 text-destructive hover:text-destructive"
+            className="h-9 w-9 text-muted-foreground hover:text-destructive transition-colors rounded-full"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2 space-y-2">
-          <Label htmlFor={`nombreVariante-${index}`}>Nombre Variante *</Label>
-          <Input
-            id={`nombreVariante-${index}`}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="col-span-1 md:col-span-2">
+          <FormInput
+            label="Nombre Variante"
+            required
             value={variante.nombreVariante}
             onChange={(e) => handleChange("nombreVariante", e.target.value)}
             placeholder="Ej: Saco 50kg"
-            required
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor={`unidadCompra-${index}`}>Unidad de Compra *</Label>
-          <Select
-            value={variante.unidadCompra}
-            onValueChange={(value) => handleChange("unidadCompra", value)}
-          >
-            <SelectTrigger id={`unidadCompra-${index}`}>
-              <SelectValue placeholder="Seleccionar" />
-            </SelectTrigger>
-            <SelectContent>
-              {unidadesMedida.map((unidad) => (
-                <SelectItem key={unidad.id} value={unidad.id}>
-                  {unidad.nombre} ({unidad.abreviatura})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <FormSelect
+          label="Unidad de Compra"
+          required
+          value={variante.unidadCompra}
+          onValueChange={(value) => handleChange("unidadCompra", value)}
+          options={unidadOptions}
+          placeholder="Seleccionar unidad"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor={`precioCompraDivisa-${index}`}>
-            Precio Divisa ($)
-          </Label>
-          <Input
-            id={`precioCompraDivisa-${index}`}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-1 md:col-span-1">
+          <FormInput
+            label="Precio Divisa ($)"
             type="number"
             step="0.01"
             min="0"
@@ -102,12 +87,9 @@ export const VarianteForm = ({
             onChange={(e) => handleChange("precioCompraDivisa", e.target.value)}
             placeholder="0.00"
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor={`precioCompraLocal-${index}`}>Precio Local</Label>
-          <Input
-            id={`precioCompraLocal-${index}`}
+          <FormInput
+            label="Precio Local"
             type="number"
             step="0.01"
             min="0"
@@ -116,63 +98,38 @@ export const VarianteForm = ({
             placeholder="0.00"
           />
         </div>
+      </div>
 
-        <div className="col-span-2 border-t pt-4 mt-2">
-          <p className="text-xs text-muted-foreground mb-3">
-            Empaque Estándar (Opcional)
-          </p>
-        </div>
+      <div className="pt-6 border-t space-y-4">
+        <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          Empaque Estándar <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 bg-muted rounded font-bold">Opcional</span>
+        </h4>
 
-        <div className="space-y-2">
-          <Label htmlFor={`nombreEmpaqueEstandar-${index}`}>
-            Nombre Empaque
-          </Label>
-          <Input
-            id={`nombreEmpaqueEstandar-${index}`}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FormInput
+            label="Nombre Empaque"
             value={variante.nombreEmpaqueEstandar}
-            onChange={(e) =>
-              handleChange("nombreEmpaqueEstandar", e.target.value)
-            }
+            onChange={(e) => handleChange("nombreEmpaqueEstandar", e.target.value)}
             placeholder="Ej: Saco, Bolsa, Caja"
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor={`cantidadEmpaqueEstandar-${index}`}>Cantidad</Label>
-          <Input
-            id={`cantidadEmpaqueEstandar-${index}`}
+          <FormInput
+            label="Cantidad"
             type="number"
             step="0.01"
             min="0"
             value={variante.cantidadEmpaqueEstandar}
-            onChange={(e) =>
-              handleChange("cantidadEmpaqueEstandar", e.target.value)
-            }
+            onChange={(e) => handleChange("cantidadEmpaqueEstandar", e.target.value)}
             placeholder="0.00"
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor={`unidadMedidaEmpaqueEstandar-${index}`}>
-            Unidad Empaque
-          </Label>
-          <Select
+          <FormSelect
+            label="Unidad Empaque"
             value={variante.unidadMedidaEmpaqueEstandar}
-            onValueChange={(value) =>
-              handleChange("unidadMedidaEmpaqueEstandar", value)
-            }
-          >
-            <SelectTrigger id={`unidadMedidaEmpaqueEstandar-${index}`}>
-              <SelectValue placeholder="Seleccionar" />
-            </SelectTrigger>
-            <SelectContent>
-              {unidadesMedida.map((unidad) => (
-                <SelectItem key={unidad.id} value={unidad.id}>
-                  {unidad.nombre} ({unidad.abreviatura})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            onValueChange={(value) => handleChange("unidadMedidaEmpaqueEstandar", value)}
+            options={unidadOptions}
+            placeholder="Seleccionar"
+          />
         </div>
       </div>
     </div>

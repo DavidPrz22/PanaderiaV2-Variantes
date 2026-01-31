@@ -16,6 +16,8 @@
   --z-index-over-header-bar: 150;
   --pos-product-final: #C25400;
   --pos-product-reventa: #DB0085;
+  --input-ring-color: oklch(88.2% 0.059 254.128);
+  --input-border-color:  oklch(80.9% 0.105 251.813);
 }
 
 @theme inline {

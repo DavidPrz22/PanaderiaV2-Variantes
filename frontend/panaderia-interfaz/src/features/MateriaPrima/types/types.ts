@@ -3,7 +3,10 @@ import type {
   TMateriaPrimaSchema,
   TLoteMateriaPrimaSchema,
 } from "@/features/MateriaPrima/schemas/schemas";
+
 import type { ReactNode, MouseEvent } from "react";
+import type { TMateriaPrimaList } from "../schemas/zod-types";
+
 
 export interface SidebarCardProps {
   children: ReactNode;
@@ -18,62 +21,6 @@ export type childrenProp = {
   children: ReactNode;
 };
 
-export type UnidadMedida = {
-  id: number;
-  nombre_completo: string;
-  abreviatura: string;
-  descripcion: string | null;
-  tipo_medida: "peso" | "volumen" | "unidad";
-};
-
-export type CategoriaMateriaPrima = {
-  id: number;
-  nombre_categoria: string;
-  descripcion: string | null;
-};
-
-
-export type MateriaPrimaListServer = {
-  id: number;
-  nombre: string;
-  unidad_medida_base_detail: UnidadMedida;
-  categoria_detail: CategoriaMateriaPrima;
-  stock_actual: number;
-  SKU: string;
-  nombre_empaque_estandar: string;
-  cantidad_empaque_estandar: number;
-  precio_compra_usd: number | null;
-  unidad_medida_empaque_estandar_detail: UnidadMedida;
-  punto_reorden: number;
-  fecha_ultima_actualizacion: string;
-  fecha_creacion_registro: string;
-  fecha_modificacion_registro: string;
-  descripcion: string;
-};
-
-export type MateriaPrimaList = MateriaPrimaListServer;
-
-
-export type submitMateriaPrima = {
-  cantidad_empaque_estandar: number | null;
-  unidad_medida_empaque_estandar: number | null;
-  nombre_empaque_estandar: string | null;
-  descripcion: string | null;
-  precio_compra_usd: number | null;
-  nombre: string;
-  SKU: string;
-  punto_reorden: number;
-  unidad_medida_base: number;
-  categoria: number;
-};
-
-export type MateriaPrimaFormSharedProps = {
-  isUpdate?: boolean;
-  initialData?: MateriaPrimaListServer;
-  onClose: () => void;
-  onSubmitSuccess: () => void;
-  title: string;
-};
 
 export type InputType = "text" | "number" | "textarea";
 
@@ -175,16 +122,18 @@ export type LotesMateriaPrimaFormSharedProps = {
   title: string;
 };
 
-export type MateriaPrimaPagination = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: MateriaPrimaList[];
-};
-
 export type LoteMateriaPrimaPagination = {
   count: number;
   next: string | null;
   previous: string | null;
   results: LoteMateriaPrimaFormResponse[];
+};
+
+export type MateriaPrimaList = TMateriaPrimaList;
+
+export type MateriaPrimaPagination = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: TMateriaPrimaList[];
 };

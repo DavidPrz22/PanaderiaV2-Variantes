@@ -1,19 +1,10 @@
 from rest_framework import serializers
-from .models import MateriasPrimas, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa
+from .models import MateriasPrimas, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, MateriasPrimasVariantes
 from apps.core.models import UnidadesDeMedida, CategoriasMateriaPrima, CategoriasProductosElaborados, CategoriasProductosReventa
 from apps.compras.serializers import ProveedoresSerializer
 from apps.compras.models import Proveedores
 from apps.produccion.models import Recetas
-
-class UnidadMedidaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UnidadesDeMedida
-        fields = ['id', 'nombre_completo', 'abreviatura', 'descripcion', 'tipo_medida']
-
-class CategoriaMateriaPrimaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoriasMateriaPrima
-        fields = ['id', 'nombre_categoria', 'descripcion']
+from apps.core.serializers import UnidadMedidaSerializer, CategoriaMateriaPrimaSerializer
 
 
 class ComponentesSearchSerializer(serializers.Serializer):
@@ -80,43 +71,46 @@ class LotesMateriaPrimaSerializer(serializers.ModelSerializer):
         return data
 
 
+class MateriaPrimaVariantesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = MateriasPrimasVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'unidad_compra',
+            'SKU_variante',
+            'precio_compra_divisa',
+            'precio_compra_local',
+            'nombre_empaque_estandar',
+            'cantidad_empaque_estandar',
+            'unidad_medida_empaque_estandar',
+        ]
+
+
 class MateriaPrimaSerializer(serializers.ModelSerializer):
+    variantes = MateriaPrimaVariantesSerializer(many=True, required=False)
 
-    # Nested serializers for detailed representation
-    unidad_medida_base_detail = UnidadMedidaSerializer(source='unidad_medida_base', read_only=True)
-    unidad_medida_empaque_estandar_detail = UnidadMedidaSerializer(source='unidad_medida_empaque_estandar', read_only=True)
-    categoria_detail = CategoriaMateriaPrimaSerializer(source='categoria', read_only=True)
+    class Meta:
+        model = MateriasPrimas
+        fields = [
+            'nombre',
+            'SKU',
+            'punto_reorden',
+            'unidad_medida_base',
+            'categoria',
+            'descripcion',
+            'variantes',
+            'stock_actual',
+            'fecha_creacion_registro'
+        ]
 
-    # For write operations, we still use IDs
-    unidad_medida_base = serializers.PrimaryKeyRelatedField(queryset=UnidadesDeMedida.objects.all(), write_only=True)
-    unidad_medida_empaque_estandar = serializers.PrimaryKeyRelatedField(
-        queryset=UnidadesDeMedida.objects.all(), 
-        required=False, 
-        allow_null=True,
-        write_only=True
-    )
-    
-    # Optional fields with proper null handling
-    nombre_empaque_estandar = serializers.CharField(
-        max_length=100,
-        required=False,
-        allow_null=True,
-        allow_blank=True
-    )
-    cantidad_empaque_estandar = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        allow_null=True
-    )
-    descripcion = serializers.CharField(
-        max_length=255,
-        required=False,
-        allow_null=True,
-        allow_blank=True
-    )
-    
-    categoria = serializers.PrimaryKeyRelatedField(queryset=CategoriasMateriaPrima.objects.all(), write_only=True)
+
+class MateriaPrimaListSerializer(serializers.ModelSerializer):
+    """Lighter serializer for table/list views."""
+    categoria = CategoriaMateriaPrimaSerializer(read_only=True)
+    unidad_medida_base = UnidadMedidaSerializer(read_only=True)
 
     class Meta:
         model = MateriasPrimas
@@ -124,126 +118,42 @@ class MateriaPrimaSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'unidad_medida_base',
-            'unidad_medida_base_detail',
+            'categoria',
             'stock_actual',
-            'SKU',
-            'precio_compra_usd',
+            'punto_reorden',
+            'fecha_creacion_registro'
+        ]
+
+
+class MateriaPrimaVariantesDetallesSerializer(serializers.ModelSerializer):
+    unidad_medida_empaque_estandar = UnidadMedidaSerializer(read_only=True)
+    unidad_compra = UnidadMedidaSerializer(read_only=True)
+
+    class Meta:
+        model = MateriasPrimasVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'unidad_compra',
+            'SKU_variante',
+            'precio_compra_divisa',
+            'precio_compra_local',
             'nombre_empaque_estandar',
             'cantidad_empaque_estandar',
             'unidad_medida_empaque_estandar',
-            'unidad_medida_empaque_estandar_detail',
-            'punto_reorden',
-            'fecha_ultima_actualizacion',
-            'fecha_creacion_registro',
-            'fecha_modificacion_registro',
-            'categoria',
-            'categoria_detail',
-            'descripcion'
-        ]
-        read_only_fields = [
-            'id',
-            'fecha_ultima_actualizacion',
-            'fecha_creacion_registro',
-            'fecha_modificacion_registro',
-            'stock_actual'
         ]
 
-    def validate_nombre(self, value):
-        """Validate that nombre doesn't contain special characters and is properly capitalized."""
-        if not value.strip():
-            raise serializers.ValidationError("El nombre no puede estar vacío o contener solo espacios.")
-        return value.strip().title()
 
-    def validate_SKU(self, value):
-        """Validate SKU format."""
-        if not value or not value.strip():
-            raise serializers.ValidationError("El SKU es requerido.")
-            
-        value = value.strip().upper()
-        if len(value) < 3:
-            raise serializers.ValidationError("El SKU debe tener al menos 3 caracteres.")
-        return value
-
-    def validate_punto_reorden(self, value):
-        """Validate that punto_reorden is positive."""
-        if value < 0:
-            raise serializers.ValidationError("El punto de reorden no puede ser negativo.")
-        return value
-
-    def validate_cantidad_empaque_estandar(self, value):
-        """Validate that cantidad_empaque_estandar is positive if provided."""
-        if value is None or value == 0 or value == "0" or value == "":
-            return None
-
-        if value < 0:
-            raise serializers.ValidationError("La cantidad de empaque estándar debe ser mayor que 0.")
-        return value
+class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):
+    """Full serializer for detail view, including variants and full descriptions."""
+    variantes = MateriaPrimaVariantesDetallesSerializer(many=True, required=False)
     
-    def validate_unidad_medida_empaque_estandar(self, value):
-        """Validate that unidad_medida_empaque_estandar is provided if required."""
-        if value is None or value == 0 or value == "0" or value == "":
-            return None
-        return value
-
-    def validate(self, data):
-        """Validate related fields and business rules."""
-        # Clean empty strings, zeros, and empty values to None for optional fields
-        optional_fields = ['nombre_empaque_estandar', 'descripcion']
-        numeric_fields = ['cantidad_empaque_estandar', 'unidad_medida_empaque_estandar']
-        
-        # Handle string fields
-        for field in optional_fields:
-            if field in data and isinstance(data[field], str) and not data[field].strip():
-                data[field] = None
-        
-        # Handle numeric fields
-        for field in numeric_fields:
-            if field in data and (data[field] == 0 or data[field] == "0" or data[field] == ""):
-                data[field] = None
-
-        # Packaging fields validation
-        packaging_fields = {
-            'nombre_empaque_estandar': 'Nombre de empaque estándar',
-            'cantidad_empaque_estandar': 'Cantidad de empaque estándar',
-            'unidad_medida_empaque_estandar': 'Unidad de medida de empaque estándar'
-        }
-        
-        # Check if any non-null packaging field is provided
-        provided_fields = {k: v for k, v in data.items() if k in packaging_fields and v is not None}
-        
-        if provided_fields:
-            # If any packaging field is provided with a non-null value, ensure all are provided
-            missing_fields = [
-                packaging_fields[field] 
-                for field in packaging_fields 
-                if field not in data or data.get(field) is None
-            ]
-            if missing_fields:
-                raise serializers.ValidationError({
-                    'packaging_error': (
-                        f"Los siguientes campos de empaque son requeridos cuando se proporciona "
-                        f"información de empaque: {', '.join(missing_fields)}"
-                    )
-                })
-
-        return data
-
-    def to_representation(self, instance):
-        """Customize the output representation of the serializer."""
-        data = super().to_representation(instance)
-        
-        # Remove write_only fields from output
-        write_only_fields = ['unidad_medida_base', 'unidad_medida_empaque_estandar', 'categoria']
-        for field in write_only_fields:
-            data.pop(field, None)
-
-        # Format dates for better readability
-        date_fields = ['fecha_ultima_actualizacion', 'fecha_creacion_registro', 'fecha_modificacion_registro']
-        for field in date_fields:
-            if data.get(field):
-                data[field] = instance.__getattribute__(field).strftime('%Y-%m-%d')
-
-        return data
+    class Meta(MateriaPrimaListSerializer.Meta):
+        fields = MateriaPrimaListSerializer.Meta.fields + [
+            'SKU',
+            'descripcion',
+            'variantes',
+        ]
 
 
 class ProductosIntermediosSerializer(serializers.ModelSerializer):

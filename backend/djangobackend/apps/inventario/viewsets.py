@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
-from apps.inventario.models import MateriasPrimas, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, ComponentesStockManagement
+from apps.inventario.models import MateriasPrimas, MateriasPrimasVariantes, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, ComponentesStockManagement
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
-from apps.inventario.serializers import ComponentesSearchSerializer, MateriaPrimaSerializer, LotesMateriaPrimaSerializer, ProductosIntermediosSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
+from apps.inventario.serializers import ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, ProductosIntermediosSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from apps.compras.models import Proveedores
@@ -20,6 +20,13 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
     serializer_class = MateriaPrimaSerializer
     permission_classes = [IsStaffOrVendedorReadOnly]
     pagination_class = StandardResultsSetPagination
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return MateriaPrimaListSerializer
+        if self.action == 'retrieve':
+            return MateriaPrimaDetailsSerializer
+        return MateriaPrimaSerializer
 
     @action(detail=False, methods=['post'], url_path='register-csv',)
     def register_csv(self, request):
@@ -54,6 +61,121 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
         MateriasPrimas.objects.bulk_create(materias_primas)
         return Response({'message': "Materias primas registradas exitosamente"}, status=status.HTTP_200_OK)
 
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+    
+        variantes = validated_data.get('variantes', None)
+
+        mp_created = MateriasPrimas(
+            nombre=validated_data.get('nombre'),
+            unidad_medida_base=validated_data.get('unidad_medida_base'),
+            SKU=validated_data.get('SKU'),
+            punto_reorden=validated_data.get('punto_reorden'),
+            categoria=validated_data.get('categoria'),
+            descripcion=validated_data.get('descripcion')
+        )
+        mp_created.save()
+        
+        variantes_bucket = []
+        if variantes:
+            for variante in variantes:
+                variantes_bucket.append(
+                    MateriasPrimasVariantes(
+                        materia_prima=mp_created,
+                        nombre_variante=variante.get('nombre_variante'),
+                        unidad_compra=variante.get('unidad_compra'),
+                        SKU_variante=variante.get('SKU_variante'),
+                        precio_compra_divisa=variante.get('precio_compra_divisa'),
+                        precio_compra_local=variante.get('precio_compra_local'),
+                        nombre_empaque_estandar=variante.get('nombre_empaque_estandar'),
+                        cantidad_empaque_estandar=variante.get('cantidad_empaque_estandar'),
+                        unidad_medida_empaque_estandar=variante.get('unidad_medida_empaque_estandar'),
+                    )
+                )
+
+            MateriasPrimasVariantes.objects.bulk_create(variantes_bucket)
+
+        mp_object = MateriaPrimaDetailsSerializer(mp_created).data
+        
+        return Response({
+            'message': "Materia prima creada exitosamente", 
+            'data': mp_object
+        }, status=status.HTTP_200_OK)
+
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        # Extract variantes data
+        variantes_data = validated_data.pop('variantes', None)
+        
+        # Update main Materia Prima fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        
+        if variantes_data is not None:
+            # Sync variants
+            existing_variantes = {v.id: v for v in instance.variantes.all()}
+            existing_ids = set(existing_variantes.keys())
+            
+            variantes_to_create = []
+            incoming_ids = set()
+            
+            for v_data in variantes_data:
+                v_id = v_data.get('id')
+                
+                if v_id and v_id in existing_ids:
+                    # Update existing variant
+                    incoming_ids.add(v_id)
+                    variante_obj = existing_variantes[v_id]
+                    for key, val in v_data.items():
+                        if key != 'id':
+                            setattr(variante_obj, key, val)
+                    variante_obj.save() 
+                
+                elif not v_id:
+                    # Create new variant
+                    # Remove 'id' if present but None/Empty
+                    if 'id' in v_data:
+                        del v_data['id']
+                    variantes_to_create.append(MateriasPrimasVariantes(materia_prima=instance, **v_data))
+            
+            # Bulk create new ones
+            if variantes_to_create:
+                MateriasPrimasVariantes.objects.bulk_create(variantes_to_create)
+            
+            # Delete removed variants
+            ids_to_delete = existing_ids - incoming_ids
+            if ids_to_delete:
+                MateriasPrimasVariantes.objects.filter(id__in=ids_to_delete).delete()
+
+        # Refetch to return full data
+        instance.refresh_from_db()
+        return Response(MateriaPrimaDetailsSerializer(instance).data)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            
+            # Check notifications globally
+            try:
+                NotificationService.check_low_stock(MateriasPrimas)
+                NotificationService.check_sin_stock(MateriasPrimas)
+            except Exception:
+                pass 
+                
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ComponenteSearchViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MateriasPrimas.objects.none()

@@ -1,77 +1,77 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft, Package, Calendar, Edit } from "lucide-react";
+import { ArrowLeft, Package, Calendar, Edit, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  MateriaPrima,
-  unidadesMedida,
-  categoriasMateriaPrima,
-} from "@/types/materiaPrima";
-import { LoteMateriaPrima, lotesMateriasPrimasMock } from "@/types/lotes";
-import { LotesTable } from "./LotesTable";
-import { LoteForm, LoteFormData } from "./LoteForm";
-import { LoteDetailsPanel } from "./LoteDetailsPanel";
+  useMateriaPrimaContext,
+} from "@/context/MateriaPrimaContext";
+import { LotesTable } from "./Lotes/LotesTableMP";
+import { LoteForm } from "./Lotes/LoteForm";
+import { LoteDetailsPanel } from "./Lotes/LoteDetallesPanel";
 import { toast } from "sonner";
+import { useLotesMateriaPrimaQuery } from "../hooks/queries/materiaPrimaqueries";
+import { useDeleteMateriaPrimaMutation } from "../hooks/mutations/materiaPrimaMutations";
+import { ConfirmDeleteModal } from "@/components/ConfirmDeleteModal";
+import type { LoteMateriaPrimaFormResponse } from "../types/types";
+
+import { useCategoriasQuery } from "@/hooks/useQueryHooks";
+import { useMateriaPrimaDetallesQuery } from "../hooks/queries/materiaPrimaqueries";
 
 type DetailsViewMode = "details" | "loteForm" | "loteDetails";
 
 interface MateriaPrimaDetailsPanelProps {
-  materiaPrima: MateriaPrima | null;
   onClose: () => void;
   fullScreen?: boolean;
 }
 
-const getUnidadNombre = (unidadId: string) => {
-  const unidad = unidadesMedida.find((u) => u.id === unidadId);
-  return unidad ? `${unidad.nombre} (${unidad.abreviatura})` : "";
-};
-
-const getUnidadAbreviatura = (unidadId: string) => {
-  const unidad = unidadesMedida.find((u) => u.id === unidadId);
-  return unidad?.abreviatura || "";
-};
-
-const getCategoriaNombre = (categoriaId: string) => {
-  const categoria = categoriasMateriaPrima.find((c) => c.id === categoriaId);
-  return categoria?.nombre || "";
-};
-
 export const MateriaPrimaDetailsPanel = ({
-  materiaPrima,
   onClose,
   fullScreen = false,
 }: MateriaPrimaDetailsPanelProps) => {
+  const {
+    materiaprimaId,
+    setUpdateRegistro,
+    setShowMateriaprimaForm,
+  } = useMateriaPrimaContext();
+
   const [viewMode, setViewMode] = useState<DetailsViewMode>("details");
-  const [lotes, setLotes] = useState<LoteMateriaPrima[]>(lotesMateriasPrimasMock);
-  const [selectedLote, setSelectedLote] = useState<LoteMateriaPrima | null>(null);
-  const [editingLote, setEditingLote] = useState<LoteMateriaPrima | null>(null);
+  const [selectedLote, setSelectedLote] = useState<LoteMateriaPrimaFormResponse | null>(null);
+  const [editingLote, setEditingLote] = useState<LoteMateriaPrimaFormResponse | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const { mutateAsync: deleteMateriaPrima, isPending: isDeleting } = useDeleteMateriaPrimaMutation();
+
+  const { data: categoriasMateriaPrima } = useCategoriasQuery();
+  const { data: materiaprimaDetalles } = useMateriaPrimaDetallesQuery(materiaprimaId!);
+
+  const { data: lotesPagination, isLoading: isLoadingLotes } = useLotesMateriaPrimaQuery(
+    materiaprimaId!,
+    !!materiaprimaId
+  );
 
   const materiaPrimaLotes = useMemo(() => {
-    if (!materiaPrima) return [];
-    return lotes.filter((l) => l.materiaPrimaId === materiaPrima.id);
-  }, [lotes, materiaPrima]);
+    if (!lotesPagination) return [];
+    return lotesPagination.pages.flatMap(page => page.results);
+  }, [lotesPagination]);
 
-  if (!materiaPrima) return null;
+  if (!materiaprimaDetalles) return null;
 
-  const isLowStock = materiaPrima.stockActual <= materiaPrima.puntoReorden;
+  const isLowStock = (materiaprimaDetalles.stock_actual || 0) <= (materiaprimaDetalles.punto_reorden || 0);
+
+  const getCategoriaNombre = (categoriaId: number) => {
+    const categoria = categoriasMateriaPrima?.find((c) => c.id === categoriaId);
+    return categoria?.nombre_categoria || "";
+  };
 
   const handleAddLote = () => {
     setEditingLote(null);
     setViewMode("loteForm");
   };
 
-  const handleViewLote = (lote: LoteMateriaPrima) => {
-    setSelectedLote(lote);
+  const handleViewLote = (lote: any) => {
+    setSelectedLote(lote as LoteMateriaPrimaFormResponse);
     setViewMode("loteDetails");
   };
 
@@ -80,55 +80,14 @@ export const MateriaPrimaDetailsPanel = ({
     setViewMode("loteForm");
   };
 
-  const handleDeleteLote = () => {
-    if (!selectedLote) return;
-    
-    setLotes((prev) => prev.filter((l) => l.id !== selectedLote.id));
+  const handleDeleteLoteSuccess = () => {
     toast.success("Lote eliminado correctamente");
     setSelectedLote(null);
     setViewMode("details");
   };
 
-  const handleSaveLote = (data: LoteFormData) => {
-    if (editingLote) {
-      // Update existing lote
-      setLotes((prev) =>
-        prev.map((l) =>
-          l.id === editingLote.id
-            ? {
-                ...l,
-                proveedorId: data.proveedorId,
-                varianteId: data.varianteId || null,
-                fechaRecepcion: data.fechaRecepcion?.toISOString().split("T")[0] || "",
-                fechaCaducidad: data.fechaCaducidad?.toISOString().split("T")[0] || "",
-                cantidadRecibida: parseFloat(data.cantidadRecibida) || 0,
-                stockActualLote: parseFloat(data.cantidadRecibida) || 0,
-                costoUnitarioDivisa: parseFloat(data.costoUnitarioDivisa) || 0,
-                costoUnitarioLocal: parseFloat(data.costoUnitarioLocal) || 0,
-              }
-            : l
-        )
-      );
-      toast.success("Lote actualizado correctamente");
-    } else {
-      // Create new lote
-      const newLote: LoteMateriaPrima = {
-        id: crypto.randomUUID(),
-        materiaPrimaId: materiaPrima.id,
-        varianteId: data.varianteId || null,
-        proveedorId: data.proveedorId,
-        fechaRecepcion: data.fechaRecepcion?.toISOString().split("T")[0] || "",
-        fechaCaducidad: data.fechaCaducidad?.toISOString().split("T")[0] || "",
-        cantidadRecibida: parseFloat(data.cantidadRecibida) || 0,
-        stockActualLote: parseFloat(data.cantidadRecibida) || 0,
-        costoUnitarioDivisa: parseFloat(data.costoUnitarioDivisa) || 0,
-        costoUnitarioLocal: parseFloat(data.costoUnitarioLocal) || 0,
-        estado: "Disponible",
-        activo: true,
-      };
-      setLotes((prev) => [...prev, newLote]);
-      toast.success("Lote creado correctamente");
-    }
+  const handleSaveLoteSuccess = () => {
+    toast.success(editingLote ? "Lote actualizado" : "Lote creado");
     setEditingLote(null);
     setViewMode("details");
   };
@@ -139,15 +98,29 @@ export const MateriaPrimaDetailsPanel = ({
     setViewMode("details");
   };
 
+  const handleEditMateriaPrima = () => {
+    setUpdateRegistro(true);
+    setShowMateriaprimaForm(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (materiaprimaId) {
+      await deleteMateriaPrima(materiaprimaId);
+      setShowDeleteModal(false);
+      onClose(); // Close details panel
+      toast.success("Materia Prima eliminada correctamente");
+    }
+  };
+
   // Lote Form View
   if (viewMode === "loteForm") {
     return (
       <div className={`${fullScreen ? "h-full" : "w-[480px] border-l"} bg-background`}>
         <LoteForm
-          materiaPrima={materiaPrima}
-          lote={editingLote}
+          materiaPrimaId={materiaprimaDetalles.id}
+          initialData={editingLote || undefined}
           onClose={handleBackFromLote}
-          onSave={handleSaveLote}
+          onSuccess={handleSaveLoteSuccess}
         />
       </div>
     );
@@ -159,10 +132,9 @@ export const MateriaPrimaDetailsPanel = ({
       <div className={`${fullScreen ? "h-full" : "w-[480px] border-l"} bg-background`}>
         <LoteDetailsPanel
           lote={selectedLote}
-          materiaPrima={materiaPrima}
           onClose={handleBackFromLote}
           onEdit={handleEditLote}
-          onDelete={handleDeleteLote}
+          onDeleteSuccess={handleDeleteLoteSuccess}
         />
       </div>
     );
@@ -184,11 +156,26 @@ export const MateriaPrimaDetailsPanel = ({
             </p>
           </div>
         </div>
-        <Button variant="outline" size="sm">
-          <Edit className="h-4 w-4 mr-1" />
-          Editar
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowDeleteModal(true)} disabled={isDeleting}>
+            <Trash2 className="h-4 w-4 mr-1 text-destructive" />
+            <span className="text-destructive">Eliminar</span>
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleEditMateriaPrima}>
+            <Edit className="h-4 w-4 mr-1" />
+            Editar
+          </Button>
+        </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteConfirm}
+        isPending={isDeleting}
+        title={`Eliminar ${materiaprimaDetalles.nombre}`}
+        description="¿Estás seguro que deseas eliminar esta materia prima? Se eliminarán también todos los lotes asociados."
+      />
 
       <ScrollArea className="flex-1">
         <div className="p-8 space-y-6 max-w-4xl mx-auto">
@@ -196,19 +183,20 @@ export const MateriaPrimaDetailsPanel = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Package className="h-6 w-6 text-primary" />
-              <h3 className="text-2xl font-bold">{materiaPrima.nombre}</h3>
+              <h3 className="text-2xl font-bold">{materiaprimaDetalles.nombre}</h3>
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary">
-                {getCategoriaNombre(materiaPrima.categoria)}
+                {getCategoriaNombre(materiaprimaDetalles.categoria?.id)}
               </Badge>
               {isLowStock && (
                 <Badge variant="destructive">Stock Bajo</Badge>
               )}
+              <Badge variant="outline">SKU: {materiaprimaDetalles.SKU}</Badge>
             </div>
-            {materiaPrima.descripcion && (
+            {materiaprimaDetalles.descripcion && (
               <p className="text-muted-foreground mt-2">
-                {materiaPrima.descripcion}
+                {materiaprimaDetalles.descripcion}
               </p>
             )}
           </div>
@@ -224,18 +212,18 @@ export const MateriaPrimaDetailsPanel = ({
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground">Stock Actual</p>
                 <p className={`text-3xl font-bold ${isLowStock ? "text-destructive" : ""}`}>
-                  {materiaPrima.stockActual}
+                  {materiaprimaDetalles.stock_actual}
                   <span className="text-base font-normal text-muted-foreground ml-1">
-                    {getUnidadAbreviatura(materiaPrima.unidadMedidaBase)}
+                    {materiaprimaDetalles.unidad_medida_base?.abreviatura}
                   </span>
                 </p>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm text-muted-foreground">Punto Reorden</p>
                 <p className="text-3xl font-bold">
-                  {materiaPrima.puntoReorden}
+                  {materiaprimaDetalles.punto_reorden}
                   <span className="text-base font-normal text-muted-foreground ml-1">
-                    {getUnidadAbreviatura(materiaPrima.unidadMedidaBase)}
+                    {materiaprimaDetalles.unidad_medida_base?.abreviatura}
                   </span>
                 </p>
               </div>
@@ -253,20 +241,20 @@ export const MateriaPrimaDetailsPanel = ({
               <div className="flex justify-between py-2 border-b">
                 <span className="text-muted-foreground">Unidad Base</span>
                 <span className="font-medium">
-                  {getUnidadNombre(materiaPrima.unidadMedidaBase)}
+                  {materiaprimaDetalles.unidad_medida_base?.nombre_completo}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-muted-foreground">Categoría</span>
                 <span className="font-medium">
-                  {getCategoriaNombre(materiaPrima.categoria)}
+                  {materiaprimaDetalles.categoria?.nombre_categoria}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b items-center">
                 <span className="text-muted-foreground">Fecha Registro</span>
                 <span className="font-medium flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {materiaPrima.fechaCreacionRegistro}
+                  {materiaprimaDetalles.fecha_creacion_registro}
                 </span>
               </div>
             </div>
@@ -274,72 +262,20 @@ export const MateriaPrimaDetailsPanel = ({
 
           <Separator />
 
-          {/* Variantes */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
-                Variantes de Compra
-              </h4>
-              <Badge variant="outline">{materiaPrima.variantes.length}</Badge>
-            </div>
-
-            {materiaPrima.variantes.length > 0 ? (
-              <div className="border rounded-lg">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Variante</TableHead>
-                      <TableHead>Unidad</TableHead>
-                      <TableHead className="text-right">Precio $</TableHead>
-                      <TableHead className="text-right">Precio Local</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {materiaPrima.variantes.map((variante) => (
-                      <TableRow key={variante.id}>
-                        <TableCell className="font-medium">
-                          {variante.nombreVariante}
-                          {variante.nombreEmpaqueEstandar && (
-                            <p className="text-xs text-muted-foreground">
-                              {variante.nombreEmpaqueEstandar} - {variante.cantidadEmpaqueEstandar}{" "}
-                              {getUnidadAbreviatura(variante.unidadMedidaEmpaqueEstandar || "")}
-                            </p>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {getUnidadAbreviatura(variante.unidadCompra)}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {variante.precioCompraDivisa != null
-                            ? `$${variante.precioCompraDivisa.toFixed(2)}`
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {variante.precioCompraLocal != null
-                            ? variante.precioCompraLocal.toFixed(2)
-                            : "-"}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay variantes registradas
-              </p>
-            )}
-          </div>
-
-          <Separator />
-
           {/* Lotes */}
-          <LotesTable
-            lotes={materiaPrimaLotes}
-            unidadMedidaBase={materiaPrima.unidadMedidaBase}
-            onAddLote={handleAddLote}
-            onViewLote={handleViewLote}
-          />
+          {isLoadingLotes ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Cargando lotes...</p>
+            </div>
+          ) : (
+            <LotesTable
+              lotes={materiaPrimaLotes as any}
+              unidadMedidaBase={materiaprimaDetalles.unidad_medida_base?.id.toString() || ""}
+              onAddLote={handleAddLote}
+              onViewLote={handleViewLote}
+            />
+          )}
         </div>
       </ScrollArea>
     </div>

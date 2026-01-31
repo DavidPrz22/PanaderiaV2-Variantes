@@ -22,91 +22,65 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import type {
   LoteMateriaPrimaFormSumit,
-  submitMateriaPrima,
 } from "../../types/types";
+
 import type { TMateriaPrimaSchema } from "../../schemas/schemas";
-import { translateApiError } from "@/data/translations";
 
 import type { UseFormSetError } from "react-hook-form";
+import { toast } from "sonner";
+import { setErrorForm } from "../../utils/util";
 
 export const useDeleteMateriaPrimaMutation = (
-  handleClose: () => void,
-  materiaprimaId: number | undefined,
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
-      await handleDeleteMateriaPrima(id);
-    },
-    onSuccess: async () => {
+    mutationFn: (id: number) => handleDeleteMateriaPrima(id),
+    onSuccess: async (_, id) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: createMateriaPrimaListQueryOptions().queryKey,
         }),
         queryClient.invalidateQueries({
-          queryKey: createMateriaPrimaListPKQueryOptions(materiaprimaId!)
+          queryKey: createMateriaPrimaListPKQueryOptions(id)
             .queryKey,
         }),
       ]);
-      handleClose();
     },
   });
 };
 
 export const useCreateUpdateMateriaPrimaMutation = (
-  onSubmitSuccess: () => void,
-  setError: UseFormSetError<TMateriaPrimaSchema>,
-  initialDataId?: number | undefined,
+  setError: UseFormSetError<TMateriaPrimaSchema>
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: submitMateriaPrima) => {
-      const response = await handleCreateUpdateMateriaPrima(
-        data,
-        initialDataId,
-      );
-      if (response.failed) {
-        throw response; // This will trigger the onError callback
-      }
-      return response;
-    },
-    onSuccess: async () => {
-      onSubmitSuccess();
+    mutationFn: ({ data, id }: { data: TMateriaPrimaSchema; id?: number }) => handleCreateUpdateMateriaPrima(data, id),
+    onSuccess: async (data) => {
+
+      toast.success("Materia Prima creada exitosamente");
+
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: createMateriaPrimaListQueryOptions().queryKey,
         }),
-        queryClient.invalidateQueries({
-          queryKey: createMateriaPrimaListPKQueryOptions(initialDataId || null)
-            .queryKey,
-        }),
+        queryClient.setQueryData(
+          createMateriaPrimaListPKQueryOptions(data.id).queryKey,
+          data,
+        ),
       ]);
     },
     onError: (error: {
       failed: boolean;
       errorData: Record<string, string[]>;
     }) => {
-      if (error.failed) {
-        for (const fieldName in error.errorData) {
-          if (
-            Object.prototype.hasOwnProperty.call(error.errorData, fieldName)
-          ) {
-            const errorMessages = error.errorData[fieldName];
-            if (Array.isArray(errorMessages) && errorMessages.length > 0) {
-              const message = translateApiError(errorMessages[0]);
-              setError(fieldName as keyof TMateriaPrimaSchema, { message });
-            } else if (typeof errorMessages === "string") {
-              const message = translateApiError(errorMessages);
-              setError(fieldName as keyof TMateriaPrimaSchema, { message });
-            }
-          }
-        }
-      }
+      setErrorForm(setError, error);
     },
   });
 };
+
+
 
 // Lotes Materia Prima
 export const useDeleteLoteMateriaPrimaMutation = (
