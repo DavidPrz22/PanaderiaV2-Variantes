@@ -1,7 +1,14 @@
 from rest_framework import viewsets, status
 from apps.inventario.models import MateriasPrimas, MateriasPrimasVariantes, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, ComponentesStockManagement
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
-from apps.inventario.serializers import ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, ProductosIntermediosSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
+from apps.inventario.serializers import (
+    ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
+    MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer, 
+    ProductosIntermediosSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
+    ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, 
+    ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
+    ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
+)
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from apps.compras.models import Proveedores
@@ -177,6 +184,7 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ComponenteSearchViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MateriasPrimas.objects.none()
     serializer_class = ComponentesSearchSerializer
@@ -242,49 +250,47 @@ class LotesMateriaPrimaViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         materia_prima = self.request.query_params.get('materia_prima')
         if materia_prima:
-            queryset = queryset.filter(materia_prima=materia_prima)
+            variantes_id = MateriasPrimasVariantes.objects.filter(materia_prima=materia_prima).values_list('id', flat=True)
+            queryset = queryset.filter(variante_materia_prima__in=variantes_id)
         return queryset
 
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return LotesMateriaPrimaDetailsSerializer
+        return LotesMateriaPrimaSerializer
+
     def list(self, request, *args, **kwargs):
-        """List lots after expiring old ones"""
-        # Get materia_prima parameter
-        materia_prima_id = request.query_params.get('materia_prima')
-        
-        # If filtering by materia prima, expire lots for that material
-        if materia_prima_id:
-                materia_prima = MateriasPrimas.objects.get(id=materia_prima_id)
-        
-        return super().list(request, *args, **kwargs)
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"results": serializer.data})
 
     def destroy(self, request, *args, **kwargs):
         from django.db import transaction
         try:
             instance = self.get_object()
-            materia_prima = instance.materia_prima
-            
-            with transaction.atomic():
-                self.perform_destroy(instance)
-                try:
-                    NotificationService.check_low_stock(MateriasPrimas)
-                    NotificationService.check_sin_stock(MateriasPrimas)
-                except Exception as notif_error:
-                    import logging
-                    logger = logging.getLogger(__name__)
-                    logger.error(f"Failed to create notifications: {str(notif_error)}")
+            self.perform_destroy(instance)
+            # with transaction.atomic():
+            #     try:
+            #         NotificationService.check_low_stock(MateriasPrimas)
+            #         NotificationService.check_sin_stock(MateriasPrimas)
+            #     except Exception as notif_error:
+            #         import logging
+            #         logger = logging.getLogger(__name__)
+            #         logger.error(f"Failed to create notifications: {str(notif_error)}")
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.validated_data['stock_actual_lote'] = serializer.validated_data['cantidad_recibida']
-
+        
         # Save only once through perform_create
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        
+
         # Check expiration notifications for newly created lot
         try:
             NotificationService.check_expiration_date(MateriasPrimas, LotesMateriasPrimas)
@@ -294,51 +300,64 @@ class LotesMateriaPrimaViewSet(viewsets.ModelViewSet):
             logger = logging.getLogger(__name__)
             logger.error(f"Failed to create notifications: {str(notif_error)}")
         
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(status=status.HTTP_201_CREATED)
 
 
-    @action(detail=True, methods=['put'], url_path='inactivar')
-    def inactivar(self, request, pk=None):
+    def update(self, request, *args, **kwargs):
         try:
-            # Inactivar
-            lote_inactivar = LotesMateriasPrimas.objects.get(id=pk)
-
-            if lote_inactivar.fecha_caducidad > datetime.now().date():
-                lote_inactivar.estado = LotesStatus.INACTIVO
-                materia_prima = lote_inactivar.materia_prima
-                lote_inactivar.save(update_fields=['estado'])
-                materia_prima.actualizar_stock()
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            
+            # Store old cantidad_recibida to calculate delta
+            old_cantidad_recibida = instance.cantidad_recibida
+            
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            
+            # If quantity received changed, adjust the current stock in the lot
+            if 'cantidad_recibida' in serializer.validated_data:
+                new_cantidad_recibida = serializer.validated_data['cantidad_recibida']
+                delta = new_cantidad_recibida - old_cantidad_recibida
+                instance.stock_actual_lote += delta
+                if instance.stock_actual_lote < 0:
+                    instance.stock_actual_lote = 0
+            
+            self.perform_update(serializer)
+            
+            # Save the adjusted stock
+            instance.save(update_fields=['stock_actual_lote'])
+            
+            # Update the main material stock
+            if instance.materia_prima:
+                instance.materia_prima.actualizar_stock()
                 
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    @action(detail=True, methods=['post'], url_path='update-status')
+    def update_status(self, request, pk=None):
+        try:
+            lote = LotesMateriasPrimas.objects.get(id=pk)
+            action = request.data.get('action')
+            
+            if lote.fecha_caducidad > datetime.now().date():
+                
+                if action == 'INACTIVAR':
+                    lote.estado = LotesStatus.INACTIVO
+                elif action == 'ACTIVAR':
+                    lote.estado = LotesStatus.DISPONIBLE
+                
+                materia_prima = lote.materia_prima
+                lote.save(update_fields=['estado'])
+                materia_prima.actualizar_stock()
                 return Response(status=status.HTTP_200_OK)
             else:
                 return Response(
                     status=status.HTTP_400_BAD_REQUEST, 
-                    data={"error": "Este Lote ya caducó"}
-                )
-                
-        except LotesMateriasPrimas.DoesNotExist:
-            return Response(
-                status=status.HTTP_404_NOT_FOUND, 
-                data={"error": "Lote no encontrado"}
+                data={"error": "Este Lote ya caducó"}
             )
-
-    @action(detail=True, methods=['put'], url_path='activar')
-    def activar(self, request, pk=None):
-        try:
-            # Activar
-            lote_activar = LotesMateriasPrimas.objects.get(id=pk)
-
-            if lote_activar.fecha_caducidad > datetime.now().date():
-                lote_activar.estado = LotesStatus.DISPONIBLE
-                materia_prima = lote_activar.materia_prima
-                lote_activar.save(update_fields=['estado'])
-                materia_prima.actualizar_stock()
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST, 
-                    data={"error": "Este Lote ya caducó"}
-                )
                 
         except LotesMateriasPrimas.DoesNotExist:
             return Response(

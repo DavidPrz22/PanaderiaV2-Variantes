@@ -34,7 +34,7 @@ class ComponentesStockManagement(models.Model):
     def actualizar_stock(self):
         if isinstance(self, MateriasPrimas):
             lote_total = LotesMateriasPrimas.objects.filter(
-                materia_prima=self, 
+                variante_materia_prima__materia_prima=self, 
                 fecha_caducidad__gt=timezone.now().date(), 
                 estado=LotesStatus.DISPONIBLE
             ).aggregate(total=Sum('stock_actual_lote'))
@@ -46,7 +46,7 @@ class ComponentesStockManagement(models.Model):
         elif isinstance(self, ProductosElaborados):
 
             lote_total = LotesProductosElaborados.objects.filter(
-                producto_elaborado=self, 
+                producto_elaborado_variante__producto_elaborado=self, 
                 fecha_caducidad__gt=timezone.now().date(), 
                 estado=LotesStatus.DISPONIBLE
             ).aggregate(total=Sum('stock_actual_lote'))
@@ -69,7 +69,7 @@ class ComponentesStockManagement(models.Model):
     def get_closest_expire_lot(self, exclude_id=None):
         if isinstance(self, MateriasPrimas):
             queryset = LotesMateriasPrimas.objects.filter(
-                materia_prima=self, 
+                variante_materia_prima__materia_prima=self, 
                 estado=LotesStatus.DISPONIBLE
             )
             if exclude_id:
@@ -78,7 +78,7 @@ class ComponentesStockManagement(models.Model):
 
         elif isinstance(self, ProductosElaborados):
             queryset = LotesProductosElaborados.objects.filter(
-                producto_elaborado=self, 
+                producto_elaborado_variante__producto_elaborado=self, 
                 estado=LotesStatus.DISPONIBLE
             )
             if exclude_id:
@@ -319,7 +319,7 @@ class ProductosStockManagement(models.Model):
                 queryset = queryset.exclude(id=exclude_id)
             return queryset.order_by('fecha_caducidad').first()
 
-    
+
     def consume_product_stock(self, cantidad, price = 0):
         if not self.check_product_availability(cantidad):
             raise ValidationError(f"Stock insuficiente. Disponible: {self.stock_actual}, Requerido: {cantidad}")
@@ -401,6 +401,12 @@ class LotesMateriasPrimas(models.Model):
     )
     activo = models.BooleanField(default=True)
 
+    @property
+    def materia_prima(self):
+        if self.variante_materia_prima:
+            return self.variante_materia_prima.materia_prima
+        return None
+
     def __str__(self):
         return f"Lote {self.id} - {self.materia_prima.nombre} - {self.stock_actual_lote}"
 
@@ -415,7 +421,7 @@ class LotesMateriasPrimas(models.Model):
         else:
             # Check if this is the earliest expiring lot
             lotes_activos = LotesMateriasPrimas.objects.filter(
-                materia_prima=self.materia_prima,
+                variante_materia_prima__materia_prima=self.materia_prima,
                 fecha_caducidad__gt=hoy,
                 stock_actual_lote__gt=0
             ).order_by('fecha_caducidad')
@@ -428,7 +434,7 @@ class LotesMateriasPrimas(models.Model):
     @classmethod
     def actualizar_estados(cls, materia_prima_id):
         """Update FEFO status for all lots of a material"""
-        lotes = cls.objects.filter(materia_prima_id=materia_prima_id)
+        lotes = cls.objects.filter(variante_materia_prima__materia_prima_id=materia_prima_id)
 
         for lote in lotes:
             nuevo_estado = lote.determinar_estado()
@@ -1017,28 +1023,24 @@ class LotesProductosReventa(models.Model):
 
 @receiver([post_save, post_delete], sender=LotesMateriasPrimas)
 def update_materia_prima_stock(sender, instance, **kwargs):
-    materia_prima = instance.materia_prima
-
+    materia_prima = instance.variante_materia_prima.materia_prima
+    variantes = MateriasPrimasVariantes.objects.filter(materia_prima=materia_prima).values_list('id', flat=True)
+    
     if getattr(instance, "id", None) and instance.fecha_caducidad <= timezone.now().date() and instance.estado == LotesStatus.DISPONIBLE:
         expired_lots = LotesMateriasPrimas.objects.filter(
-            materia_prima=materia_prima,
+            variante_materia_prima__in=variantes,
             fecha_caducidad__lte=timezone.now().date(),
             estado=LotesStatus.DISPONIBLE
         )
         expired_lots.update(estado=LotesStatus.EXPIRADO)
 
     total_stock = LotesMateriasPrimas.objects.filter(
-        materia_prima=materia_prima,
+        variante_materia_prima__in=variantes,
         fecha_caducidad__gt=timezone.now().date(),
         estado=LotesStatus.DISPONIBLE
     ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
 
     MateriasPrimas.objects.filter(id=materia_prima.id).update(stock_actual=total_stock)
-
-    from apps.core.services.services import NotificationService
-    NotificationService.check_low_stock(MateriasPrimas)
-    NotificationService.check_sin_stock(MateriasPrimas)
-
 
 # @receiver([post_save, post_delete], sender=LotesProductosReventa)
 # def update_producto_reventa_variante_stock(sender, instance, **kwargs):

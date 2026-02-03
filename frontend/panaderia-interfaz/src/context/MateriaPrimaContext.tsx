@@ -1,30 +1,16 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import {
   type childrenProp,
-  type LoteMateriaPrimaFormResponse,
+  type DetailsViewMode
 } from "../features/MateriaPrima/types/types";
 
 type MateriaPrimaContextType = {
-  showMateriaprimaForm: boolean;
-  setShowMateriaprimaForm: (value: boolean) => void;
-  showMateriaprimaDetalles: boolean;
-  setShowMateriaprimaDetalles: (value: boolean) => void;
   materiaprimaId: number | null;
   setMateriaprimaId: (value: number | null) => void;
   registroDelete: boolean | null;
   setRegistroDelete: (value: boolean | null) => void;
   updateRegistro: boolean | null;
   setUpdateRegistro: (value: boolean | null) => void;
-  lotesForm: LoteMateriaPrimaFormResponse[];
-  setLotesForm: (value: LoteMateriaPrimaFormResponse[]) => void;
-  showLotesForm: boolean;
-  setShowLotesForm: (value: boolean) => void;
-  lotesMateriaPrimaDetalles: LoteMateriaPrimaFormResponse | null;
-  setLotesMateriaPrimaDetalles: (
-    value: LoteMateriaPrimaFormResponse | null,
-  ) => void;
-  showLotesMateriaPrimaDetalles: boolean;
-  setShowLotesMateriaPrimaDetalles: (value: boolean) => void;
   filteredApplied: boolean;
   setFilteredApplied: (value: boolean) => void;
   searchInputRef: React.RefObject<HTMLInputElement | null>;
@@ -32,56 +18,37 @@ type MateriaPrimaContextType = {
   setMPFilteredInputSearchApplied: (value: boolean) => void;
   inputfilterDoubleApplied: boolean | null;
   setInputfilterDoubleApplied: (value: boolean | null) => void;
-  isLoadingDetalles: boolean;
-  setIsLoadingDetalles: (value: boolean) => void;
-  isLoadingList: boolean;
-  setIsLoadingList: (value: boolean) => void;
-  shouldRefreshList: boolean;
-  setShouldRefreshList: (value: boolean) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
+  showMateriaprimaForm: boolean;
+  setShowMateriaprimaForm: (value: boolean) => void;
+  viewMode: DetailsViewMode;
+  setViewMode: (value: DetailsViewMode) => void;
+  showMateriaprimaDetalles: boolean;
+  setShowMateriaprimaDetalles: (value: boolean) => void;
 };
 
 const MateriaPrimaContextProvider =
   createContext<MateriaPrimaContextType | null>(null);
 
 export function MateriaPrimaProvider({ children }: childrenProp) {
-
-  const [showMateriaprimaForm, setShowMateriaprimaForm] = useState(false);
-  const [showMateriaprimaDetalles, setShowMateriaprimaDetalles] =
-    useState(false);
-  const [showLotesForm, setShowLotesForm] = useState(false);
-  const [showLotesMateriaPrimaDetalles, setShowLotesMateriaPrimaDetalles] =
-    useState(false);
-
+  const [viewMode, setViewMode] = useState<DetailsViewMode>("details");
   const [filteredApplied, setFilteredApplied] = useState<boolean>(false);
-
   const [MPFilteredInputSearchApplied, setMPFilteredInputSearchApplied] =
     useState<boolean>(false);
-
-  const [inputfilterDoubleApplied, setInputfilterDoubleApplied] = useState<
+  
+    const [inputfilterDoubleApplied, setInputfilterDoubleApplied] = useState<
     boolean | null
   >(null);
 
-
   const [materiaprimaId, setMateriaprimaId] = useState<number | null>(null);
-
+  const [showMateriaprimaForm, setShowMateriaprimaForm] = useState(false);
   const [registroDelete, setRegistroDelete] = useState<boolean | null>(null);
   const [updateRegistro, setUpdateRegistro] = useState<boolean | null>(null);
-
-  const [lotesForm, setLotesForm] = useState<LoteMateriaPrimaFormResponse[]>(
-    [],
-  );
-
-  const [lotesMateriaPrimaDetalles, setLotesMateriaPrimaDetalles] =
-    useState<LoteMateriaPrimaFormResponse | null>(null);
+  const [showMateriaprimaDetalles, setShowMateriaprimaDetalles] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [isLoadingDetalles, setIsLoadingDetalles] = useState<boolean>(false);
-  const [isLoadingList, setIsLoadingList] = useState<boolean>(false);
-
-  const [shouldRefreshList, setShouldRefreshList] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   // Reset page to 0 when filters change
@@ -94,24 +61,12 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
   return (
     <MateriaPrimaContextProvider.Provider
       value={{
-        showMateriaprimaForm,
-        setShowMateriaprimaForm,
-        showMateriaprimaDetalles,
-        setShowMateriaprimaDetalles,
         materiaprimaId,
         setMateriaprimaId,
         registroDelete,
         setRegistroDelete,
         updateRegistro,
         setUpdateRegistro,
-        showLotesForm,
-        setShowLotesForm,
-        lotesForm,
-        setLotesForm,
-        lotesMateriaPrimaDetalles,
-        setLotesMateriaPrimaDetalles,
-        showLotesMateriaPrimaDetalles,
-        setShowLotesMateriaPrimaDetalles,
         filteredApplied,
         setFilteredApplied,
         searchInputRef,
@@ -119,14 +74,14 @@ export function MateriaPrimaProvider({ children }: childrenProp) {
         setMPFilteredInputSearchApplied,
         inputfilterDoubleApplied,
         setInputfilterDoubleApplied,
-        isLoadingDetalles,
-        setIsLoadingDetalles,
-        isLoadingList,
-        setIsLoadingList,
-        shouldRefreshList,
-        setShouldRefreshList,
         currentPage,
         setCurrentPage,
+        showMateriaprimaForm,
+        setShowMateriaprimaForm,
+        showMateriaprimaDetalles,
+        setShowMateriaprimaDetalles,
+        viewMode,
+        setViewMode,
       }}
     >
       {children}

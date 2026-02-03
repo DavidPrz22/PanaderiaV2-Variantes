@@ -16,30 +16,28 @@ class ComponentesSearchSerializer(serializers.Serializer):
 
 
 class LotesMateriaPrimaSerializer(serializers.ModelSerializer):
-    fecha_recepcion = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
-    fecha_caducidad = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
-    proveedor = ProveedoresSerializer(read_only=True)
     proveedor_id = serializers.PrimaryKeyRelatedField(
         source='proveedor',
         queryset=Proveedores.objects.all(),
         write_only=True
     )
+    fecha_recepcion = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
+    fecha_caducidad = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
 
     class Meta:
         model = LotesMateriasPrimas
         fields = [
             'id',
-            'materia_prima', 
-            'proveedor',
+            'variante_materia_prima', 
             'proveedor_id',
             'fecha_recepcion',
             'fecha_caducidad', 
             'cantidad_recibida', 
-            'stock_actual_lote', 
-            'costo_unitario_usd', 
-            'detalle_oc', 
-            'estado',
+            'costo_unitario_divisa',
+            'costo_unitario_local',
+            'detalle_oc',
         ]
+    
 
     def validate(self, data):
         """Validate dates for lot registration."""
@@ -67,8 +65,73 @@ class LotesMateriaPrimaSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'fecha_caducidad': 'La fecha de caducidad debe ser al menos 1 día después de la fecha de recepción.'
                 })
+        
+        # Validate that cantidad_recibida is greater than 0
+        cantidad_recibida = data.get('cantidad_recibida')
+        if cantidad_recibida is not None and cantidad_recibida <= 0:
+            raise serializers.ValidationError({
+                'cantidad_recibida': 'La cantidad recibida debe ser mayor a 0.'
+            })
+
+        # Validate that costo_unitario_divisa is greater than 0
+        costo_unitario_divisa = data.get('costo_unitario_divisa')
+        if costo_unitario_divisa is not None and costo_unitario_divisa <= 0:
+            raise serializers.ValidationError({
+                'costo_unitario_divisa': 'El costo unitario en divisa debe ser mayor a 0.'
+            })
+
+        # Validate that costo_unitario_local is greater than 0
+        costo_unitario_local = data.get('costo_unitario_local')
+        if costo_unitario_local is not None and costo_unitario_local <= 0:
+            raise serializers.ValidationError({
+                'costo_unitario_local': 'El costo unitario en moneda local debe ser mayor a 0.'
+            })
+
 
         return data
+
+
+class MateriaPrimaVariantesDetallesSerializer(serializers.ModelSerializer):
+    unidad_medida_empaque_estandar = UnidadMedidaSerializer(read_only=True)
+    unidad_compra = UnidadMedidaSerializer(read_only=True)
+
+    class Meta:
+        model = MateriasPrimasVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'unidad_compra',
+            'SKU_variante',
+            'precio_compra_divisa',
+            'precio_compra_local',
+            'nombre_empaque_estandar',
+            'cantidad_empaque_estandar',
+            'unidad_medida_empaque_estandar',
+        ]
+
+
+class LotesMateriaPrimaDetailsSerializer(serializers.ModelSerializer):
+    proveedor = ProveedoresSerializer(read_only=True)
+    fecha_recepcion = serializers.DateField(format="%Y-%m-%d")
+    fecha_caducidad = serializers.DateField(format="%Y-%m-%d")
+    variante_materia_prima = MateriaPrimaVariantesDetallesSerializer(read_only=True)
+    
+    class Meta:
+        model = LotesMateriasPrimas
+        fields = [
+            'id',
+            'variante_materia_prima', 
+            'proveedor',
+            'fecha_recepcion',
+            'fecha_caducidad', 
+            'cantidad_recibida', 
+            'costo_unitario_divisa',
+            'stock_actual_lote',
+            'costo_unitario_local',
+            'estado',
+            'activo',
+            'detalle_oc',
+        ]
 
 
 class MateriaPrimaVariantesSerializer(serializers.ModelSerializer):
@@ -125,23 +188,6 @@ class MateriaPrimaListSerializer(serializers.ModelSerializer):
         ]
 
 
-class MateriaPrimaVariantesDetallesSerializer(serializers.ModelSerializer):
-    unidad_medida_empaque_estandar = UnidadMedidaSerializer(read_only=True)
-    unidad_compra = UnidadMedidaSerializer(read_only=True)
-
-    class Meta:
-        model = MateriasPrimasVariantes
-        fields = [
-            'id',
-            'nombre_variante',
-            'unidad_compra',
-            'SKU_variante',
-            'precio_compra_divisa',
-            'precio_compra_local',
-            'nombre_empaque_estandar',
-            'cantidad_empaque_estandar',
-            'unidad_medida_empaque_estandar',
-        ]
 
 
 class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):

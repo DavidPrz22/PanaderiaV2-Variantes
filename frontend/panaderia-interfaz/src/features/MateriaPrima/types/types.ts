@@ -5,7 +5,7 @@ import type {
 } from "@/features/MateriaPrima/schemas/schemas";
 
 import type { ReactNode, MouseEvent } from "react";
-import type { TMateriaPrimaList } from "../schemas/zod-types";
+import type { TLoteMateriaPrima, TMateriaPrimaList } from "../schemas/zod-types";
 
 
 export interface SidebarCardProps {
@@ -102,17 +102,6 @@ export type emptyLoteMateriaPrima = {
   empty: true;
 };
 
-export type LoteMateriaPrimaFormSumit = {
-  id?: number;
-  materia_prima: number;
-  proveedor_id: number;
-  fecha_recepcion: Date;
-  fecha_caducidad: Date;
-  cantidad_recibida: number;
-  stock_actual_lote: number;
-  costo_unitario_usd: number;
-  detalle_oc: number | null;
-};
 
 export type LotesMateriaPrimaFormSharedProps = {
   isUpdate?: boolean;
@@ -126,7 +115,7 @@ export type LoteMateriaPrimaPagination = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: LoteMateriaPrimaFormResponse[];
+  results: TLoteMateriaPrima[];
 };
 
 export type MateriaPrimaList = TMateriaPrimaList;
@@ -137,3 +126,5 @@ export type MateriaPrimaPagination = {
   previous: string | null;
   results: TMateriaPrimaList[];
 };
+
+export type DetailsViewMode = "details" | "loteForm" | "loteDetails";

@@ -9,31 +9,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import type { LoteMateriaPrimaFormResponse } from "../../types/types";
+import type { TLoteMateriaPrima } from "../../schemas/zod-types";
 import { useMateriaPrimaContext } from "@/context/MateriaPrimaContext";
 import { useMateriaPrimaDetallesQuery } from "../../hooks/queries/materiaPrimaqueries";
 
 interface LotesTableProps {
-    lotes: LoteMateriaPrimaFormResponse[];
-    unidadMedidaBase: string; // This is the ID of the unit
+    lotes: TLoteMateriaPrima[];
     onAddLote: () => void;
-    onViewLote: (lote: LoteMateriaPrimaFormResponse) => void;
+    onViewLote: (lote: TLoteMateriaPrima) => void;
 }
-
-const getStatusBadgeVariant = (estado: string) => {
-    switch (estado.toUpperCase()) {
-        case "DISPONIBLE":
-            return "default";
-        case "INACTIVO":
-            return "secondary";
-        case "AGOTADO":
-            return "outline";
-        case "EXPIRADO":
-            return "destructive";
-        default:
-            return "secondary";
-    }
-};
+import { getStatusBadgeVariant } from "@/utils/utils";
 
 export const LotesTable = ({
     lotes,
@@ -45,14 +30,13 @@ export const LotesTable = ({
     const { data: materiaprimaDetalles } = useMateriaPrimaDetallesQuery(materiaprimaId!);
 
     const unidadAbrev = materiaprimaDetalles?.unidad_medida_base?.abreviatura;
-
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
                     Lotes
                 </h4>
-                <Button size="sm" onClick={onAddLote}>
+                <Button size="lg" onClick={onAddLote} className=" bg-(--button-primary-color) hover:bg-(--button-primary-hover-color) cursor-pointer">
                     <Plus className="h-4 w-4 mr-1" />
                     Agregar Lote
                 </Button>
@@ -76,7 +60,7 @@ export const LotesTable = ({
                             {lotes.map((lote) => (
                                 <TableRow
                                     key={lote.id}
-                                    className="cursor-pointer hover:bg-muted/50"
+                                    className="cursor-pointer hover:bg-muted/50 h-12"
                                     onClick={() => onViewLote(lote)}
                                 >
                                     <TableCell className="font-medium">

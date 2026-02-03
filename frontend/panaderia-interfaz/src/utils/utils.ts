@@ -55,3 +55,19 @@ export const HadleFileConversion = async (file: File): Promise<TFileBase64 | nul
   };
 
 export const RoundToTwo = (num: number) => Math.round(num * 100) / 100
+
+
+export const getStatusBadgeVariant = (estado: string) => {
+    switch (estado.toUpperCase()) {
+        case "DISPONIBLE":
+            return "default";
+        case "INACTIVO":
+            return "secondary";
+        case "AGOTADO":
+            return "outline";
+        case "EXPIRADO":
+            return "destructive";
+        default:
+            return "secondary";
+    }
+};

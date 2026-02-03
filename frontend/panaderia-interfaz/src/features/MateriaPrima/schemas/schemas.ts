@@ -82,6 +82,9 @@ export const loteMateriaPrimaSchema = z
     costo_unitario_divisa: z.coerce
       .number()
       .min(0, "El costo unitario debe ser mayor a 0"),
+    variante_materia_prima: z.coerce
+      .number()
+      .min(1, "La variante es requerida"),
   })
   .refine((data) => data.fecha_recepcion < data.fecha_caducidad, {
     message: "La fecha de recepción debe ser anterior a la fecha de caducidad",

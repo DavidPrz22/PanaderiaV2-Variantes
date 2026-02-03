@@ -1,8 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import {
-  handleActivateLoteMateriaPrima,
-  handleInactivateLoteMateriaPrima,
+  handleChangeLoteMateriaPrimaStatus,
   handleDeleteLoteMateriaPrima,
   handleDeleteMateriaPrima,
   handleCreateUpdateLoteMateriaPrima,
@@ -11,20 +10,14 @@ import {
 } from "../../api/api";
 
 import {
-  createLotesMateriaPrimaQueryOptions,
   createMateriaPrimaListQueryOptions,
   createMateriaPrimaListPKQueryOptions,
   lotesMateriaPrimaQueryOptions,
 } from "../../hooks/queries/materiaPrimaQueryOptions";
 
-
 import { useQueryClient } from "@tanstack/react-query";
 
-import type {
-  LoteMateriaPrimaFormSumit,
-} from "../../types/types";
-
-import type { TMateriaPrimaSchema } from "../../schemas/schemas";
+import type { TLoteMateriaPrimaSchema, TMateriaPrimaSchema } from "../../schemas/schemas";
 
 import type { UseFormSetError } from "react-hook-form";
 import { toast } from "sonner";
@@ -81,11 +74,9 @@ export const useCreateUpdateMateriaPrimaMutation = (
 };
 
 
-
 // Lotes Materia Prima
 export const useDeleteLoteMateriaPrimaMutation = (
-  materiaprimaId: number | undefined,
-  handleClose: () => void,
+  materiaPrimaId: number
 ) => {
   const queryClient = useQueryClient();
 
@@ -94,103 +85,67 @@ export const useDeleteLoteMateriaPrimaMutation = (
       await handleDeleteLoteMateriaPrima(id);
     },
     onSuccess: async () => {
-      if (materiaprimaId) {
-        await queryClient.invalidateQueries({
-          queryKey:
-            createLotesMateriaPrimaQueryOptions(materiaprimaId).queryKey,
-        });
-        await queryClient.invalidateQueries({ queryKey: createMateriaPrimaListQueryOptions().queryKey });
-        await queryClient.invalidateQueries({
-          queryKey: createMateriaPrimaListPKQueryOptions(materiaprimaId).queryKey,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: lotesMateriaPrimaQueryOptions(materiaprimaId).queryKey,
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: createMateriaPrimaListQueryOptions().queryKey }),
+
+        queryClient.invalidateQueries({
+          queryKey: createMateriaPrimaListPKQueryOptions(materiaPrimaId).queryKey,
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: lotesMateriaPrimaQueryOptions(materiaPrimaId).queryKey,
         })
-        handleClose();
-      }
+      ])
     },
   });
 };
 
-export const useActivateLoteMateriaPrimaMutation = (
-  materiaPrimaId: number | undefined,
-  handleClose: () => void,
+
+export const useUpdateLoteStatusMateriaPrimaMutation = (
+  materiaPrimaId: number,
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => handleActivateLoteMateriaPrima(id),
-    onSuccess: () => {
-      handleClose();
-      if (materiaPrimaId) {
-        queryClient.invalidateQueries({
-          queryKey:
-            createLotesMateriaPrimaQueryOptions(materiaPrimaId).queryKey,
-        });
+    mutationFn: ({ id, action }: { id: number; action: "ACTIVAR" | "INACTIVAR" }) =>
+      handleChangeLoteMateriaPrimaStatus(id, action),
+
+    onSuccess: async () => {
+      await Promise.all([
         queryClient.invalidateQueries({
           queryKey: lotesMateriaPrimaQueryOptions(materiaPrimaId).queryKey,
-        })
-      }
-      queryClient.invalidateQueries({ queryKey: createMateriaPrimaListQueryOptions().queryKey });
-    },
-  });
-};
-
-export const useInactivateLoteMateriaPrimaMutation = (
-  materiaPrimaId: number | undefined,
-  handleClose: () => void,
-) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: number) => handleInactivateLoteMateriaPrima(id),
-    onSuccess: () => {
-      handleClose();
-      if (materiaPrimaId) {
+        }),
         queryClient.invalidateQueries({
-          queryKey:
-            createLotesMateriaPrimaQueryOptions(materiaPrimaId).queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: lotesMateriaPrimaQueryOptions(materiaPrimaId).queryKey,
-        })
-        queryClient.invalidateQueries({ queryKey: createMateriaPrimaListQueryOptions().queryKey });
-      }
+          queryKey: createMateriaPrimaListPKQueryOptions(materiaPrimaId).queryKey,
+        }),
+        queryClient.invalidateQueries({ queryKey: createMateriaPrimaListQueryOptions().queryKey }),
+      ])
     },
   });
 };
 
 export const useCreateUpdateLoteMateriaPrimaMutation = (
-  onSubmitSuccess: () => void,
-  reset: () => void,
-  isUpdate?: boolean,
-  initialDataId?: number | undefined,
+  materia_prima_id: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: LoteMateriaPrimaFormSumit) =>
+    mutationFn: ({ data, id }: { data: TLoteMateriaPrimaSchema, id?: number }) =>
       handleCreateUpdateLoteMateriaPrima(
         data,
-        isUpdate ? initialDataId : undefined,
+        id,
       ),
-    onSuccess: async (_, { materia_prima }) => {
-      reset();
-      onSubmitSuccess();
-      if (materia_prima) {
-        await queryClient.invalidateQueries({
-          queryKey:
-            createMateriaPrimaListPKQueryOptions(materia_prima).queryKey,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: createLotesMateriaPrimaQueryOptions(materia_prima).queryKey,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: lotesMateriaPrimaQueryOptions(materia_prima).queryKey
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: createMateriaPrimaListPKQueryOptions(materia_prima_id).queryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: createMateriaPrimaListQueryOptions().queryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: lotesMateriaPrimaQueryOptions(materia_prima_id).queryKey,
         })
-      };
-      await queryClient.invalidateQueries({
-        queryKey: createMateriaPrimaListQueryOptions().queryKey,
-      });
+      ])
     },
   });
 };

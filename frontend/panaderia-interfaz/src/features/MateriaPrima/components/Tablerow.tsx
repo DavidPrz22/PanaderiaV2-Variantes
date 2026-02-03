@@ -31,8 +31,6 @@ export const TableRow = ({
   const {
     setShowMateriaprimaDetalles,
     setMateriaprimaId,
-    setLotesForm,
-    setIsLoadingDetalles,
     setUpdateRegistro,
     setShowMateriaprimaForm
   } = useMateriaPrimaContext();
@@ -41,14 +39,11 @@ export const TableRow = ({
   const { mutateAsync: deleteMateriaPrima, isPending: isDeleting } = useDeleteMateriaPrimaMutation();
 
   async function setDetails(pk: number) {
-    setIsLoadingDetalles(true);
     await queryClient.fetchQuery(
       createMateriaPrimaListPKQueryOptions(pk),
     );
     setShowMateriaprimaDetalles(true);
     setMateriaprimaId(pk);
-    setLotesForm([]);
-    setIsLoadingDetalles(false);
   }
 
   const handleEdit = (e: React.MouseEvent) => {

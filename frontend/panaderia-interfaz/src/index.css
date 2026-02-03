@@ -18,6 +18,13 @@
   --pos-product-reventa: #DB0085;
   --input-ring-color: oklch(88.2% 0.059 254.128);
   --input-border-color:  oklch(80.9% 0.105 251.813);
+  --button-primary-color: oklch(37.9% 0.146 265.522);
+  --button-primary-hover-color: oklch(42.4% 0.199 265.638);
+  --estado-disponible: #22c55e;
+  --estado-inactivo: #6b7280;
+  --estado-agotado: #ef4444;
+  --estado-expirado: #f59e0b;
+
 }
 
 @theme inline {

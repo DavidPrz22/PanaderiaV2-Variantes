@@ -1,14 +1,13 @@
 import apiClient from "../../../api/client";
 import type { AxiosError } from "axios";
 import {
-  type LoteMateriaPrimaFormSumit,
-  type LoteMateriaPrimaFormResponse,
   type LoteMateriaPrimaPagination,
 
 } from "../types/types";
 
-import type { TMateriaPrimaSchema } from "../schemas/schemas";
-import { type TMateriaPrima, MateriaPrimaSchema, MateriaPrimaPaginationSchema, type TMateriaPrimaPagination } from "../schemas/zod-types";
+import type { TLoteMateriaPrimaSchema, TMateriaPrimaSchema } from "../schemas/schemas";
+
+import { type TLoteMateriaPrima, LoteMateriaPrimaSchema, type TMateriaPrima, MateriaPrimaSchema, MateriaPrimaPaginationSchema, type TMateriaPrimaPagination } from "../schemas/zod-types";
 
 
 
@@ -34,7 +33,6 @@ export const handleCreateUpdateMateriaPrima = async (
     throw error;
   }
 };
-
 
 
 // API CALL FOR MATERIA PRIMA LIST
@@ -66,6 +64,7 @@ export const handleMateriaPrimaList = async ({
   }
 };
 
+
 // API CALL FOR MATERIA PRIMA LIST PK
 export const handleMateriaPrimaListPK = async (
   pk: number,
@@ -86,6 +85,7 @@ export const handleMateriaPrimaListPK = async (
   }
 };
 
+
 // API CALL FOR DELETE MATERIA PRIMA
 export const handleDeleteMateriaPrima = async (pk: number) => {
   try {
@@ -102,49 +102,24 @@ export const handleDeleteMateriaPrima = async (pk: number) => {
   }
 };
 
-// API CALL FOR LOTES MATERIA PRIMA LIST
-export const handleLotesMateriaPrimaLotes = async (
-  pk: number,
-): Promise<{ lotes: LoteMateriaPrimaFormResponse[]; success: boolean }> => {
-  try {
-    const response = await apiClient.get(
-      `/api/inventario/lotesmateriaprima/?materia_prima=${pk}`,
-    );
-    const dataResponse = response.data;
-    console.log("Lotes fetched:", dataResponse);
-    if (dataResponse.length > 0) {
-      return { lotes: dataResponse, success: true };
-    }
-    return { lotes: [], success: false };
-  } catch (error) {
-    const axiosError = error as AxiosError<{ detail?: string }>;
-    throw new Error(
-      axiosError.response?.data?.detail || "Failed to fetch lotes",
-    );
-  }
-};
 
 // API CALL FOR CREATE LOTE MATERIA PRIMA
 export const handleCreateUpdateLoteMateriaPrima = async (
-  data: LoteMateriaPrimaFormSumit,
+  data: TLoteMateriaPrimaSchema,
   id?: number,
-): Promise<{ lotes: LoteMateriaPrimaFormResponse; success: boolean }> => {
+): Promise<void> => {
   const isUpdate = id !== undefined;
   const url = isUpdate
     ? `/api/inventario/lotesmateriaprima/${id}/`
     : "/api/inventario/lotesmateriaprima/";
   const method = isUpdate ? "put" : "post";
-
-  // Format dates to YYYY-MM-DD
-  const formattedData = {
-    ...data,
-    fecha_recepcion: data.fecha_recepcion.toISOString().split("T")[0],
-    fecha_caducidad: data.fecha_caducidad.toISOString().split("T")[0],
-  };
-
   try {
-    const response = await apiClient[method](url, formattedData);
-    return { lotes: response.data, success: true };
+    const formattedData = {
+      ...data,
+      fecha_recepcion: data.fecha_recepcion instanceof Date ? data.fecha_recepcion.toISOString().split('T')[0] : data.fecha_recepcion,
+      fecha_caducidad: data.fecha_caducidad instanceof Date ? data.fecha_caducidad.toISOString().split('T')[0] : data.fecha_caducidad,
+    }
+    await apiClient[method](url, formattedData);
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
@@ -159,7 +134,6 @@ export const handleDeleteLoteMateriaPrima = async (pk: number | undefined) => {
   if (!pk) {
     return { success: false };
   }
-
   try {
     await apiClient.delete(`/api/inventario/lotesmateriaprima/${pk}/`);
     return { success: true };
@@ -172,42 +146,21 @@ export const handleDeleteLoteMateriaPrima = async (pk: number | undefined) => {
 };
 
 // API CALL FOR ACTIVATE LOTE MATERIA PRIMA
-export const handleActivateLoteMateriaPrima = async (
-  pk: number | undefined,
+export const handleChangeLoteMateriaPrimaStatus = async (
+  pk: number,
+  action: 'ACTIVAR' | 'INACTIVAR',
 ) => {
-  if (!pk) {
-    return { success: false };
-  }
 
   try {
-    await apiClient.put(`/api/inventario/lotesmateriaprima/${pk}/activar/`);
-    return { success: true };
+    await apiClient.post(`/api/inventario/lotesmateriaprima/${pk}/update-status/`, { action });
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
-      axiosError.response?.data?.detail || "Failed to activate lote",
+      axiosError.response?.data?.detail || "Failed to change lote status",
     );
   }
 };
 
-
-export const handleInactivateLoteMateriaPrima = async (
-  pk: number | undefined,
-) => {
-  if (!pk) {
-    return { success: false };
-  }
-
-  try {
-    await apiClient.put(`/api/inventario/lotesmateriaprima/${pk}/inactivar/`);
-    return { success: true };
-  } catch (error) {
-    const axiosError = error as AxiosError<{ detail?: string }>;
-    throw new Error(
-      axiosError.response?.data?.detail || "Failed to inactivate lote",
-    );
-  }
-};
 
 export const uploadCSV = async (Base64File: string): Promise<{ status: number, message: string }> => {
   try {
