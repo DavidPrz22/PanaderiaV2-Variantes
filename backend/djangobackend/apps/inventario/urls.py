@@ -4,21 +4,35 @@ from apps.inventario.views import ProductosPedidoSearchView, ProductosComprasSea
 from django.urls import include, path
 
 router = DefaultRouter()
+# Materias Primas
 router.register('materiaprima', MateriaPrimaViewSet, basename='materiaprima')
 router.register('lotesmateriaprima', LotesMateriaPrimaViewSet, basename='lotesmateriaprima')
+
+# Componentes Receta
 router.register('componentes-search', ComponenteSearchViewSet, basename='componentes-search')
+
+# Productos Intermedios
 router.register('productosintermedios', ProductosIntermediosViewSet, basename='productosintermedios')
-router.register('productosfinales', ProductosFinalesViewSet, basename='productosfinales')
-router.register('productoselaborados', ProductosElaboradosViewSet, basename='productoselaborados')
-router.register('productosfinales-lista-transformacion', ProductosFinalesListaTransformacionViewSet, basename='productosfinales-lista-transformacion')
 router.register('productosintermedios-detalles', ProductosIntermediosDetallesViewSet, basename='productosintermedios-detalles')
+router.register('productosintermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
+
+# Productos Finales
+router.register('productosfinales', ProductosFinalesViewSet, basename='productosfinales')
 router.register('productosfinales-detalles', ProductosFinalesDetallesViewSet, basename='productosfinales-detalles')
 router.register('productosfinales-search', ProductosFinalesSearchViewset, basename='productosfinales-search')
-router.register('productosintermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
-router.register('lotes-productos-elaborados', LotesProductosElaboradosViewSet, basename='lotes-productos-elaborados')
+
+# Productos Reventa
+router.register('productosreventa', ProductosReventaViewSet, basename='productosreventa')
 router.register('productosreventa-detalles', ProductosReventaDetallesViewSet, basename='productosreventa-detalles')
 router.register('lotes-productos-reventa', LotesProductosReventaViewSet, basename='lotes-productos-reventa')
-router.register('productosreventa', ProductosReventaViewSet, basename='productosreventa')
+
+# Productos Elaborados
+router.register('lotes-productos-elaborados', LotesProductosElaboradosViewSet, basename='lotes-productos-elaborados')
+router.register('productoselaborados', ProductosElaboradosViewSet, basename='productoselaborados')
+
+
+# Transformaciones
+router.register('productosfinales-lista-transformacion', ProductosFinalesListaTransformacionViewSet, basename='productosfinales-lista-transformacion')
 
 urlpatterns = [
     path('productos-pedidos-search/', ProductosPedidoSearchView.as_view(), name="productos-pedidos-search"),

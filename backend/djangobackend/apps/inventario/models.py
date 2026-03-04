@@ -461,7 +461,6 @@ class ProductosElaborados(ComponentesStockManagement, ProductosStockManagement):
         help_text="Unidad en la que se vende el producto (e.g., Unidades, Kilogramos, Litros).")
     categoria = models.ForeignKey(CategoriasProductosElaborados, on_delete=models.CASCADE)
     fecha_creacion_registro = models.DateField(auto_now_add=True)
-    fecha_modificacion_registro = models.DateField(auto_now=True)
     vendible_por_medida_real  = models.BooleanField(
         null=True,
         blank=True,
@@ -505,6 +504,7 @@ class ProductosElaborados(ComponentesStockManagement, ProductosStockManagement):
                 name='intermedio_o_producto'
             )
         ]
+
 
 class ProductosElaboradosVariantes(ProductosStockManagement):
     """
@@ -554,7 +554,6 @@ class ProductosElaboradosVariantes(ProductosStockManagement):
     )
     
     fecha_creacion = models.DateField(auto_now_add=True)
-    fecha_modificacion = models.DateField(auto_now=True)
     
     class Meta:
         unique_together = [('producto_elaborado', 'nombre_variante')]
@@ -569,17 +568,16 @@ class ProductosElaboradosVariantes(ProductosStockManagement):
         super().clean()
         
         # Ensure intermediate products don't have sellable variants
-        if self.producto_elaborado.es_intermediario and self.precio_venta_usd:
+        if self.producto_elaborado.es_intermediario and self.precio_venta_divisa:
             raise ValidationError(
                 "Las variantes de productos intermediarios no pueden tener precio de venta"
             )
         
         # Ensure final products have pricing
-        if not self.producto_elaborado.es_intermediario and not self.precio_venta_usd:
+        if not self.producto_elaborado.es_intermediario and not self.precio_venta_divisa:
             raise ValidationError(
                 "Las variantes de productos finales deben tener precio de venta"
             )
-
 
 
 class GruposProductosElaborados(models.Model):
@@ -717,10 +715,6 @@ class LotesProductosElaborados(models.Model):
         ordering = ['fecha_caducidad', '-fecha_produccion']
 
 
-
-
-
-
 class ProductosIntermediosManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(es_intermediario=True)
@@ -740,7 +734,7 @@ class ProductosIntermedios(ProductosElaborados):
         verbose_name_plural = "Productos Intermedios"
 
     def clean(self):
-        if self.precio_venta_usd:
+        if self.precio_venta_divisa:
             raise ValidationError("Productos intermedios no pueden tener precio de venta")
 
 
@@ -753,7 +747,7 @@ class ProductosFinales(ProductosElaborados):
         verbose_name_plural = "Productos Finales"
 
     def clean(self):
-        if not self.precio_venta_usd:
+        if not self.precio_venta_divisa:
             raise ValidationError("Productos finales deben tener precio de venta")
 
 
@@ -951,18 +945,6 @@ class ProductosReventaVariantes(models.Model):
     def clean(self):
         """Validate variant business logic"""
         super().clean()
-        
-        # Ensure intermediate products don't have sellable variants
-        if self.producto_reventa.es_intermediario and self.precio_venta_usd:
-            raise ValidationError(
-                "Las variantes de productos intermediarios no pueden tener precio de venta"
-            )
-        
-        # Ensure final products have pricing
-        if not self.producto_reventa.es_intermediario and not self.precio_venta_usd:
-            raise ValidationError(
-                "Las variantes de productos finales deben tener precio de venta"
-            )
 
 
 class GruposProductosReventa(models.Model):

@@ -163,6 +163,7 @@ class ConversionesUnidades(models.Model):
     def __str__(self):
         return f"1 {self.unidad_origen.abreviatura} = {self.factor_conversion} {self.unidad_destino.abreviatura}"
 
+
 class AtributosProductos(models.TextChoices):
     CANTIDAD = 'Cantidad', 'Cantidad'
     TAMAÑO = 'Tamaño', 'Tamaño'

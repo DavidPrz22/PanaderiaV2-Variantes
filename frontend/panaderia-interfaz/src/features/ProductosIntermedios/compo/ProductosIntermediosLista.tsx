@@ -2,13 +2,15 @@ import { TubeSpinner } from "@/assets";
 import { PITableBody } from "./PITableBody";
 import { PITableHeader } from "./PITableHeader";
 import { useProductosIntermediosContext } from "@/context/ProductosIntermediosContext";
-import { useGetProductosIntermedios, useGetProductosIntermediosDetalles } from "../hooks/queries/queries";
-import { useEffect } from "react";
+import { useGetProductosIntermedios } from "../hooks/queries/queries";
+import { useEffect, useMemo, useReducer } from "react";
 import { Paginator } from "@/components/Paginator";
-import { usePageHook } from "@/hooks/usePageHook";
+
+type PaginatorActions = "next" | "previous" | "base";
 
 export default function ProductosIntermediosLista() {
   const {
+    isLoadingDetalles,
     productosIntermediosSearchTerm,
     selectedUnidadesProduccion,
     selectedCategoriasIntermedio,
@@ -30,15 +32,31 @@ export default function ProductosIntermediosLista() {
     isFetching,
   } = useGetProductosIntermedios();
 
-  const { productoIntermedioId } = useProductosIntermediosContext();
-  const { isLoading: isLoadingDetalles } = useGetProductosIntermediosDetalles(productoIntermedioId!);
-
-  const {
-    page,
-    setPage,
-    currentPageResults: currentPageData,
-    totalPages: pagesCount
-  } = usePageHook(productosPagination, fetchNextPage, hasNextPage, 15, currentPage);
+  // Handle pagination state with reducer for complex logic
+  const [page, dispatch] = useReducer(
+    (state: number, action: { type: PaginatorActions; payload?: number }) => {
+      switch (action.type) {
+        case "next":
+          if (productosPagination) {
+            if (state < (productosPagination.pages?.length || 0) - 1) return state + 1;
+            if (hasNextPage) fetchNextPage();
+            return state + 1;
+          }
+          return state;
+        case "previous":
+          return Math.max(0, state - 1);
+        case "base":
+          const targetPage = action.payload ?? 0;
+          if (targetPage >= (productosPagination?.pages?.length || 0) && hasNextPage) {
+            fetchNextPage();
+          }
+          return targetPage;
+        default:
+          return state;
+      }
+    },
+    currentPage
+  );
 
   // Update context page when local page changes
   useEffect(() => {
@@ -46,6 +64,16 @@ export default function ProductosIntermediosLista() {
       setCurrentPage(page);
     }
   }, [page, currentPage, setCurrentPage]);
+
+  // Calculate total pages
+  const pagesCount = useMemo(() => {
+    const resultCount = productosPagination?.pages?.[0]?.count || 0;
+    const entriesPerPage = 15;
+    return Math.ceil(resultCount / entriesPerPage);
+  }, [productosPagination]);
+
+  // Get current page data
+  const currentPageData = productosPagination?.pages[page]?.results || [];
 
   // Apply filters to current page data
   let displayData = currentPageData;
@@ -134,9 +162,9 @@ export default function ProductosIntermediosLista() {
             nextPage={hasNextPage || page < pagesCount - 1}
             pages={Array.from({ length: pagesCount }, (_, i) => i)}
             currentPage={page}
-            onClickPrev={() => setPage({ type: "previous" })}
-            onClickPage={(p) => setPage({ type: "base", payload: p })}
-            onClickNext={() => setPage({ type: "next" })}
+            onClickPrev={() => dispatch({ type: "previous" })}
+            onClickPage={(p) => dispatch({ type: "base", payload: p })}
+            onClickNext={() => dispatch({ type: "next" })}
           />
         </div>
       )}

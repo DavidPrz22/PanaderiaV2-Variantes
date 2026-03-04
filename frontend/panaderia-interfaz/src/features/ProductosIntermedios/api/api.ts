@@ -1,69 +1,21 @@
 import apiClient from "@/api/client";
 import type { TProductosIntermediosSchema } from "../schemas/schema";
 import type {
-  CategoriaProductoIntermedio,
-  ProductosIntermedios,
   ProductosIntermediosDetalles,
-  recetasSearchItem,
-  LotesProductosIntermedios,
-  UnidadesDeMedida,
   LoteProductoIntermedioPagination,
   ProductosIntermediosPagination,
 } from "../types/types";
 
-export const createProductoIntermedio = async (
-  productoIntermedio: TProductosIntermediosSchema,
-) => {
-  const response = await apiClient.post(
-    "/productos-intermedios/",
-    productoIntermedio,
-  );
-  return response.data;
-};
-
-export const getRecetasSearch = async (
-  search: string,
-): Promise<recetasSearchItem[]> => {
-  try {
-    const response = await apiClient.get(
-      `/api/recetas-search/list_recetas/?search=${search}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const getUnidadesMedida = async (): Promise<UnidadesDeMedida[]> => {
-  try {
-    const response = await apiClient.get("/api/unidades-medida/");
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const getCategoriasProductoIntermedio = async (): Promise<
-  CategoriaProductoIntermedio[]
-> => {
-  try {
-    const response = await apiClient.get(
-      "/api/categorias-producto-intermedio/",
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const createProductosIntermedios = async (
+export const createUpdateProductosIntermedios = async (
   data: TProductosIntermediosSchema,
+  id?: number,
 ) => {
   try {
-    const response = await apiClient.post("/api/productosintermedios/", data);
+    if (id) {
+      const response = await apiClient.put(`/api/inventario/productos-intermedios/${id}/`, data);
+      return response.data;
+    }
+    const response = await apiClient.post("/api/inventario/productos-intermedios/", data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -77,7 +29,7 @@ export const getProductosIntermedios = async ({
   pageParam?: string | null
 } = {}): Promise<ProductosIntermediosPagination> => {
   try {
-    const url = pageParam || "/api/productosintermedios/";
+    const url = pageParam || "/api/inventario/productos-intermedios/";
     const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
@@ -88,37 +40,21 @@ export const getProductosIntermedios = async ({
 
 export const getProductosIntermediosDetalles = async (
   id: number,
-): Promise<ProductosIntermediosDetalles | null> => {
+): Promise<ProductosIntermediosDetalles> => {
   try {
     const response = await apiClient.get(
-      `/api/productosintermedios-detalles/${id}/`,
+      `/api/inventario/productos-intermedios/${id}/`,
     );
     return response.data;
   } catch (error) {
     console.error(error);
-    return null;
-  }
-};
-
-export const updateProductoIntermedio = async (
-  id: number,
-  data: TProductosIntermediosSchema,
-) => {
-  try {
-    const response = await apiClient.put(
-      `/api/productosintermedios/${id}/`,
-      data,
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return null;
+    throw error;
   }
 };
 
 export const deleteProductoIntermedio = async (id: number) => {
   try {
-    const response = await apiClient.delete(`/api/productosintermedios/${id}/`);
+    const response = await apiClient.delete(`/api/inventario/productos-intermedios/${id}/`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -146,7 +82,7 @@ export const getLotesProductosIntermedios = async ({
   producto_intermedio_id?: number;
 } = {}): Promise<LoteProductoIntermedioPagination> => {
   try {
-    let url = pageParam || "/api/lotes-productos-elaborados/";
+    let url = pageParam || "/api/inventario/lotes-productos-elaborados/";
     if (!pageParam && producto_intermedio_id) {
       url += `?producto_elaborado=${producto_intermedio_id}`;
     }
@@ -161,7 +97,7 @@ export const getLotesProductosIntermedios = async ({
 
 export const changeEstadoLoteProductosIntermedios = async (id: number) => {
   try {
-    const response = await apiClient.get(`/api/lotes-productos-elaborados/${id}/change-estado-lote/`);
+    const response = await apiClient.get(`/api/inventario/lotes-productos-elaborados/${id}/change-estado-lote/`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -171,7 +107,7 @@ export const changeEstadoLoteProductosIntermedios = async (id: number) => {
 
 export const deleteLoteProductoElaborado = async (id: number) => {
   try {
-    const response = await apiClient.delete(`/api/lotes-productos-elaborados/${id}/`);
+    const response = await apiClient.delete(`/api/inventario/lotes-productos-elaborados/${id}/`);
     return response.data;
   } catch (error) {
     console.error("Error deleting lote producto elaborado:", error);

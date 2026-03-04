@@ -1,5 +1,5 @@
 import { PITableRows } from "./PITableRows";
-import { PendingTubeSpinner } from "@/components/PendingTubeSpinner";
+import { PendingTubeSpinner } from "./PendingTubeSpinner";
 import type { ProductosIntermedios } from "../types/types";
 
 interface PITableBodyProps {
@@ -17,7 +17,6 @@ export const PITableBody = ({
   clearFilters,
   isTrulyEmpty,
 }: PITableBodyProps) => {
-
 
   const EmptyState = () => {
     if (isTrulyEmpty) {

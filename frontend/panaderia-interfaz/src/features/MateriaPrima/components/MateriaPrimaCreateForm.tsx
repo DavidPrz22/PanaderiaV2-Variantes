@@ -15,7 +15,6 @@ import { VariantesSection } from "./form-sections/VariantesSection";
 import { ActionBar } from "./form-sections/ActionBar";
 
 interface CreateMateriaPrimaPanelProps {
-  isOpen: boolean;
   onClose: () => void;
   fullScreen?: boolean;
 }
@@ -45,7 +44,6 @@ const createVarianteDetalle = (materiaprimaDetalles: TMateriaPrima) => {
 };
 
 export const CreateMateriaPrimaPanel = ({
-  isOpen,
   onClose,
   fullScreen = false,
 }: CreateMateriaPrimaPanelProps) => {
@@ -105,8 +103,6 @@ export const CreateMateriaPrimaPanel = ({
     await createUpdateMateriaPrima({ data, id: updateRegistro && materiaprimaId ? materiaprimaId : undefined });
     onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div

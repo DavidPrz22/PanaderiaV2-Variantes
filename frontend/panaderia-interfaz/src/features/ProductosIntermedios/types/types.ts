@@ -6,6 +6,7 @@ import type {
   UseFormSetValue,
 } from "react-hook-form";
 import type { TProductosIntermediosSchema } from "../schemas/schema";
+import type { LotesEstados } from "@/types/types";
 
 export type childrenProp = {
   children: ReactNode;
@@ -29,7 +30,6 @@ export type PIFormInputContainerProps = {
   errors: FieldErrors<TProductosIntermediosSchema>;
   optional?: boolean;
   search?: boolean;
-  initialData?: RecetaRelacionada | false;
 };
 
 export type PIFormInputProps = {
@@ -48,23 +48,6 @@ export type PIFormSelectContainerProps = {
   optional?: boolean;
 };
 
-export type recetasSearchItem = {
-  id: number;
-  nombre: string;
-};
-
-export type UnidadesDeMedida = {
-  id: number;
-  nombre_completo: string;
-  abreviatura: string;
-  tipo_medida?: string;
-};
-
-export type CategoriaProductoIntermedio = {
-  id: number;
-  nombre_categoria: string;
-};
-
 export type setValueProps = {
   setValue?: UseFormSetValue<TProductosIntermediosSchema>;
 };
@@ -80,12 +63,15 @@ export type ProductosIntermedios = {
   fecha_creacion_registro: string;
 };
 
-export type RecetaRelacionada =
-  | {
-    id: number;
-    nombre: string;
-  }
-  | false;
+export type VariantesIntermedio = {
+  id: number;
+  nombre_variante: string;
+  SKU: string;
+  stock_actual: number;
+  punto_reorden: number;
+  atributo: string; 
+  descripcion: string
+}
 
 export type ProductosIntermediosDetalles = {
   id: number;
@@ -93,23 +79,33 @@ export type ProductosIntermediosDetalles = {
   SKU: string;
   stock_actual: number;
   punto_reorden: number;
-  categoria_producto: { id: number; nombre_categoria: string };
-  unidad_produccion_producto: { id: number; nombre_completo: string };
+  categoria_producto: { 
+    id: number; 
+    nombre_categoria: string 
+  };
+  unidad_produccion_producto: { 
+    id: number; 
+    nombre_completo: string 
+  };
+  variantes: VariantesIntermedio[];
   fecha_creacion_registro: string;
   fecha_modificacion_registro: string;
   descripcion: string;
-  receta_relacionada: RecetaRelacionada;
+  receta_producto: {
+    id: number;
+    nombre_receta: string;
+  };
   tipo_medida_fisica: "UNIDAD" | "PESO" | "VOLUMEN";
 };
 
-export type LotesProductosIntermedios = {
+export type LoteProductoIntermedio = {
   id: number;
   fecha_produccion: string;
   fecha_caducidad: string;
-  cantidad_inicial_lote: string;
-  stock_actual_lote: string;
-  coste_total_lote_usd: string;
-  estado: "DISPONIBLE" | "INACTIVO" | "EXPIRADO" | "AGOTADO";
+  cantidad_inicial_lote: number;
+  stock_actual_lote: number;
+  coste_total_lote_usd: number;
+  estado: LotesEstados;
   produccion_origen: number;
   peso_total_lote_gramos: string | null;
   volumen_total_lote_ml: string | null;
@@ -129,6 +125,6 @@ export type LoteProductoIntermedioPagination = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: LotesProductosIntermedios[];
+  results: LoteProductoIntermedio[];
 };
 

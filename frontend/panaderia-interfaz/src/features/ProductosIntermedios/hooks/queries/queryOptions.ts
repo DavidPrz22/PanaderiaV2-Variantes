@@ -1,23 +1,10 @@
 import {
-  getCategoriasProductoIntermedio,
   getLotesProductosIntermedios,
   getProductosIntermedios,
   getProductosIntermediosDetalles,
-  getUnidadesMedida,
 } from "../../api/api";
 import type { LoteProductoIntermedioPagination, ProductosIntermediosPagination } from "../../types/types";
 
-export const unidadesMedidaQueryOptions = {
-  queryKey: ["unidades-medida"],
-  queryFn: getUnidadesMedida,
-  staleTime: Infinity,
-};
-
-export const categoriasProductoIntermedioQueryOptions = {
-  queryKey: ["categorias-producto-intermedio"],
-  queryFn: getCategoriasProductoIntermedio,
-  staleTime: Infinity,
-};
 
 export const productosIntermediosQueryOptions = {
   queryKey: ["productos-intermedios"],

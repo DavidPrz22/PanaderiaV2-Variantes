@@ -22,6 +22,7 @@ export default function SearchInput() {
     if (productosIntermediosSearchTerm !== localValue) {
       setLocalValue(productosIntermediosSearchTerm);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productosIntermediosSearchTerm]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

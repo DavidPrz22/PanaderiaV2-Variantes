@@ -1,10 +1,17 @@
 from rest_framework import viewsets, status
-from apps.inventario.models import MateriasPrimas, MateriasPrimasVariantes, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, ComponentesStockManagement
+from apps.inventario.models import ( 
+    MateriasPrimas, MateriasPrimasVariantes, LotesMateriasPrimas, 
+    ProductosIntermedios,
+    ProductosFinales, 
+    ProductosElaborados, ProductosElaboradosVariantes, LotesProductosElaborados, 
+    ProductosReventa, LotesProductosReventa, 
+    ComponentesStockManagement
+    )
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.inventario.serializers import (
     ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
     MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer, 
-    ProductosIntermediosSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
+    ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
     ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, 
     ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
     ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
@@ -20,7 +27,7 @@ from apps.inventario.models import LotesStatus
 from djangobackend.permissions import IsStaffOrVendedorReadOnly
 from djangobackend.pagination import StandardResultsSetPagination
 
-
+from django.db import transaction
 
 class MateriaPrimaViewSet(viewsets.ModelViewSet):
     queryset = MateriasPrimas.objects.all().order_by('id')
@@ -579,6 +586,43 @@ class ProductosIntermediosViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductosIntermediosListSerializer
+        return ProductosIntermediosSerializer
+
+
+    def create(self, request):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        variantes = serializer.validated_data.pop('variantes')
+        
+        with transaction.atomic():
+            try:
+                producto_intermedio = ProductosIntermedios.objects.create(
+                    **serializer.validated_data, 
+                    es_intermediario=True, 
+                )
+                variantes_create = []
+                for variante in variantes:
+                    variantes_create.append(
+                        ProductosElaboradosVariantes(
+                            producto_intermedio=producto_intermedio,
+                        **variante
+                    )
+                )
+                ProductosElaboradosVariantes.objects.bulk_create(variantes_create)
+            except Exception as e:
+                transaction.rollback()
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return {
+            'message': 'Producto intermedio creado correctamente', 
+            'producto_intermedio': producto_intermedio
+        }
+
+
 class ProductosFinalesViewSet(viewsets.ModelViewSet):
     queryset = ProductosFinales.objects.all().order_by('id')
     serializer_class = ProductosFinalesSerializer
@@ -703,6 +747,7 @@ class ProductosReventaViewSet(viewsets.ModelViewSet):
             return Response({'message': "Productos de Reventa registrados exitosamente"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class ProductosReventaDetallesViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductosReventa.objects.all()

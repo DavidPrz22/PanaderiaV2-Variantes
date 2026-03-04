@@ -1,12 +1,16 @@
 import apiClient from "./client";
 import { z } from "zod";
-import { 
-    UnidadMedidaSchema, 
-    CategoriaMateriaPrimaSchema,
-    ProveedorSchema,
-    type TUnidadMedida,
-    type TCategoriaMateriaPrima,
-    type TProveedor,
+import {
+  UnidadMedidaSchema,
+  CategoriaMateriaPrimaSchema,
+  AtributosProductosSchema,
+  ProveedorSchema,
+  CategoriaProductoIntermedioSchema,
+  type TUnidadMedida,
+  type TCategoriaMateriaPrima,
+  type TProveedor,
+  type TAtributosProductos,
+  type TCategoriaProductoIntermedio,
 } from "@/types/zod-types";
 
 import type { AxiosError } from "axios";
@@ -16,8 +20,8 @@ export const fetchUnidadesMedida = async (): Promise<TUnidadMedida[]> => {
   try {
     const response = await apiClient.get("/api/core/unidades-medida/");
     console.log(response.data)
-    const valid = z.array(UnidadMedidaSchema).safeParse(response.data) ;
-    
+    const valid = z.array(UnidadMedidaSchema).safeParse(response.data);
+
     if (valid.success) {
       return valid.data;
     }
@@ -38,7 +42,7 @@ export const fetchCategoriasMateriaPrima = async (): Promise<
   try {
     const response = await apiClient.get("/api/core/categorias-materiaprima/");
     const valid = z.array(CategoriaMateriaPrimaSchema).safeParse(response.data);
-    
+
     if (valid.success) {
       return valid.data;
     }
@@ -67,6 +71,57 @@ export const fetchProveedores = async (): Promise<TProveedor[]> => {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
       axiosError.response?.data?.detail || "Failed to fetch proveedores",
+    );
+  }
+};
+
+export const fetchAtributosProducto = async (): Promise<TAtributosProductos> => {
+  try {
+    const response = await apiClient.get("/api/core/atributos/");
+    const valid = AtributosProductosSchema.safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    throw new Error("Invalid response from server");
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch atributos",
+    );
+  }
+};
+
+export const fetchCategoriasProductoIntermedio = async (): Promise<TCategoriaProductoIntermedio[]> => {
+  try {
+    const response = await apiClient.get("/api/core/categorias-producto-intermedio/");
+    const valid = z.array(CategoriaProductoIntermedioSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch categorias",
+    );
+  }
+};
+
+export const fetchProductosIntermediosCategorias = async (): Promise<TCategoriaProductoIntermedio[]> => {
+  try {
+    const response = await apiClient.get("/api/core/categorias-producto-intermedio/");
+    const valid = z.array(CategoriaProductoIntermedioSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch categorias",
     );
   }
 };

@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import MateriasPrimas, LotesMateriasPrimas, ProductosIntermedios, ProductosFinales, ProductosElaborados, LotesProductosElaborados, ProductosReventa, LotesProductosReventa, MateriasPrimasVariantes
+
+from .models import (
+    MateriasPrimas, LotesMateriasPrimas, 
+    ProductosIntermedios, ProductosFinales,
+    ProductosElaborados, LotesProductosElaborados, 
+    ProductosReventa, LotesProductosReventa, 
+    MateriasPrimasVariantes, ProductosElaboradosVariantes
+)
+
 from apps.core.models import UnidadesDeMedida, CategoriasMateriaPrima, CategoriasProductosElaborados, CategoriasProductosReventa
 from apps.compras.serializers import ProveedoresSerializer
 from apps.compras.models import Proveedores
@@ -188,8 +196,6 @@ class MateriaPrimaListSerializer(serializers.ModelSerializer):
         ]
 
 
-
-
 class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):
     """Full serializer for detail view, including variants and full descriptions."""
     variantes = MateriaPrimaVariantesDetallesSerializer(many=True, required=False)
@@ -202,68 +208,97 @@ class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):
         ]
 
 
-class ProductosIntermediosSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
-    receta_relacionada = serializers.CharField(write_only=True, required=True)
-    unidad_produccion_producto = serializers.CharField(source='unidad_produccion.nombre_completo', read_only=True)
+class ProductosIntermediosListSerializer(serializers.ModelSerializer):
+    """Lighter serializer for table/list views."""
+    categoria = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
+    unidad_produccion = serializers.CharField(source='unidad_produccion.nombre_completo', read_only=True)
+
     class Meta:
         model = ProductosIntermedios
         fields = [
-            'id', 
-            'nombre_producto', 
-            'SKU', 
-            'stock_actual', 
-            'punto_reorden', 
+            'id',
+            'nombre_producto',
+            'SKU',
+            'stock_actual',
+            'punto_reorden',
             'categoria',
             'unidad_produccion',
-            'unidad_produccion_producto',
+            'fecha_creacion_registro'
+        ]
+
+
+class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductosElaboradosVariantes
+        fields = [
+            'nombre_variante',
+            'SKU',
             'descripcion',
-            'tipo_medida_fisica',
-            'categoria_nombre', 
+            'stock_actual',
+            'punto_reorden',
+            'atributo'
+        ]
+
+class ProductosIntermediosSerializer(serializers.ModelSerializer):
+    variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
+    class Meta:
+        model = ProductosIntermedios
+        fields = [
+            'nombre_producto', 
+            'categoria',
+            'punto_reorden', 
+            'descripcion',
+            'variantes',
+        ]
+
+
+class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
+    categoria_producto = serializers.SerializerMethodField()
+    receta_relacionada = serializers.SerializerMethodField()
+    unidad_produccion_producto = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductosIntermedios
+        fields = [
+            'id',
+            'nombre_producto',
+            'SKU',
+            'stock_actual',
+            'punto_reorden',
+            'categoria_producto',
+            'unidad_produccion_producto',
             'fecha_creacion_registro',
+            'fecha_modificacion_registro',
+            'tipo_medida_fisica',
+            'descripcion',
             'receta_relacionada',
         ]
-        extra_kwargs = {
-            'categoria': {'write_only': True},
-            'categoria_nombre': {'read_only': True},
+
+    def get_categoria_producto(self, obj):
+        categoria = CategoriasProductosElaborados.objects.get(id=obj.categoria.id)
+        return {
+            'id': categoria.id,
+            'nombre_categoria': categoria.nombre_categoria,
         }
 
-    def create(self, validated_data):
-        receta_relacionada = validated_data.pop('receta_relacionada', None)
+    def get_unidad_produccion_producto(self, obj):
+        unidad_produccion = UnidadesDeMedida.objects.get(id=obj.unidad_produccion.id)
+        return {
+            'id': unidad_produccion.id,
+            'nombre_completo': unidad_produccion.nombre_completo,
+        }
 
-        validated_data['es_intermediario'] = True
-        validated_data['precio_venta_usd'] = None
-        validated_data['unidad_venta'] = None
-        validated_data['vendible_por_medida_real'] = None
+    def get_receta_relacionada(self, obj):
+        """Get the related recipe for a product."""
 
-        producto_intermedio = ProductosIntermedios.objects.create(**validated_data)
-
-        if receta_relacionada:
-            try:
-                receta = Recetas.objects.get(id=receta_relacionada)
-                receta.producto_elaborado = producto_intermedio
-                receta.save()
-            except Recetas.DoesNotExist:
-                pass
-        return producto_intermedio
-
-    def update(self, instance, validated_data):
-        receta_relacionada = validated_data.pop('receta_relacionada', None)
-
-        instance = super().update(instance, validated_data)
-        
-        if receta_relacionada:
-            try:
-                Recetas.objects.filter(producto_elaborado=instance).update(producto_elaborado=None)
-                
-                receta = Recetas.objects.get(id=receta_relacionada)
-                receta.producto_elaborado = instance
-                receta.save()
-            except Recetas.DoesNotExist:
-                pass
-                
-        return instance
-
+        try:
+            receta_relacionada = Recetas.objects.get(producto_elaborado=obj.id)
+            return {
+            'id': receta_relacionada.id,
+            'nombre': receta_relacionada.nombre,
+        }
+        except Recetas.DoesNotExist:
+            return None
 
 class ProductosFinalesSerializer(serializers.ModelSerializer):
     # Read-only fields for displaying related object names
@@ -423,55 +458,6 @@ class ProductosFinalesListaTransformacionSerializer(serializers.ModelSerializer)
     class Meta:
         model = ProductosFinales
         fields = ['id', 'nombre_producto', 'stock_actual']
-
-
-class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
-    categoria_producto = serializers.SerializerMethodField()
-    receta_relacionada = serializers.SerializerMethodField()
-    unidad_produccion_producto = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ProductosIntermedios
-        fields = [
-            'id',
-            'nombre_producto',
-            'SKU',
-            'stock_actual',
-            'punto_reorden',
-            'categoria_producto',
-            'unidad_produccion_producto',
-            'fecha_creacion_registro',
-            'fecha_modificacion_registro',
-            'tipo_medida_fisica',
-            'descripcion',
-            'receta_relacionada',
-        ]
-
-    def get_categoria_producto(self, obj):
-        categoria = CategoriasProductosElaborados.objects.get(id=obj.categoria.id)
-        return {
-            'id': categoria.id,
-            'nombre_categoria': categoria.nombre_categoria,
-        }
-
-    def get_unidad_produccion_producto(self, obj):
-        unidad_produccion = UnidadesDeMedida.objects.get(id=obj.unidad_produccion.id)
-        return {
-            'id': unidad_produccion.id,
-            'nombre_completo': unidad_produccion.nombre_completo,
-        }
-
-    def get_receta_relacionada(self, obj):
-        """Get the related recipe for a product."""
-
-        try:
-            receta_relacionada = Recetas.objects.get(producto_elaborado=obj.id)
-            return {
-            'id': receta_relacionada.id,
-            'nombre': receta_relacionada.nombre,
-        }
-        except Recetas.DoesNotExist:
-            return None
 
 
 class LotesProductosElaboradosSerializer(serializers.ModelSerializer):

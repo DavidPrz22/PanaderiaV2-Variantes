@@ -1,10 +1,6 @@
 import { createContext, useContext, useRef, useState, useEffect } from "react";
 import type {
-  CategoriaProductoIntermedio,
   childrenProp,
-  LotesProductosIntermedios,
-  recetasSearchItem,
-  UnidadesDeMedida,
 } from "@/features/ProductosIntermedios/types/types";
 
 type ProductosIntermediosContextType = {
@@ -18,17 +14,9 @@ type ProductosIntermediosContextType = {
   setRegistroDelete: (value: boolean) => void;
   productoIntermedioId: number | null;
   setProductoIntermedioId: (value: number | null) => void;
-  searchList: recetasSearchItem[];
-  setSearchList: (value: recetasSearchItem[]) => void;
   searchTimer: NodeJS.Timeout | null;
   setSearchTimer: (value: NodeJS.Timeout | null) => void;
   recetaSearchInputRef: React.RefObject<HTMLInputElement | null>;
-  unidadesMedida: UnidadesDeMedida[];
-  setUnidadesMedida: (value: UnidadesDeMedida[]) => void;
-  categoriasProductoIntermedio: CategoriaProductoIntermedio[];
-  setCategoriasProductoIntermedio: (
-    value: CategoriaProductoIntermedio[],
-  ) => void;
   isLoadingDetalles: boolean;
   setIsLoadingDetalles: (value: boolean) => void;
   enabledDetalles: boolean;
@@ -50,8 +38,6 @@ type ProductosIntermediosContextType = {
   setAgotadosFilter: (value: boolean) => void;
   showLotesDetalles: boolean;
   setShowLotesDetalles: (value: boolean) => void;
-  lotesProductosIntermediosDetalles: LotesProductosIntermedios | null;
-  setLotesProductosIntermediosDetalles: (value: LotesProductosIntermedios | null) => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   showRecipeModal: boolean;
@@ -77,14 +63,9 @@ export const ProductosIntermediosProvider = ({ children }: childrenProp) => {
     number | null
   >(null);
   const [enabledDetalles, setEnabledDetalles] = useState(false);
-  const [searchList, setSearchList] = useState<recetasSearchItem[]>([]);
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
 
   const recetaSearchInputRef = useRef<HTMLInputElement | null>(null);
-
-  const [unidadesMedida, setUnidadesMedida] = useState<UnidadesDeMedida[]>([]);
-  const [categoriasProductoIntermedio, setCategoriasProductoIntermedio] =
-    useState<CategoriaProductoIntermedio[]>([]);
 
   const [isLoadingDetalles, setIsLoadingDetalles] = useState(false);
 
@@ -100,7 +81,6 @@ export const ProductosIntermediosProvider = ({ children }: childrenProp) => {
   const [agotadosFilter, setAgotadosFilter] = useState(false);
 
   const [showLotesDetalles, setShowLotesDetalles] = useState(false);
-  const [lotesProductosIntermediosDetalles, setLotesProductosIntermediosDetalles] = useState<LotesProductosIntermedios | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const [showRecipeModal, setShowRecipeModal] = useState(false);
@@ -124,15 +104,9 @@ export const ProductosIntermediosProvider = ({ children }: childrenProp) => {
         setRegistroDelete,
         productoIntermedioId,
         setProductoIntermedioId,
-        searchList,
-        setSearchList,
         searchTimer,
         setSearchTimer,
         recetaSearchInputRef,
-        unidadesMedida,
-        setUnidadesMedida,
-        categoriasProductoIntermedio,
-        setCategoriasProductoIntermedio,
         isLoadingDetalles,
         setIsLoadingDetalles,
         enabledDetalles,
@@ -153,8 +127,6 @@ export const ProductosIntermediosProvider = ({ children }: childrenProp) => {
         setAgotadosFilter,
         showLotesDetalles,
         setShowLotesDetalles,
-        lotesProductosIntermediosDetalles,
-        setLotesProductosIntermediosDetalles,
         currentPage,
         setCurrentPage,
         showRecipeModal,
