@@ -9,8 +9,8 @@ function ProductosIntermediosPageContent() {
   const { showProductosIntermediosForm, showProductosIntermediosDetalles } = useProductosIntermediosContext();
   return (
     <>
-      {showProductosIntermediosForm && <ProductosIntermediosForm onClose={() => { }} />}
-      {showProductosIntermediosDetalles && <ProductosIntermediosDetalles/>}
+      {showProductosIntermediosForm && <ProductosIntermediosForm />}
+      {showProductosIntermediosDetalles && <ProductosIntermediosDetalles />}
       <ProductosIntermediosPanel />
     </>
   );

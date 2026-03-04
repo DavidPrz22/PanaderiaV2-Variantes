@@ -36,6 +36,7 @@ export const AtributosProductosSchema = z.object({
     atributos: z.array(z.string()),
 });
 
+
 export type TUnidadMedida = z.infer<typeof UnidadMedidaSchema>;
 export type TCategoriaMateriaPrima = z.infer<typeof CategoriaMateriaPrimaSchema>;
 export type TCategoriaProductoIntermedio = z.infer<typeof CategoriaProductoIntermedioSchema>;

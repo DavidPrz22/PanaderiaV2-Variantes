@@ -12,9 +12,9 @@ router.register('lotesmateriaprima', LotesMateriaPrimaViewSet, basename='lotesma
 router.register('componentes-search', ComponenteSearchViewSet, basename='componentes-search')
 
 # Productos Intermedios
-router.register('productosintermedios', ProductosIntermediosViewSet, basename='productosintermedios')
-router.register('productosintermedios-detalles', ProductosIntermediosDetallesViewSet, basename='productosintermedios-detalles')
-router.register('productosintermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
+router.register('productos-intermedios', ProductosIntermediosViewSet, basename='productosintermedios')
+router.register('productos-intermedios-detalles', ProductosIntermediosDetallesViewSet, basename='productosintermedios-detalles')
+router.register('productos-intermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
 
 # Productos Finales
 router.register('productosfinales', ProductosFinalesViewSet, basename='productosfinales')

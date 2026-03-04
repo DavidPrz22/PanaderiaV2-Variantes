@@ -1,6 +1,6 @@
 from rest_framework import routers
 from .viewsets import CategoriaProductoFinalViewSet, UnidadMedidaViewSet, CategoriaMateriaPrimaViewSet, CategoriaProductoIntermedioViewSet, CategoriaProductosReventaViewSet, EstadosOrdenVentaViewSet, MetodosDePagoViewSet, EstadosOrdenCompraViewSet, NotificacionesViewSet
-from .views import DashboardDataView
+from .views import DashboardDataView, AtributosProductosView
 from django.urls import include, path
 
 
@@ -16,6 +16,7 @@ router.register(r'metodos-de-pago', MetodosDePagoViewSet)
 router.register(r'notificaciones', NotificacionesViewSet)
 
 urlpatterns = [
-    path('core/dashboard/', DashboardDataView.as_view()),
+    path('dashboard/', DashboardDataView.as_view()),
+    path('atributos-producto/', AtributosProductosView.as_view()),
     path('', include(router.urls))
 ]

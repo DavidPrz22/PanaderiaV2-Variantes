@@ -77,7 +77,7 @@ export const fetchProveedores = async (): Promise<TProveedor[]> => {
 
 export const fetchAtributosProducto = async (): Promise<TAtributosProductos> => {
   try {
-    const response = await apiClient.get("/api/core/atributos/");
+    const response = await apiClient.get("/api/core/atributos-producto/");
     const valid = AtributosProductosSchema.safeParse(response.data);
     if (valid.success) {
       return valid.data;

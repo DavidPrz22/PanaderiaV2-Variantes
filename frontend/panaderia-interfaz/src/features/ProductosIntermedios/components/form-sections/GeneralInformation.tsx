@@ -43,6 +43,8 @@ export const GeneralInformation = ({ control, register, errors }: GeneralInforma
                             label="Unidad Producción"
                             placeholder="Seleccionar"
                             options={unidadesOptions}
+                            triggerClassName="w-full"
+                            containerClassName="w-full"
                             required
                             error={error?.message}
                             value={field.value}
@@ -60,6 +62,8 @@ export const GeneralInformation = ({ control, register, errors }: GeneralInforma
                             label="Categoría"
                             placeholder="Seleccionar categoría"
                             options={categoriasOptions}
+                            triggerClassName="w-full"
+                            containerClassName="w-full"
                             required
                             error={error?.message}
                             value={field.value}

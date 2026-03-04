@@ -30,7 +30,7 @@ export const useCategoriasProductoIntermedioQuery = () => {
   return useQuery(createCategoriasProductoIntermedioQueryOptions());
 }
 
-export const useRecetasQuery = (recetaId: number, showRecipeModal: boolean) => {
+export const useRecetasQuery = (recetaId: number | null, showRecipeModal: boolean) => {
   return useQuery({
     ...recetasDetallesQueryOptions(recetaId),
     enabled: !!recetaId && showRecipeModal,

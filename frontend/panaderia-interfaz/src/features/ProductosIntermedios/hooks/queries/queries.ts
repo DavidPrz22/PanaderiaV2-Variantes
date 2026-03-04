@@ -13,7 +13,7 @@ export const useGetProductosIntermedios = () => {
 export const useGetProductosIntermediosDetalles = (id: number) => {
   return useQuery({
     ...productosIntermediosDetallesQueryOptions(id),
-    enabled: !!id,
+    enabled: !!id
   });
 };
 
@@ -21,5 +21,6 @@ export const useGetLotesProductosIntermedios = (id: number) => {
   return useInfiniteQuery({
     ...lotesProductosIntermediosQueryOptions(id),
     enabled: !!id,
+    
   });
 };

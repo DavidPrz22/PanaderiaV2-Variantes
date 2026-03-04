@@ -210,21 +210,26 @@ class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):
 
 class ProductosIntermediosListSerializer(serializers.ModelSerializer):
     """Lighter serializer for table/list views."""
-    categoria = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
-    unidad_produccion = serializers.CharField(source='unidad_produccion.nombre_completo', read_only=True)
-
+    categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
+    unidad_produccion_nombre = serializers.SerializerMethodField()
+    stock_actual = serializers.SerializerMethodField()
+    
     class Meta:
         model = ProductosIntermedios
         fields = [
             'id',
             'nombre_producto',
-            'SKU',
+            'unidad_produccion_nombre',
             'stock_actual',
-            'punto_reorden',
-            'categoria',
-            'unidad_produccion',
+            'categoria_nombre',
             'fecha_creacion_registro'
         ]
+
+    def get_stock_actual(self, obj):
+        return 0
+
+    def get_unidad_produccion_nombre(self, obj):
+        return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
 
 
 class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
@@ -239,6 +244,7 @@ class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
             'atributo'
         ]
 
+
 class ProductosIntermediosSerializer(serializers.ModelSerializer):
     variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
     class Meta:
@@ -246,7 +252,7 @@ class ProductosIntermediosSerializer(serializers.ModelSerializer):
         fields = [
             'nombre_producto', 
             'categoria',
-            'punto_reorden', 
+            'unidad_produccion',
             'descripcion',
             'variantes',
         ]
@@ -256,49 +262,57 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
     categoria_producto = serializers.SerializerMethodField()
     receta_relacionada = serializers.SerializerMethodField()
     unidad_produccion_producto = serializers.SerializerMethodField()
-
+    stock_actual = serializers.SerializerMethodField()
+    punto_reorden = serializers.SerializerMethodField()
+    variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
     class Meta:
         model = ProductosIntermedios
         fields = [
             'id',
             'nombre_producto',
-            'SKU',
             'stock_actual',
             'punto_reorden',
             'categoria_producto',
             'unidad_produccion_producto',
             'fecha_creacion_registro',
-            'fecha_modificacion_registro',
             'tipo_medida_fisica',
             'descripcion',
             'receta_relacionada',
+            'variantes'
         ]
 
     def get_categoria_producto(self, obj):
-        categoria = CategoriasProductosElaborados.objects.get(id=obj.categoria.id)
+        if not obj.categoria:
+            return None
         return {
-            'id': categoria.id,
-            'nombre_categoria': categoria.nombre_categoria,
+            'id': obj.categoria.id,
+            'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
     def get_unidad_produccion_producto(self, obj):
-        unidad_produccion = UnidadesDeMedida.objects.get(id=obj.unidad_produccion.id)
+        if not obj.unidad_produccion:
+            return None
         return {
-            'id': unidad_produccion.id,
-            'nombre_completo': unidad_produccion.nombre_completo,
+            'id': obj.unidad_produccion.id,
+            'nombre_completo': obj.unidad_produccion.nombre_completo,
         }
+
+    def get_stock_actual(self, obj):
+        return 0
+
+    def get_punto_reorden(self, obj):
+        return 0
 
     def get_receta_relacionada(self, obj):
         """Get the related recipe for a product."""
-
-        try:
-            receta_relacionada = Recetas.objects.get(producto_elaborado=obj.id)
+        receta_relacionada = Recetas.objects.filter(producto_elaborado_variante__producto_elaborado=obj).first()
+        if receta_relacionada:
             return {
-            'id': receta_relacionada.id,
-            'nombre': receta_relacionada.nombre,
-        }
-        except Recetas.DoesNotExist:
-            return None
+                'id': receta_relacionada.id,
+                'nombre': receta_relacionada.nombre,
+            }
+        return None
+
 
 class ProductosFinalesSerializer(serializers.ModelSerializer):
     # Read-only fields for displaying related object names
@@ -413,7 +427,6 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
             'vendible_por_medida_real',
             'precio_venta_usd',
             'fecha_creacion_registro',
-            'fecha_modificacion_registro',
             'descripcion',
             'receta_relacionada',
             'usado_en_transformaciones',
@@ -444,14 +457,13 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
 
     def get_receta_relacionada(self, obj):
         """Get the related recipe for a product."""
-        try:
-            receta_relacionada = Recetas.objects.get(producto_elaborado=obj.id)
+        receta_relacionada = Recetas.objects.filter(producto_elaborado_variante__producto_elaborado=obj).first()
+        if receta_relacionada:
             return {
                 'id': receta_relacionada.id,
                 'nombre': receta_relacionada.nombre,
             }
-        except Recetas.DoesNotExist:
-            return None
+        return None
 
 
 class ProductosFinalesListaTransformacionSerializer(serializers.ModelSerializer):
@@ -466,6 +478,7 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
     peso_promedio_por_unidad = serializers.SerializerMethodField()
     volumen_promedio_por_unidad = serializers.SerializerMethodField()
     costo_unitario_usd = serializers.SerializerMethodField()
+    producto_elaborado_variante = serializers.SerializerMethodField()
 
     class Meta: 
         model = LotesProductosElaborados
@@ -473,6 +486,7 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
             "id",
             "cantidad_inicial_lote",
             "stock_actual_lote",
+            "producto_elaborado_variante",
             "fecha_produccion",
             "fecha_caducidad",
             "estado",
@@ -484,6 +498,12 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
             "volumen_promedio_por_unidad",
             "costo_unitario_usd",
         ]
+
+    def get_producto_elaborado_variante(self, obj):
+        return {
+            'id': obj.producto_elaborado_variante.id,
+            'nombre_variante': obj.producto_elaborado_variante.nombre_variante,
+        }
 
     def validate(self, data):
         """Validate dates for lot registration."""

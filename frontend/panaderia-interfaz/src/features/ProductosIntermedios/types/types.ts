@@ -59,7 +59,7 @@ export type ProductosIntermedios = {
   stock_actual: number;
   punto_reorden: number;
   categoria_nombre: string;
-  unidad_produccion_producto: string;
+  unidad_produccion_nombre: string;
   fecha_creacion_registro: string;
 };
 
@@ -69,37 +69,39 @@ export type VariantesIntermedio = {
   SKU: string;
   stock_actual: number;
   punto_reorden: number;
-  atributo: string; 
+  atributo: string;
   descripcion: string
 }
 
 export type ProductosIntermediosDetalles = {
   id: number;
   nombre_producto: string;
-  SKU: string;
   stock_actual: number;
   punto_reorden: number;
-  categoria_producto: { 
-    id: number; 
-    nombre_categoria: string 
+  categoria_producto: {
+    id: number;
+    nombre_categoria: string
   };
-  unidad_produccion_producto: { 
-    id: number; 
-    nombre_completo: string 
+  unidad_produccion_producto: {
+    id: number;
+    nombre_completo: string
   };
   variantes: VariantesIntermedio[];
   fecha_creacion_registro: string;
-  fecha_modificacion_registro: string;
   descripcion: string;
-  receta_producto: {
+  receta_relacionada?: {
     id: number;
-    nombre_receta: string;
+    nombre: string;
   };
   tipo_medida_fisica: "UNIDAD" | "PESO" | "VOLUMEN";
 };
 
 export type LoteProductoIntermedio = {
   id: number;
+  producto_elaborado_variante: {
+    id: number;
+    nombre_variante: string;
+  };
   fecha_produccion: string;
   fecha_caducidad: string;
   cantidad_inicial_lote: number;

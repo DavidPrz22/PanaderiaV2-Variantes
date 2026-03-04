@@ -6,20 +6,29 @@ import type {
   ProductosIntermediosPagination,
 } from "../types/types";
 
+import {
+  productoIntermedioDetallesSchema,
+  productosIntermediosPaginationSchema,
+  loteProductoIntermedioPaginationSchema
+} from "../types/zod-types";
+
 export const createUpdateProductosIntermedios = async (
   data: TProductosIntermediosSchema,
   id?: number,
 ) => {
   try {
+    let response;
     if (id) {
-      const response = await apiClient.put(`/api/inventario/productos-intermedios/${id}/`, data);
-      return response.data;
+      response = await apiClient.put(`/api/inventario/productos-intermedios/${id}/`, data);
+    } else {
+      response = await apiClient.post("/api/inventario/productos-intermedios/", data);
     }
-    const response = await apiClient.post("/api/inventario/productos-intermedios/", data);
+
+    productoIntermedioDetallesSchema.safeParse(response.data)
     return response.data;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 
@@ -31,6 +40,8 @@ export const getProductosIntermedios = async ({
   try {
     const url = pageParam || "/api/inventario/productos-intermedios/";
     const response = await apiClient.get(url);
+    productosIntermediosPaginationSchema.safeParse(response.data)
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error(error);
@@ -45,6 +56,8 @@ export const getProductosIntermediosDetalles = async (
     const response = await apiClient.get(
       `/api/inventario/productos-intermedios/${id}/`,
     );
+    console.log(response.data)
+    productoIntermedioDetallesSchema.safeParse(response.data)
     return response.data;
   } catch (error) {
     console.error(error);
@@ -58,7 +71,7 @@ export const deleteProductoIntermedio = async (id: number) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 
@@ -70,7 +83,7 @@ export const removeRecetaRelacionada = async (id: number) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 
@@ -87,7 +100,7 @@ export const getLotesProductosIntermedios = async ({
       url += `?producto_elaborado=${producto_intermedio_id}`;
     }
     const response = await apiClient.get(url);
-    console.log(response.data);
+    loteProductoIntermedioPaginationSchema.safeParse(response.data)
     return response.data;
   } catch (error) {
     console.error(error);
@@ -101,7 +114,7 @@ export const changeEstadoLoteProductosIntermedios = async (id: number) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 };
 

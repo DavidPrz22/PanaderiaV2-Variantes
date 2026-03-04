@@ -57,12 +57,12 @@ export default function ProductosIntermediosLista() {
         p.nombre_producto.toLowerCase().includes(term) ||
         p.SKU.toLowerCase().includes(term) ||
         (p.categoria_nombre || "").toLowerCase().includes(term) ||
-        (p.unidad_produccion_producto || "").toLowerCase().includes(term),
+        (p.unidad_produccion_nombre || "").toLowerCase().includes(term),
     );
   }
   if (selectedUnidadesProduccion.length > 0) {
     displayData = displayData.filter((p) =>
-      selectedUnidadesProduccion.includes(p.unidad_produccion_producto),
+      selectedUnidadesProduccion.includes(p.unidad_produccion_nombre),
     );
   }
   if (selectedCategoriasIntermedio.length > 0) {
@@ -104,11 +104,10 @@ export default function ProductosIntermediosLista() {
           headers={[
             "ID",
             "Nombre",
-            "SKU",
-            "Stock",
             "Unidad de producción",
-            "Punto de reorden",
-            "Categoria"
+            "Stock",
+            "Categoria",
+            "Fecha de creación"
           ]}
         />
         <PITableBody

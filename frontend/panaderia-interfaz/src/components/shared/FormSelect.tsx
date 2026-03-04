@@ -8,7 +8,7 @@ import {
 import { FormItem } from "./FormItem";
 import { cn } from "@/lib/utils";
 
-interface SelectOption {
+export interface SelectOption {
     value: string | number;
     label: string;
 }

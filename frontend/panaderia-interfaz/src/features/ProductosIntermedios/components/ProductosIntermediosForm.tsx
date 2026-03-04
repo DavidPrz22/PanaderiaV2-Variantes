@@ -11,7 +11,6 @@ import { useGetProductosIntermediosDetalles } from "../hooks/queries/queries";
 import type { ProductosIntermediosDetalles } from "../types/types";
 
 interface CreateProductoIntermedioPanelProps {
-  onClose: () => void;
   fullScreen?: boolean;
 }
 
@@ -32,60 +31,72 @@ const initialFormState: TProductosIntermediosSchema = {
 }
 
 export const ProductosIntermediosForm = ({
-  onClose,
-  fullScreen = false,
 }: CreateProductoIntermedioPanelProps) => {
 
-  const { updateRegistro, productoIntermedioId } = useProductosIntermediosContext();
+  const { updateRegistro, productoIntermedioId, setShowProductosIntermediosForm, setUpdateRegistro, setProductoIntermedioId } = useProductosIntermediosContext();
   const { mutate: createProducto, isPending } = useCreateProductosIntermediosMutation();
-  const {data: producto } = useGetProductosIntermediosDetalles(productoIntermedioId!)
-  
-  const getDefaultValuesUpdate = (producto: ProductosIntermediosDetalles) : TProductosIntermediosSchema =>  ({
+  const { data: producto } = useGetProductosIntermediosDetalles(productoIntermedioId!)
+
+  const getDefaultValuesUpdate = (producto: ProductosIntermediosDetalles): TProductosIntermediosSchema => ({
     nombre_producto: producto.nombre_producto,
     descripcion: producto.descripcion,
     unidad_produccion: producto.unidad_produccion_producto.id,
     categoria: producto.categoria_producto.id,
-    variantes: producto.variantes.map( v => 
-      ({
-        nombre_variante: v.nombre_variante, 
-        SKU: v.SKU,
-        descripcion: v.descripcion,
-        punto_reorden: v.punto_reorden,
-        atributo: v.atributo
-      }))
+    variantes: producto.variantes.map(v =>
+    ({
+      nombre_variante: v.nombre_variante,
+      SKU: v.SKU,
+      descripcion: v.descripcion,
+      punto_reorden: v.punto_reorden,
+      atributo: v.atributo
+    }))
 
   })
 
 
-  const { handleSubmit, control, register, formState: { errors } } = useForm<TProductosIntermediosSchema>({
+  const { handleSubmit, control, register, formState: { errors }, reset} = useForm<TProductosIntermediosSchema>({
     resolver: zodResolver(productosIntermediosSchema),
     defaultValues: updateRegistro && productoIntermedioId ? getDefaultValuesUpdate(producto!) :
-    initialFormState,
+      initialFormState,
   });
+
+  const handleOnClose = () => {
+    setShowProductosIntermediosForm(false);
+    setUpdateRegistro(false);
+    setProductoIntermedioId(null);
+    reset();
+  }
 
   const onSubmit = (data: TProductosIntermediosSchema) => {
     createProducto(data, {
       onSuccess: () => {
-        onClose();
+        handleOnClose();
       }
     });
   };
 
+
+  const formId = "producto-intermedio-form";
+
   return (
-    <div className={`${fullScreen ? "h-full" : "w-[480px] border-l"} bg-background flex flex-col`}>
+    <div className={`mx-auto bg-background flex flex-col`}>
       <FormHeader
-        onClose={onClose}
+        onClose={handleOnClose}
         title="Nuevo Producto Intermedio"
         description="Complete los campos para registrar un nuevo producto intermedio"
       />
 
       <div className="flex-1 overflow-y-auto">
-        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6 max-w-4xl mx-auto flex flex-col min-h-full">
+        <form
+          id={formId}
+          onSubmit={handleSubmit(onSubmit)}
+          className="p-8 space-y-6 max-w-4xl mx-auto flex flex-col min-h-full"
+        >
           <GeneralInformation control={control} register={register} errors={errors} />
           <VariantesSection control={control} register={register} errors={errors} />
         </form>
       </div>
-      <ActionBar onCancel={onClose} isSubmitting={isPending} />
+      <ActionBar onCancel={handleOnClose} isSubmitting={isPending} formId={formId} />
     </div>
   );
 };

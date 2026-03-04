@@ -11,10 +11,10 @@ export const recetasQueryOptions = {
   getPreviousPageParam: (firstPage: RecetasPagination) => firstPage.previous,
 };
 
-export const recetasDetallesQueryOptions = (id: number) => {
+export const recetasDetallesQueryOptions = (id: number | null) => {
   return {
     queryKey: ["recetasDetalles", id],
-    queryFn: () => getRecetaDetalles(id),
+    queryFn: () => (id ? getRecetaDetalles(id) : undefined),
     staleTime: Infinity,
   };
 };

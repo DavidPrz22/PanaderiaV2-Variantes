@@ -1,10 +1,12 @@
 import type { Control, UseFormRegister, FieldErrors } from "react-hook-form";
-import { useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
-import { FormInput } from "@/components/shared";
+import { FormInput, FormSelect } from "@/components/shared";
 import type { TProductosIntermediosSchema, TProductosIntermediosVariantesSchema } from "../../schemas/schema";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAtributosProductoQuery } from "@/hooks/useQueryHooks";
+
 
 interface VariantesSectionProps {
     control: Control<TProductosIntermediosSchema>;
@@ -12,8 +14,17 @@ interface VariantesSectionProps {
     errors: FieldErrors<TProductosIntermediosSchema>;
 }
 
+
 export const VariantesSection = ({ control, register, errors }: VariantesSectionProps) => {
-    const { fields, append, remove,  } = useFieldArray({
+
+    const { data: atributos } = useAtributosProductoQuery();
+
+    const atributosOptions = atributos?.atributos.map((atributo) => ({
+        value: atributo,
+        label: atributo,
+    })) || [];
+
+    const { fields, append, remove, } = useFieldArray({
         control,
         name: "variantes",
     });
@@ -80,11 +91,23 @@ export const VariantesSection = ({ control, register, errors }: VariantesSection
                                     error={errors.variantes?.[index]?.punto_reorden?.message}
                                     {...register(`variantes.${index}.punto_reorden`)}
                                 />
-                                <FormInput
-                                    label="Atributo"
-                                    placeholder="Atributo definitorio"
-                                    error={errors.variantes?.[index]?.atributo?.message}
-                                    {...register(`variantes.${index}.atributo`)}
+                                <Controller
+                                    name={`variantes.${index}.atributo`}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <FormSelect
+                                            label="Atributo "
+                                            placeholder="Seleccionar atributo"
+                                            options={atributosOptions}
+                                            triggerClassName="w-full"
+                                            containerClassName="w-full"
+                                            required
+                                            error={errors.variantes?.[index]?.atributo?.message}
+                                            value={field.value}
+                                            onValueChange={(val) => field.onChange(val)}
+                                            className="w-full"
+                                        />
+                                    )}
                                 />
                             </div>
                             <div className="mt-4">

@@ -42,6 +42,7 @@ export const useCreateProductosIntermediosMutation = () => {
       ]);
       toast({
         title: "Éxito",
+        variant: 'success',
         description: "Producto intermedio creado correctamente",
       });
     },

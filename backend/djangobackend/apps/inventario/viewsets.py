@@ -511,7 +511,8 @@ class LotesProductosElaboradosViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         producto_elaborado = self.request.query_params.get('producto_elaborado')
         if producto_elaborado:
-            queryset = queryset.filter(producto_elaborado=producto_elaborado)
+            producto_variantes = ProductosElaboradosVariantes.objects.filter(producto_elaborado=producto_elaborado).values_list('id', flat=True)
+            queryset = queryset.filter(producto_elaborado_variante_id__in=producto_variantes)
         return queryset
 
     def destroy(self, request, *args, **kwargs):
@@ -589,17 +590,18 @@ class ProductosIntermediosViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return ProductosIntermediosListSerializer
+        if self.action == 'retrieve':
+            return ProductosIntermediosDetallesSerializer
         return ProductosIntermediosSerializer
 
 
     def create(self, request):
-
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        variantes = serializer.validated_data.pop('variantes')
+        variantes = serializer.validated_data.pop('variantes', [])
         
-        with transaction.atomic():
-            try:
+        try:
+            with transaction.atomic():
                 producto_intermedio = ProductosIntermedios.objects.create(
                     **serializer.validated_data, 
                     es_intermediario=True, 
@@ -608,19 +610,19 @@ class ProductosIntermediosViewSet(viewsets.ModelViewSet):
                 for variante in variantes:
                     variantes_create.append(
                         ProductosElaboradosVariantes(
-                            producto_intermedio=producto_intermedio,
-                        **variante
+                            producto_elaborado=producto_intermedio,
+                            **variante
+                        )
                     )
-                )
                 ProductosElaboradosVariantes.objects.bulk_create(variantes_create)
-            except Exception as e:
-                transaction.rollback()
-                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        return {
+        producto_data = ProductosIntermediosSerializer(producto_intermedio).data
+        return Response({
             'message': 'Producto intermedio creado correctamente', 
-            'producto_intermedio': producto_intermedio
-        }
+            'producto_intermedio': producto_data
+        }, status=status.HTTP_201_CREATED)
 
 
 class ProductosFinalesViewSet(viewsets.ModelViewSet):

@@ -29,22 +29,24 @@ export const ProductosIntermediosDetalles = ({
   fullScreen = false,
 }: ProductoIntermedioDetailsPanelProps) => {
 
-  const { 
-    productoIntermedioId, 
-    setProductoIntermedioId, 
-    setShowProductosIntermediosDetalles, 
+  const {
+    productoIntermedioId,
+    setProductoIntermedioId,
+    setShowProductosIntermediosDetalles,
     setShowProductosIntermediosForm,
     setUpdateRegistro
   } = useProductosIntermediosContext();
 
   const { data: productoIntermedio } = useGetProductosIntermediosDetalles(productoIntermedioId!);
+
   const { mutate: changeStatus } = useChangeEstadoLoteProductosIntermedios();
   const [viewMode, setViewMode] = useState<ViewMode>("details");
   const [selectedLote, setSelectedLote] = useState<LoteProductoIntermedio | null>(null);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const { data: recipeDetails, isLoading: isLoadingRecipe } = useRecetasQuery(productoIntermedio!.receta_producto.id, showRecipeModal);
+  const idReceta = productoIntermedio?.receta_relacionada?.id ?? null;
+  const { data: recipeDetails, isLoading: isLoadingRecipe = false } = useRecetasQuery(idReceta, showRecipeModal);
 
   const { mutateAsync: deleteProductoIntermedio, isPending: isDeleting } = useDeleteProductoIntermedioMutation();
   if (!productoIntermedio) {
@@ -57,8 +59,8 @@ export const ProductosIntermediosDetalles = ({
   }
 
   const { user } = useAuth();
-  const canEdit = userHasPermission(user!, "edit", "productos_elaborados");
-  const canDelete = userHasPermission(user!, "delete", "productos_elaborados");
+  const canEdit = userHasPermission(user!, "productos_elaborados", "edit");
+  const canDelete = userHasPermission(user!, "productos_elaborados", "delete");
 
   const handleViewLote = (lote: LoteProductoIntermedio) => {
     setSelectedLote(lote);
@@ -72,6 +74,7 @@ export const ProductosIntermediosDetalles = ({
 
   const handleOnCloseDetails = () => {
     setProductoIntermedioId(null);
+    setShowProductosIntermediosDetalles(false);
     setSelectedLote(null);
     setViewMode("details");
   };
@@ -106,48 +109,52 @@ export const ProductosIntermediosDetalles = ({
       </div>
     );
   }
-
+  console.log(canDelete, canEdit)
   // Main Details View
   return (
-    <div className={`${fullScreen ? "h-full" : "w-[480px] border-l"} bg-background flex flex-col`}>
+    <div className={`w-full bg-background flex flex-col`}>
       <ConfirmDeleteModal
-              isOpen={showDeleteModal}
-              onClose={() => setShowDeleteModal(false)}
-              onConfirm={handleDeleteProductoIntermedio}
-              isPending={isDeleting}
-              title={`Eliminar ${productoIntermedio.nombre_producto}`}
-              description="¿Estás seguro que deseas eliminar este producto intermedio? Se eliminarán también todos los lotes asociados."
-            />
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteProductoIntermedio}
+        isPending={isDeleting}
+        title={`Eliminar ${productoIntermedio.nombre_producto}`}
+        description="¿Estás seguro que deseas eliminar este producto intermedio? Se eliminarán también todos los lotes asociados."
+      />
       {/* Header */}
 
-      <div className="flex items-center justify-between p-6 border-b">
-        <div className="flex items-center gap-4">
-          {fullScreen && (
-            <Button variant="ghost" size="icon" onClick={handleOnCloseDetails}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          )}
-          <div>
-            <h2 className="text-xl font-semibold">{productoIntermedio.nombre_producto}</h2>
-            <p className="text-sm text-muted-foreground">
-              {productoIntermedio.categoria_producto.nombre_categoria}
-            </p>
+      <div className="flex items-center justify-between p-6 pt-0 border-b ">
+        <div className="flex items-center gap-4 max-w-4xl mx-auto w-full">
+          <Button variant="ghost" size="icon" onClick={handleOnCloseDetails}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div className="flex justify-between w-full">
+            <div>
+              <h2 className="text-xl font-semibold">{productoIntermedio.nombre_producto}</h2>
+              <p className="text-sm text-muted-foreground">
+                {productoIntermedio.categoria_producto.nombre_categoria}
+              </p>
+
+            </div>
+            <div className="flex items-center gap-2">
+              {canEdit && (
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="lg" onClick={handleEditProductoIntermedio}>
+                    <Edit className="h-4 w-4" /> Editar
+                  </Button>
+                </div>
+              )}
+            {canDelete && (
+              <div className="flex items-center gap-2">
+                <Button variant="destructive" size="lg" onClick={() => setShowDeleteModal(true)}>
+                  <X className="h-5 w-5" /> Eliminar
+                </Button>
+              </div>
+            )}
+            </div>
           </div>
         </div>
-        {canEdit && (
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={handleEditProductoIntermedio}>
-              <Edit className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-        {canDelete && (
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setShowDeleteModal(true)}>
-              <X className="h-5 w-5" /> Eliminar
-            </Button>
-          </div>
-        )}
+        
       </div>
 
       <ScrollArea className="flex-1">
@@ -170,12 +177,14 @@ export const ProductosIntermediosDetalles = ({
                 <p className="text-sm text-muted-foreground">Fecha Creación</p>
                 <p className="font-medium">{productoIntermedio.fecha_creacion_registro}</p>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Receta</p>
-                <Button variant="link" onClick={() => setShowRecipeModal(true)}>
-                  {productoIntermedio.receta_producto.nombre_receta}
-                </Button>
-              </div>
+              {productoIntermedio.receta_relacionada && (
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Receta</p>
+                  <Button variant="link" onClick={() => setShowRecipeModal(true)}>
+                    {productoIntermedio.receta_relacionada.nombre}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -233,12 +242,14 @@ export const ProductosIntermediosDetalles = ({
             onViewLote={handleViewLote}
           />
         </div>
-        <RecipeModal
-                isOpen={showRecipeModal}
-                onClose={() => setShowRecipeModal(false)}
-                data={recipeDetails}
-                isLoading={isLoadingRecipe}
-              />
+        {productoIntermedio.receta_relacionada && (
+          <RecipeModal
+            isOpen={showRecipeModal}
+            onClose={() => setShowRecipeModal(false)}
+            data={recipeDetails}
+            isLoading={isLoadingRecipe}
+          />
+        )}
       </ScrollArea>
     </div>
   );
