@@ -1,9 +1,21 @@
-import { ProductosFinalesProvider } from "@/context/ProductosFinalesContext";
+import { ProductosFinalesProvider, useProductosFinalesContext } from "@/context/ProductosFinalesContext";
 import Sidebar from "@/components/Layout/Sidebar/Sidebar";
 import HeaderBar from "@/components/Layout/HeaderBar/HeaderBar";
 import ProductosFinalesPanel from "@/features/ProductosFinales/components/ProductosFinalesPanel";
-import ProductosFinalesForma from "@/features/ProductosFinales/components/ProductosFinalesForma";
-import ProductosFinalesDetalles from "@/features/ProductosFinales/components/ProductosFinalesDetalles";
+import { ProductosFinalesForm } from "@/features/ProductosFinales/components/ProductosFinalesForm";
+import { ProductosFinalesDetails } from "@/features/ProductosFinales/components/ProductosFinalesDetails";
+
+const ProductosFinalesContent = () => {
+  const { showProductoForm, showProductoDetalles } = useProductosFinalesContext();
+
+  return (
+    <main className="pt-7 pb-3 h-full">
+      {!showProductoForm && !showProductoDetalles && <ProductosFinalesPanel />}
+      {showProductoForm && <ProductosFinalesForm />}
+      {showProductoDetalles && <ProductosFinalesDetails />}
+    </main>
+  );
+};
 
 export default function ProductosFinalesPage() {
   return (
@@ -12,11 +24,7 @@ export default function ProductosFinalesPage() {
       <HeaderBar />
       <div className="flex min-h-screen">
         <div className={`flex-1 ml-(--sidebar-width) pt-(--header-height)`}>
-          <main className="pt-7 pb-3 h-full">
-            <ProductosFinalesPanel />
-            <ProductosFinalesForma />
-            <ProductosFinalesDetalles />
-          </main>
+          <ProductosFinalesContent />
         </div>
       </div>
     </ProductosFinalesProvider>

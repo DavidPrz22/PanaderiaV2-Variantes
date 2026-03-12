@@ -5,7 +5,8 @@ import {
   createCategoriasQueryOptions,
   createProveedoresQueryOptions,
   createAtributosProductoQueryOptions,
-  createCategoriasProductoIntermedioQueryOptions
+  createCategoriasProductoIntermedioQueryOptions,
+  createCategoriasProductoFinalQueryOptions
 } from "../lib/queryOptions";
 import { recetasDetallesQueryOptions } from "@/features/Recetas/hooks/queries/RecetasQueryOptions";
 
@@ -35,4 +36,8 @@ export const useRecetasQuery = (recetaId: number | null, showRecipeModal: boolea
     ...recetasDetallesQueryOptions(recetaId),
     enabled: !!recetaId && showRecipeModal,
   });
+}
+
+export const useCategoriasProductoFinalQuery = () => {
+  return useQuery(createCategoriasProductoFinalQueryOptions());
 }

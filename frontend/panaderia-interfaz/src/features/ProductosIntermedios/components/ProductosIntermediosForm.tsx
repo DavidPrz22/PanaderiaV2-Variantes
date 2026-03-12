@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormHeader } from "./form-sections/FormHeader";
 import { GeneralInformation } from "./form-sections/GeneralInformation";
 import { VariantesSection } from "./form-sections/VariantesSection";
-import { useCreateProductosIntermediosMutation } from "../hooks/mutations/productosIntermediosMutations";
+import { useCreateUpdateProductosIntermediosMutation } from "../hooks/mutations/productosIntermediosMutations";
 import { ActionBar } from "./form-sections/ActionBar";
 import { useProductosIntermediosContext } from "@/context/ProductosIntermediosContext";
 import { useGetProductosIntermediosDetalles } from "../hooks/queries/queries";
@@ -34,7 +34,7 @@ export const ProductosIntermediosForm = ({
 }: CreateProductoIntermedioPanelProps) => {
 
   const { updateRegistro, productoIntermedioId, setShowProductosIntermediosForm, setUpdateRegistro, setProductoIntermedioId } = useProductosIntermediosContext();
-  const { mutate: createProducto, isPending } = useCreateProductosIntermediosMutation();
+  const { mutate: createUpdateProducto, isPending } = useCreateUpdateProductosIntermediosMutation();
   const { data: producto } = useGetProductosIntermediosDetalles(productoIntermedioId!)
 
   const getDefaultValuesUpdate = (producto: ProductosIntermediosDetalles): TProductosIntermediosSchema => ({
@@ -44,6 +44,7 @@ export const ProductosIntermediosForm = ({
     categoria: producto.categoria_producto.id,
     variantes: producto.variantes.map(v =>
     ({
+      id: v.id,
       nombre_variante: v.nombre_variante,
       SKU: v.SKU,
       descripcion: v.descripcion,
@@ -54,7 +55,7 @@ export const ProductosIntermediosForm = ({
   })
 
 
-  const { handleSubmit, control, register, formState: { errors }, reset} = useForm<TProductosIntermediosSchema>({
+  const { handleSubmit, control, register, formState: { errors }, reset } = useForm<TProductosIntermediosSchema>({
     resolver: zodResolver(productosIntermediosSchema),
     defaultValues: updateRegistro && productoIntermedioId ? getDefaultValuesUpdate(producto!) :
       initialFormState,
@@ -68,11 +69,19 @@ export const ProductosIntermediosForm = ({
   }
 
   const onSubmit = (data: TProductosIntermediosSchema) => {
-    createProducto(data, {
-      onSuccess: () => {
-        handleOnClose();
-      }
-    });
+    if (updateRegistro && productoIntermedioId) {
+      createUpdateProducto({ data, id: productoIntermedioId }, {
+        onSuccess: () => {
+          handleOnClose();
+        }
+      });
+    } else {
+      createUpdateProducto({ data }, {
+        onSuccess: () => {
+          handleOnClose();
+        }
+      });
+    }
   };
 
 

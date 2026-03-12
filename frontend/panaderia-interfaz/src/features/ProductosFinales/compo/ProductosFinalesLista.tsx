@@ -1,14 +1,17 @@
 import { TubeSpinner } from "@/assets";
+
 import { PFTableBody } from "./PFTableBody";
-import { PFTableHeader } from "./PFTableHeader";
+import { PFTableHeader } from "./PFHeader";
 import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
-import { useGetProductosFinales, useProductoFinalDetalles } from "../hooks/queries/queries";
-import { useEffect } from "react";
+import { useGetProductosFinales } from "../hooks/queries/queries";
+import { useEffect, useMemo, useReducer } from "react";
 import { Paginator } from "@/components/Paginator";
-import { usePageHook } from "@/hooks/usePageHook";
+
+type PaginatorActions = "next" | "previous" | "base";
 
 export default function ProductosFinalesLista() {
   const {
+    isLoadingDetalles,
     productosFinalesSearchTerm,
     selectedUnidadesVenta,
     selectedCategoriasProductoFinal,
@@ -17,11 +20,8 @@ export default function ProductosFinalesLista() {
     setSelectedUnidadesVenta,
     setSelectedCategoriasProductoFinal,
     setProductosFinalesSearchTerm,
-    setBajoStockFilter,
-    setAgotadosFilter,
     currentPage,
     setCurrentPage,
-    productoId
   } = useProductosFinalesContext();
 
   const {
@@ -31,14 +31,32 @@ export default function ProductosFinalesLista() {
     isFetching,
   } = useGetProductosFinales();
 
-  const { isLoading: isLoadingDetalles } = useProductoFinalDetalles(productoId!);
-
-  const {
-    page,
-    setPage,
-    currentPageResults: currentPageData,
-    totalPages: pagesCount
-  } = usePageHook(productosPagination, fetchNextPage, hasNextPage, 15, currentPage);
+  // Handle pagination state with reducer for complex logic
+  const [page, dispatch] = useReducer(
+    (state: number, action: { type: PaginatorActions; payload?: number }) => {
+      switch (action.type) {
+        case "next":
+          if (productosPagination) {
+            if (state < (productosPagination.pages?.length || 0) - 1) return state + 1;
+            if (hasNextPage) fetchNextPage();
+            return state + 1;
+          }
+          return state;
+        case "previous":
+          return Math.max(0, state - 1);
+        case "base":
+          const targetPage = action.payload ?? 0;
+          // Check if we need to fetch more pages
+          if (targetPage >= (productosPagination?.pages?.length || 0) && hasNextPage) {
+            fetchNextPage();
+          }
+          return targetPage;
+        default:
+          return state;
+      }
+    },
+    currentPage
+  );
 
   // Update context page when local page changes
   useEffect(() => {
@@ -46,6 +64,16 @@ export default function ProductosFinalesLista() {
       setCurrentPage(page);
     }
   }, [page, currentPage, setCurrentPage]);
+
+  // Calculate total pages
+  const pagesCount = useMemo(() => {
+    const resultCount = productosPagination?.pages?.[0]?.count || 0;
+    const entriesPerPage = 15;
+    return Math.ceil(resultCount / entriesPerPage);
+  }, [productosPagination]);
+
+  // Get current page data
+  const currentPageData = productosPagination?.pages[page]?.results || [];
 
   // Apply filters to current page data
   let displayData = currentPageData;
@@ -59,25 +87,25 @@ export default function ProductosFinalesLista() {
         (p.unidad_venta_nombre || "").toLowerCase().includes(term),
     );
   }
+
   if (selectedUnidadesVenta.length > 0) {
     displayData = displayData.filter((p) =>
       selectedUnidadesVenta.includes(p.unidad_venta_nombre),
     );
   }
+
   if (selectedCategoriasProductoFinal.length > 0) {
     displayData = displayData.filter((p) =>
       selectedCategoriasProductoFinal.includes(p.categoria_nombre),
     );
   }
 
-  if (agotadosFilter && bajoStockFilter) {
-    displayData = displayData.filter((p) => Number(p.stock_actual) === 0 || Number(p.stock_actual) < 10); // Assuming 10 as default reorder point if not available in list
-  }
-  else if (agotadosFilter) {
+  if (agotadosFilter) {
     displayData = displayData.filter((p) => Number(p.stock_actual) === 0);
-  } else if (bajoStockFilter) {
-    displayData = displayData.filter((p) => Number(p.stock_actual) < 10); // Placeholder logic if punto_reorden is not in list type
   }
+
+  // Sort by id ascending
+  displayData = displayData.sort((a, b) => a.id - b.id);
 
   const anyFilterActive =
     productosFinalesSearchTerm.length > 0 ||
@@ -86,15 +114,13 @@ export default function ProductosFinalesLista() {
     agotadosFilter ||
     bajoStockFilter;
 
-  const clearFilters = () => {
+  const handleClearFilters = () => {
     setProductosFinalesSearchTerm("");
     setSelectedUnidadesVenta([]);
     setSelectedCategoriasProductoFinal([]);
-    setBajoStockFilter(false);
-    setAgotadosFilter(false);
   };
 
-  const isTrulyEmpty = !productosPagination || productosPagination.pages[0]?.results?.length === 0;
+  const hasData = productosPagination && productosPagination.pages[0]?.results?.length > 0;
 
   return (
     <>
@@ -103,18 +129,19 @@ export default function ProductosFinalesLista() {
           headers={[
             "ID",
             "Nombre",
-            "Unidad de venta",
-            "Stock",
+            "Unidad Produccion",
             "Categoria",
-            "Fecha creacion"
+            "Unidad de Venta",
+            "Stock",
+            "Fecha Creación",
           ]}
         />
         <PFTableBody
-          data={displayData}
+          displayData={displayData}
           isFetching={isFetching}
+          hasData={!!hasData}
           anyFilterActive={anyFilterActive}
-          clearFilters={clearFilters}
-          isTrulyEmpty={isTrulyEmpty}
+          onClearFilters={handleClearFilters}
         />
         {isLoadingDetalles && !isFetching ? (
           <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white opacity-50">
@@ -124,16 +151,18 @@ export default function ProductosFinalesLista() {
           ""
         )}
       </div>
+
+      {/* Show paginator only if there are multiple pages and no active filters */}
       {!anyFilterActive && pagesCount > 1 && (
-        <div className="mt-4 flex justify-center mb-8">
+        <div className="mt-4 flex justify-center">
           <Paginator
             previousPage={page > 0}
             nextPage={hasNextPage || page < pagesCount - 1}
             pages={Array.from({ length: pagesCount }, (_, i) => i)}
             currentPage={page}
-            onClickPrev={() => setPage({ type: "previous" })}
-            onClickPage={(p) => setPage({ type: "base", payload: p })}
-            onClickNext={() => setPage({ type: "next" })}
+            onClickPrev={() => dispatch({ type: "previous" })}
+            onClickPage={(p) => dispatch({ type: "base", payload: p })}
+            onClickNext={() => dispatch({ type: "next" })}
           />
         </div>
       )}

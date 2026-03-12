@@ -1,34 +1,34 @@
-import { PFTableRows } from "./PFTableRows";
-import { PendingTubeSpinner } from "@/components/PendingTubeSpinner";
+import { PFTableRows } from "./PFTablerows";
+import { PendingTubeSpinner } from "./PendingTubeSpinner";
 import type { ProductoFinal } from "../types/types";
 
 interface PFTableBodyProps {
-  data: ProductoFinal[];
+  displayData: ProductoFinal[];
   isFetching: boolean;
+  hasData: boolean;
   anyFilterActive: boolean;
-  clearFilters: () => void;
-  isTrulyEmpty: boolean;
+  onClearFilters: () => void;
 }
 
 export const PFTableBody = ({
-  data,
+  displayData,
   isFetching,
+  hasData,
   anyFilterActive,
-  clearFilters,
-  isTrulyEmpty,
+  onClearFilters,
 }: PFTableBodyProps) => {
-
   const EmptyState = () => {
-    if (isTrulyEmpty) {
+    if (!hasData) {
       return (
         <div className="flex flex-col gap-2 justify-center h-full items-center text-center text-gray-600 py-16">
           <p className="font-semibold text-lg">No hay datos registrados</p>
           <p className="text-sm text-gray-500 max-w-sm">
-            Registra un producto final para comenzar.
+            Aún no se han cargado productos finales. Registra uno nuevo para comenzar.
           </p>
         </div>
       );
     }
+    // There is base data, but filters/search produced zero results
     return (
       <div className="flex flex-col gap-3 justify-center h-full items-center text-center text-gray-600 py-16">
         <p className="font-semibold text-lg">Sin resultados</p>
@@ -37,8 +37,8 @@ export const PFTableBody = ({
         </p>
         {anyFilterActive && (
           <button
-            onClick={clearFilters}
-            className="text-xs px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+            onClick={onClearFilters}
+            className="text-xs px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors"
           >
             Limpiar filtros
           </button>
@@ -54,11 +54,12 @@ export const PFTableBody = ({
           size={28}
           extraClass="absolute bg-white opacity-50 w-full h-[80%]"
         />
-      ) : data.length > 0 ? (
-        <PFTableRows data={data} />
+      ) : displayData.length > 0 ? (
+        <PFTableRows data={displayData} />
       ) : (
         <EmptyState />
       )}
     </>
   );
 };
+

@@ -1,14 +1,16 @@
 import FilterButton from "./FilterButton";
-import PFFiltersPanel from "./PFFiltersPanel";
 import NewButton from "@/components/NewButton";
-import SearchInput from "@/features/ProductosFinales/components/SearchInput";
+import SearchInput from "./SearchInput";
 import { Button } from "@/components/ui/button";
 import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
+import FiltersPanel from "./FiltersPanel";
 import { PackageX, TrendingDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
 
+
 export default function FilterSearch() {
+
   const { setShowProductoForm, bajoStockFilter, setBajoStockFilter, agotadosFilter, setAgotadosFilter } = useProductosFinalesContext();
   const { user } = useAuth();
   const hasAddPermission = userHasPermission(user!, 'productos_elaborados', 'add');
@@ -21,9 +23,9 @@ export default function FilterSearch() {
   }
 
   return (
-    <div className="flex items-center px-8 justify-between relative">
+    <div className="flex items-start px-8 justify-between relative">
       <SearchInput />
-      <div className="flex gap-4 relative" id="pf-filters-anchor">
+      <div className="flex gap-4 relative">
         <Button variant="outline" size="lg" className={`${bajoStockFilter ? "bg-black border-transparent text-white hover:bg-gray-300" : "border-gray-200 shadow-xs "} border cursor-pointer`} onClick={() => toggleBajoStock()}>
           <TrendingDown />
           Bajo Stock
@@ -32,15 +34,11 @@ export default function FilterSearch() {
           <PackageX />
           Agotados
         </Button>
-        <FilterButton />
-        {hasAddPermission && (
-          <NewButton
-            onClick={() => {
-              setShowProductoForm(true);
-            }}
-          />
-        )}
-        <PFFiltersPanel />
+        <div className="relative">
+          <FilterButton />
+          <FiltersPanel />
+        </div>
+        {hasAddPermission && <NewButton onClick={() => setShowProductoForm(true)} />}
       </div>
     </div>
   );

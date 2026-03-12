@@ -1,30 +1,27 @@
 import FilterSearch from "./FilterSearch";
 import ProductosFinalesLista from "./ProductosFinalesLista";
 import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
-import { useGetParametros } from "../hooks/queries/queries";
+import { useProductoFinalDetalles } from "../hooks/queries/queries";
 import { useEffect } from "react";
-import type { CategoriaProductoFinal, UnidadesDeMedida } from "../types/types";
 
 export default function ProductosFinalesPanel() {
   const {
     showProductoForm,
     showProductoDetalles,
-    setUnidadesMedida,
-    setCategoriasProductoFinal,
+    productoId,
+    setShowProductoDetalles
   } = useProductosFinalesContext();
 
-  const [{ data: unidadesMedida }, { data: categoriasProductoFinal }] =
-    useGetParametros();
-  useEffect(() => {
-    if (unidadesMedida && categoriasProductoFinal) {
-      setUnidadesMedida(unidadesMedida as UnidadesDeMedida[]);
-      setCategoriasProductoFinal(
-        categoriasProductoFinal as CategoriaProductoFinal[],
-      );
-    }
-  }, [unidadesMedida, categoriasProductoFinal]);
+  const { data: producto } = useProductoFinalDetalles(productoId!);
 
-  if (showProductoForm || showProductoDetalles) return <></>;
+  useEffect(() => {
+    if (productoId && producto) {
+      setShowProductoDetalles(true);
+    }
+  }, [producto, productoId, setShowProductoDetalles]);
+  
+  if (showProductoForm || showProductoDetalles)
+    return <></>;
 
   return (
     <>

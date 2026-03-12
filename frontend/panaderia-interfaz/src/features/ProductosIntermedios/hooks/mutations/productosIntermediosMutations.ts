@@ -24,13 +24,13 @@ export const useGetRecetasSearchMutation = () => {
   });
 };
 
-export const useCreateProductosIntermediosMutation = () => {
+export const useCreateUpdateProductosIntermediosMutation = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (data: TProductosIntermediosSchema) =>
-      createUpdateProductosIntermedios(data),
+    mutationFn: ({ data, id }: { data: TProductosIntermediosSchema, id?: number }) =>
+      createUpdateProductosIntermedios(data, id),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
@@ -40,11 +40,11 @@ export const useCreateProductosIntermediosMutation = () => {
           queryKey: intermediosSearchOptions.queryKey,
         }),
       ]);
-      toast({
-        title: "Éxito",
-        variant: 'success',
-        description: "Producto intermedio creado correctamente",
-      });
+      // toast({
+      //   title: "Éxito",
+      //   variant: 'success',
+      //   description: "Producto intermedio guardado correctamente",
+      // });
     },
     onError: (error: Error) => {
       toast({

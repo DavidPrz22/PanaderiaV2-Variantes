@@ -144,6 +144,7 @@ class LotesMateriaPrimaDetailsSerializer(serializers.ModelSerializer):
 
 class MateriaPrimaVariantesSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    SKU_variante = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[])
 
     class Meta:
         model = MateriasPrimasVariantes
@@ -158,6 +159,9 @@ class MateriaPrimaVariantesSerializer(serializers.ModelSerializer):
             'cantidad_empaque_estandar',
             'unidad_medida_empaque_estandar',
         ]
+        extra_kwargs = {
+            'SKU_variante': {'validators': []}
+        }
 
 
 class MateriaPrimaSerializer(serializers.ModelSerializer):
@@ -233,9 +237,13 @@ class ProductosIntermediosListSerializer(serializers.ModelSerializer):
 
 
 class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    SKU = serializers.CharField(validators=[])
+
     class Meta:
         model = ProductosElaboradosVariantes
         fields = [
+            'id',
             'nombre_variante',
             'SKU',
             'descripcion',
@@ -243,7 +251,6 @@ class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
             'punto_reorden',
             'atributo'
         ]
-
 
 class ProductosIntermediosSerializer(serializers.ModelSerializer):
     variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
@@ -314,96 +321,67 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
         return None
 
 
-class ProductosFinalesSerializer(serializers.ModelSerializer):
-    # Read-only fields for displaying related object names
+class ProductosFinalesVariantesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    SKU = serializers.CharField(validators=[])
+
+    class Meta:
+        model = ProductosElaboradosVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'SKU',
+            'descripcion',
+            'stock_actual',
+            'punto_reorden',
+            'atributo',
+            'precio_venta_divisa',
+            'precio_venta_local',
+        ]
+
+
+class ProductosFinalesListSerializer(serializers.ModelSerializer):
+    """Lighter serializer for table/list views."""
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
     unidad_venta_nombre = serializers.CharField(source='unidad_venta.nombre_completo', read_only=True)
-
-    # Write-only fields for create/update operations
-    categoria = serializers.PrimaryKeyRelatedField(
-        queryset=CategoriasProductosElaborados.objects.all(), write_only=True
-    )
-    unidad_venta = serializers.PrimaryKeyRelatedField(
-        queryset=UnidadesDeMedida.objects.all(), write_only=True, required=False, allow_null=True
-    )
-    receta_relacionada = serializers.IntegerField(required=False, write_only=True, allow_null=True)
-
+    unidad_produccion_nombre = serializers.SerializerMethodField()
+    stock_actual = serializers.SerializerMethodField()
+    
     class Meta:
         model = ProductosFinales
         fields = [
             'id',
             'nombre_producto',
-            'SKU',
-            'precio_venta_usd',
-            'stock_actual',
-            'punto_reorden',
-            'vendible_por_medida_real',
-            # Read-only fields
             'categoria_nombre',
             'unidad_venta_nombre',
-            # Write-only fields
+            'unidad_produccion_nombre',
+            'fecha_creacion_registro',
+            'stock_actual',
+        ]
+
+    def get_stock_actual(self, obj):
+        return sum(v.stock_actual for v in obj.variantes.all())
+
+    def get_unidad_produccion_nombre(self, obj):
+        return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
+
+
+class ProductosFinalesSerializer(serializers.ModelSerializer):
+    variantes = ProductosFinalesVariantesSerializer(many=True, required=False)
+    class Meta:
+        model = ProductosFinales
+        fields = [
+            'id',
+            'nombre_producto',
+            'vendible_por_medida_real',
             'categoria',
             'unidad_venta',
-            'receta_relacionada',
-            # Other fields needed for write
             'unidad_produccion',
             'tipo_medida_fisica',
             'descripcion',
             'usado_en_transformaciones',
+            'variantes',
         ]
-        # Rename read-only fields in the output to match the frontend type
-        extra_kwargs = {
-            'categoria_nombre': {'source': 'categoria.nombre_categoria'},
-            'unidad_venta_nombre': {'source': 'unidad_venta.nombre_completo'},
-        }
-
-
-    def to_representation(self, instance):
-        """
-        Customize the output to match the `ProductoFinal` type for list views.
-        """
-        representation = super().to_representation(instance)
-        return {
-            'id': representation.get('id'),
-            'nombre_producto': representation.get('nombre_producto'),
-            'SKU': representation.get('SKU'),
-            'unidad_venta': representation.get('unidad_venta_nombre'),
-            'precio_venta_usd': representation.get('precio_venta_usd'),
-            'stock_actual': representation.get('stock_actual'),
-            'punto_reorden': representation.get('punto_reorden'),
-            'categoria': representation.get('categoria_nombre'),
-        }
-
-
-    def create(self, validated_data):
-
-        receta_relacionada = validated_data.pop('receta_relacionada', None)
-        validated_data['es_intermediario'] = False
-        producto = ProductosFinales.objects.create(**validated_data)
-        
-        if receta_relacionada:
-            try:
-                receta = Recetas.objects.get(id=receta_relacionada)
-                receta.producto_elaborado = producto
-                receta.save()
-            except Recetas.DoesNotExist:
-                pass
-        return producto
-
-    def update(self, instance, validated_data):
-        receta_relacionada = validated_data.pop('receta_relacionada', None)
-
-        instance = super().update(instance, validated_data) 
-        if receta_relacionada:
-            try:
-                Recetas.objects.filter(producto_elaborado=instance).update(producto_elaborado=None)
-                
-                receta = Recetas.objects.get(id=receta_relacionada)
-                receta.producto_elaborado = instance
-                receta.save()
-            except Recetas.DoesNotExist:
-                pass
-        return instance
 
 
 class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
@@ -411,49 +389,59 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
     receta_relacionada = serializers.SerializerMethodField()
     unidad_produccion_producto = serializers.SerializerMethodField()
     unidad_venta_producto = serializers.SerializerMethodField()
+    variantes = ProductosFinalesVariantesSerializer(many=True, required=False)
+    stock_actual = serializers.SerializerMethodField()
+    punto_reorden = serializers.SerializerMethodField()
     
     class Meta:
         model = ProductosFinales
         fields = [
             'id',
             'nombre_producto',
-            'SKU',
-            'stock_actual',
-            'punto_reorden',
             'categoria_producto',
             'unidad_produccion_producto',
             'unidad_venta_producto',
             'tipo_medida_fisica',
             'vendible_por_medida_real',
-            'precio_venta_usd',
             'fecha_creacion_registro',
             'descripcion',
             'receta_relacionada',
             'usado_en_transformaciones',
+            'variantes',
+            'stock_actual',
+            'punto_reorden',
         ]
 
     def get_categoria_producto(self, obj):
-        categoria = CategoriasProductosElaborados.objects.get(id=obj.categoria.id)
+        if not obj.categoria:
+            return None
         return {
-            'id': categoria.id,
-            'nombre_categoria': categoria.nombre_categoria,
+            'id': obj.categoria.id,
+            'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
     def get_unidad_produccion_producto(self, obj):
-        unidad_produccion = UnidadesDeMedida.objects.get(id=obj.unidad_produccion.id)
+        if not obj.unidad_produccion:
+            return None
         return {
-            'id': unidad_produccion.id,
-            'nombre_completo': unidad_produccion.nombre_completo,
+            'id': obj.unidad_produccion.id,
+            'nombre_completo': obj.unidad_produccion.nombre_completo,
         }
 
     def get_unidad_venta_producto(self, obj):
-        if obj.unidad_venta:
-            unidad_venta = UnidadesDeMedida.objects.get(id=obj.unidad_venta.id)
-            return {
-                'id': unidad_venta.id,
-                'nombre_completo': unidad_venta.nombre_completo,
-            }
-        return None
+        if not obj.unidad_venta:
+            return None
+        return {
+            'id': obj.unidad_venta.id,
+            'nombre_completo': obj.unidad_venta.nombre_completo,
+        }
+
+    def get_stock_actual(self, obj):
+        return sum(v.stock_actual for v in obj.variantes.all())
+
+    def get_punto_reorden(self, obj):
+        # Can return 0 here, it's mostly handled per variant
+        return 0
 
     def get_receta_relacionada(self, obj):
         """Get the related recipe for a product."""
@@ -469,7 +457,7 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
 class ProductosFinalesListaTransformacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductosFinales
-        fields = ['id', 'nombre_producto', 'stock_actual']
+        fields = ['id', 'nombre_producto']
 
 
 class LotesProductosElaboradosSerializer(serializers.ModelSerializer):

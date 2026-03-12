@@ -20,6 +20,13 @@ export const CategoriaProductoIntermedioSchema = z.object({
     descripcion: z.string().optional().nullable(),
 });
 
+export const CategoriaProductoFinalSchema = z.object({
+    id: z.number(),
+    nombre_categoria: z.string(),
+    descripcion: z.string().optional().nullable(),
+});
+
+
 export const ProveedorSchema = z.object({
     id: z.number(),
     nombre_proveedor: z.string(),
@@ -40,5 +47,6 @@ export const AtributosProductosSchema = z.object({
 export type TUnidadMedida = z.infer<typeof UnidadMedidaSchema>;
 export type TCategoriaMateriaPrima = z.infer<typeof CategoriaMateriaPrimaSchema>;
 export type TCategoriaProductoIntermedio = z.infer<typeof CategoriaProductoIntermedioSchema>;
+export type TCategoriaProductoFinal = z.infer<typeof CategoriaProductoFinalSchema>;
 export type TProveedor = z.infer<typeof ProveedorSchema>;
 export type TAtributosProductos = z.infer<typeof AtributosProductosSchema>;

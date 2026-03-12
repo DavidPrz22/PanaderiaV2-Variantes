@@ -1,10 +1,14 @@
 import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
 import type { recetasSearchItem } from "../types/types";
+import type { UseFormSetValue } from "react-hook-form";
+import type { TProductoFinalSchema } from "../schemas/schemas";
 
 export default function RecetaSearchContainer({
   searchList,
+  setValue,
 }: {
   searchList: recetasSearchItem[];
+  setValue?: UseFormSetValue<TProductoFinalSchema>;
 }) {
   const { setSearchList, recetaSearchInputRef } = useProductosFinalesContext();
   return (
@@ -19,6 +23,9 @@ export default function RecetaSearchContainer({
               recetaSearchInputRef.current.disabled = true;
             }
             setSearchList([]);
+            if (setValue) {
+              setValue("receta_relacionada", item.id);
+            }
           }}
         >
           {item.nombre}

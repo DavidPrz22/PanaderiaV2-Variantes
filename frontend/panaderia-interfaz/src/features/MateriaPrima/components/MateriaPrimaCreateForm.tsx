@@ -91,7 +91,7 @@ export const CreateMateriaPrimaPanel = ({
     setError
   );
 
-  console.log(errors);
+  console.log(watch("variantes"));
   const { fields, append, remove } = useFieldArray({
     control,
     name: "variantes",

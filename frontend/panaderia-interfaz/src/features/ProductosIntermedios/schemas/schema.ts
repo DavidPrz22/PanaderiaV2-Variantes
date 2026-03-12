@@ -2,6 +2,7 @@ import { z } from "zod";
 
 
 export const productosIntermediosVariantesSchema = z.object({
+  id: z.number().optional(),
   nombre_variante: z.string().min(3, "El nombre de la variante debe tener al menos 3 caracteres"),
   SKU: z.string().min(3, "El SKU debe tener al menos 3 caracteres"),
   punto_reorden: z.coerce

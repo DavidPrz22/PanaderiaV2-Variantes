@@ -10,12 +10,11 @@ import type { TProductoFinalSchema } from "../schemas/schemas";
 export type ProductoFinal = {
   id: number;
   nombre_producto: string;
-  SKU: string;
-  unidad_venta: string;
-  precio_venta_usd: number;
-  stock_actual: string;
-  punto_reorden: number;
-  categoria: string;
+  categoria_nombre: string;
+  unidad_venta_nombre: string;
+  unidad_produccion_nombre: string;
+  fecha_creacion_registro: string;
+  stock_actual: number;
 };
 
 export type ProductosFinalesList = ProductoFinal[];
@@ -27,23 +26,33 @@ export type receta_relacionada =
   }
   | false;
 
+export type VariantesProductoFinal = {
+  id: number;
+  nombre_variante: string;
+  SKU: string;
+  precio_venta_divisa: string;
+  precio_venta_local: string;
+  stock_actual: number;
+  punto_reorden: number;
+  atributo: string;
+  descripcion: string;
+};
+
 export type ProductoFinalDetalles = {
   id: number;
   nombre_producto: string;
-  SKU: string;
-  precio_venta_usd: number | null;
-  stock_actual: number;
-  punto_reorden: number;
   categoria_producto: { id: number; nombre_categoria: string };
   unidad_produccion_producto: { id: number; nombre_completo: string };
-  unidad_venta_producto: { id: number; nombre_completo: string };
+  unidad_venta_producto: { id: number; nombre_completo: string } | null;
   tipo_medida_fisica: "UNIDAD" | "PESO" | "VOLUMEN";
   descripcion: string;
   fecha_creacion_registro: string;
-  fecha_modificacion_registro: string;
   receta_relacionada: receta_relacionada | null;
   vendible_por_medida_real: boolean;
   usado_en_transformaciones: boolean;
+  variantes: VariantesProductoFinal[];
+  stock_actual: number;
+  punto_reorden: number;
 };
 
 export type InputType = "text" | "number" | "textarea";

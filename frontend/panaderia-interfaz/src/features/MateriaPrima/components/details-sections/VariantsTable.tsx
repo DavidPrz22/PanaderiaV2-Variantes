@@ -14,6 +14,7 @@ interface VariantsTableProps {
 }
 
 export const VariantsTable = ({ variantes }: VariantsTableProps) => {
+    console.log(variantes)
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -51,12 +52,12 @@ export const VariantsTable = ({ variantes }: VariantsTableProps) => {
                                     <TableCell>{variante.unidad_compra.abreviatura}</TableCell>
                                     <TableCell className="text-right">
                                         {variante.precio_compra_divisa != null
-                                            ? `$${variante.precio_compra_divisa.toFixed(2)}`
+                                            ? `$${variante.precio_compra_divisa}`
                                             : "-"}
                                     </TableCell>
                                     <TableCell className="text-right">
                                         {variante.precio_compra_local != null
-                                            ? variante.precio_compra_local.toFixed(2)
+                                            ? variante.precio_compra_local
                                             : "-"}
                                     </TableCell>
                                 </TableRow>

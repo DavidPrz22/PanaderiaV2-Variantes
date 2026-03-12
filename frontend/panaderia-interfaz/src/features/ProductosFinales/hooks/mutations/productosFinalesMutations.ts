@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteProductoFinal,
-  registerProductoFinal,
-  updateProductoFinal,
-  getRecetasSearch,
+  createUpdateProductoFinal,
   removeRecetaRelacionada,
   changeEstadoLoteProductosFinales,
   deleteLoteProductoElaborado,
@@ -19,47 +17,48 @@ import {
 import { finalesSearchOptions } from "@/features/Production/hooks/queries/ProductionQueryOptions";
 import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
 
-export const useCreateProductoFinal = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (data: TProductoFinalSchema) => registerProductoFinal(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: productosFinalesQueryOptions.queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: finalesSearchOptions.queryKey,
-      })
-    },
-  });
-};
+import { useToast } from "@/utils/use-toast";
 
-export const useUpdateProductoFinal = () => {
+export const useCreateUpdateProductoFinalMutation = () => {
+
   const queryClient = useQueryClient();
+  const { toast } = useToast();
+
   return useMutation({
-    mutationFn: ({
-      id,
-      producto,
-    }: {
-      id: number;
-      producto: TProductoFinalSchema;
-    }) => updateProductoFinal(id, producto),
+    mutationFn: ({ data, id }: { data: TProductoFinalSchema; id?: number }) =>
+      createUpdateProductoFinal(data, id),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
         queryKey: productosFinalesQueryOptions.queryKey,
       });
       queryClient.invalidateQueries({
-        queryKey: productoFinalDetallesQueryOptions(id).queryKey,
-      });
-      queryClient.invalidateQueries({
         queryKey: finalesSearchOptions.queryKey,
-      })
+      });
+      if (id) {
+        queryClient.invalidateQueries({
+          queryKey: productoFinalDetallesQueryOptions(id).queryKey,
+        });
+      }
+
+      toast({
+        title: "Producto final guardado",
+        description: "El producto final ha sido guardado correctamente",
+        variant: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Hubo un error al actualizar el producto final",
+        variant: "destructive",
+      });
     },
   });
 };
 
 export const useDeleteProductoFinal = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: (id: number) => deleteProductoFinal(id),
     onSuccess: (id) => {
@@ -69,70 +68,118 @@ export const useDeleteProductoFinal = () => {
       queryClient.removeQueries({
         queryKey: productoFinalDetallesQueryOptions(id).queryKey,
       });
-    },
-  });
-};
 
-export const useGetRecetasSearchMutation = () => {
-  return useMutation({
-    mutationFn: (search: string) => getRecetasSearch(search),
+      toast({
+        title: "Producto final eliminado",
+        description: "El producto final ha sido eliminado correctamente",
+        variant: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Hubo un error al eliminar el producto final",
+        variant: "destructive",
+      });
+    },
   });
 };
 
 export const useRemoveRecetaRelacionadaMutation = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: (id: number) => removeRecetaRelacionada(id),
     onSuccess: async (_, id) => {
       queryClient.invalidateQueries({
         queryKey: productoFinalDetallesQueryOptions(id).queryKey,
       });
+
+      toast({
+        title: "Receta eliminada",
+        description: "La receta ha sido eliminada correctamente",
+        variant: "success",
+      });
     },
-    onError: (error) => {
-      console.log(error);
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Hubo un error al eliminar la receta",
+        variant: "destructive",
+      });
     },
   });
 };
 
 export const useChangeEstadoLoteProductosFinales = () => {
+
   const queryClient = useQueryClient();
   const { productoId } = useProductosFinalesContext();
+  const { toast } = useToast();
+  
   return useMutation({
     mutationFn: (id: number) => changeEstadoLoteProductosFinales(id),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: lotesProductosFinalesQueryOptions(productoId!).queryKey,
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: lotesProductosFinalesQueryOptions(productoId!).queryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: productosFinalesQueryOptions.queryKey,
+        }),
+      ]);
+
+      toast({
+        title: "Estado del lote actualizado",
+        description: "El estado del lote ha sido actualizado correctamente",
+        variant: "success",
       });
-      await queryClient.invalidateQueries({
-        queryKey: productosFinalesQueryOptions.queryKey,
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Hubo un error al actualizar el estado del lote",
+        variant: "destructive",
       });
     },
   });
 };
 
-export const useDeleteLoteProductoElaboradoMutation = (
-  productoId: number | undefined,
-  handleClose: () => void,
-) => {
+export const useDeleteLoteProductoElaboradoMutation = () => {
+  
+  const { productoId } = useProductosFinalesContext();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (id: number) => {
       await deleteLoteProductoElaborado(id);
     },
     onSuccess: async () => {
-      if (productoId) {
-        await queryClient.invalidateQueries({
-          queryKey: lotesProductosFinalesQueryOptions(productoId).queryKey,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: productoFinalDetallesQueryOptions(productoId).queryKey,
-        });
-        await queryClient.invalidateQueries({
-          queryKey: productosFinalesQueryOptions.queryKey
-        });
-        handleClose();
-      }
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: lotesProductosFinalesQueryOptions(productoId!).queryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: productoFinalDetallesQueryOptions(productoId!).queryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: productosFinalesQueryOptions.queryKey,
+        }),
+      ]);
+
+      toast({
+        title: "Lote eliminado",
+        description: "El lote ha sido eliminado correctamente",
+        variant: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Hubo un error al eliminar el lote",
+        variant: "destructive",
+      });
     },
   });
 };

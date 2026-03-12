@@ -2,8 +2,6 @@ import { queryOptions } from "@tanstack/react-query";
 import {
   getProductoFinalDetalles,
   getProductosFinales,
-  getUnidadesMedida,
-  getCategoriasProductoFinal,
   getLotesProductosFinales,
 } from "../../api/api";
 import type { LoteProductoFinalPagination, ProductosFinalesPagination } from "../../types/types";
@@ -25,17 +23,6 @@ export const productosFinalesQueryOptions = {
   getPreviousPageParam: (firstPage: ProductosFinalesPagination) => firstPage.previous,
 };
 
-export const unidadesMedidaQueryOptions = {
-  queryKey: ["unidades-medida"],
-  queryFn: getUnidadesMedida,
-  staleTime: Infinity,
-};
-
-export const categoriasProductoFinalQueryOptions = {
-  queryKey: ["categorias-producto-final"],
-  queryFn: getCategoriasProductoFinal,
-  staleTime: Infinity,
-};
 
 export const lotesProductosFinalesQueryOptions = (producto_final_id?: number) => ({
   queryKey: ["lotes-productos-finales-paginated", producto_final_id],

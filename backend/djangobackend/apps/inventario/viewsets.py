@@ -12,7 +12,7 @@ from apps.inventario.serializers import (
     ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
     MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer, 
     ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
-    ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, 
+    ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, ProductosFinalesListSerializer,
     ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
     ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
 )
@@ -130,46 +130,50 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
         # Extract variantes data
         variantes_data = validated_data.pop('variantes', None)
         
-        # Update main Materia Prima fields
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        
-        if variantes_data is not None:
-            # Sync variants
-            existing_variantes = {v.id: v for v in instance.variantes.all()}
-            existing_ids = set(existing_variantes.keys())
-            
-            variantes_to_create = []
-            incoming_ids = set()
-            
-            for v_data in variantes_data:
-                v_id = v_data.get('id')
+        try:
+            with transaction.atomic():
+                # Update main Materia Prima fields
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+                instance.save()
                 
-                if v_id and v_id in existing_ids:
-                    # Update existing variant
-                    incoming_ids.add(v_id)
-                    variante_obj = existing_variantes[v_id]
-                    for key, val in v_data.items():
-                        if key != 'id':
-                            setattr(variante_obj, key, val)
-                    variante_obj.save() 
-                
-                elif not v_id:
-                    # Create new variant
-                    # Remove 'id' if present but None/Empty
-                    if 'id' in v_data:
-                        del v_data['id']
-                    variantes_to_create.append(MateriasPrimasVariantes(materia_prima=instance, **v_data))
-            
-            # Bulk create new ones
-            if variantes_to_create:
-                MateriasPrimasVariantes.objects.bulk_create(variantes_to_create)
-            
-            # Delete removed variants
-            ids_to_delete = existing_ids - incoming_ids
-            if ids_to_delete:
-                MateriasPrimasVariantes.objects.filter(id__in=ids_to_delete).delete()
+                if variantes_data is not None:
+                    # Sync variants
+                    existing_variantes = {v.id: v for v in instance.variantes.all()}
+                    existing_ids = set(existing_variantes.keys())
+                    
+                    variantes_to_create = []
+                    incoming_ids = set()
+                    
+                    for v_data in variantes_data:
+                        v_id = v_data.get('id')
+                        
+                        if v_id and v_id in existing_ids:
+                            # Update existing variant
+                            incoming_ids.add(v_id)
+                            variante_obj = existing_variantes[v_id]
+                            for key, val in v_data.items():
+                                if key != 'id':
+                                    setattr(variante_obj, key, val)
+                            variante_obj.save() 
+                        
+                        elif not v_id:
+                            # Create new variant
+                            if 'id' in v_data:
+                                del v_data['id']
+                            variantes_to_create.append(MateriasPrimasVariantes(materia_prima=instance, **v_data))
+                    
+                    # Bulk create new ones
+                    if variantes_to_create:
+                        MateriasPrimasVariantes.objects.bulk_create(variantes_to_create)
+                    
+                    # Delete removed variants
+                    ids_to_delete = existing_ids - incoming_ids
+                    if ids_to_delete:
+                        MateriasPrimasVariantes.objects.filter(id__in=ids_to_delete).delete()
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         # Refetch to return full data
         instance.refresh_from_db()
@@ -607,11 +611,11 @@ class ProductosIntermediosViewSet(viewsets.ModelViewSet):
                     es_intermediario=True, 
                 )
                 variantes_create = []
-                for variante in variantes:
+                for variant in variantes:
                     variantes_create.append(
                         ProductosElaboradosVariantes(
                             producto_elaborado=producto_intermedio,
-                            **variante
+                            **variant
                         )
                     )
                 ProductosElaboradosVariantes.objects.bulk_create(variantes_create)
@@ -624,12 +628,176 @@ class ProductosIntermediosViewSet(viewsets.ModelViewSet):
             'producto_intermedio': producto_data
         }, status=status.HTTP_201_CREATED)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        # Extract variants data
+        variantes_data = validated_data.pop('variantes', None)
+        
+        try:
+            with transaction.atomic():
+                # Update main product fields
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+                instance.save()
+                
+                if variantes_data is not None:
+                    # Sync variants
+                    variantes_in_mp = instance.variantes.all()
+                    print(variantes_data)
+                    existing_variantes = {v.id: v for v in variantes_in_mp}
+                    existing_ids = set(existing_variantes.keys())
+                    
+                    variantes_to_create = []
+                    incoming_ids = set()
+                    
+                    for v_data in variantes_data:
+                        v_id = v_data.get('id')
+                        
+                        if v_id and v_id in existing_ids:
+                            # Update existing variant
+                            incoming_ids.add(v_id)
+                            variante_obj = existing_variantes[v_id]
+                            for key, val in v_data.items():
+                                if key != 'id':
+                                    setattr(variante_obj, key, val)
+                            variante_obj.save() 
+                        
+                        elif not v_id:
+                            # Create new variant
+                            if 'id' in v_data:
+                                del v_data['id']
+                            variantes_to_create.append(
+                                ProductosElaboradosVariantes(
+                                    producto_elaborado=instance, 
+                                    **v_data
+                                )
+                            )
+                    
+                    # Bulk create new ones
+                    if variantes_to_create:
+                        ProductosElaboradosVariantes.objects.bulk_create(variantes_to_create)
+                    
+                    # Delete removed variants
+                    ids_to_delete = existing_ids - incoming_ids
+                    if ids_to_delete:
+                        # Before deleting, check if they have lots or other relations
+                        ProductosElaboradosVariantes.objects.filter(id__in=ids_to_delete).delete()
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Refetch and return full data
+        instance.refresh_from_db()
+        return Response(ProductosIntermediosDetallesSerializer(instance).data)
+
 
 class ProductosFinalesViewSet(viewsets.ModelViewSet):
     queryset = ProductosFinales.objects.all().order_by('id')
     serializer_class = ProductosFinalesSerializer
     permission_classes = [IsStaffOrVendedorReadOnly]
     pagination_class = StandardResultsSetPagination
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductosFinalesListSerializer
+        if self.action == 'retrieve':
+            return ProductosFinalesDetallesSerializer
+        return ProductosFinalesSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        variantes = serializer.validated_data.pop('variantes', [])
+        
+        try:
+            with transaction.atomic():
+                producto_final = ProductosFinales.objects.create(
+                    **serializer.validated_data, 
+                    es_intermediario=False, 
+                )
+                variantes_create = []
+                for variant in variantes:
+                    variantes_create.append(
+                        ProductosElaboradosVariantes(
+                            producto_elaborado=producto_final,
+                            **variant
+                        )
+                    )
+                ProductosElaboradosVariantes.objects.bulk_create(variantes_create)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        producto_data = ProductosFinalesSerializer(producto_final).data
+        return Response({
+            'message': 'Producto final creado correctamente', 
+            'producto_final': producto_data
+        }, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        variantes_data = validated_data.pop('variantes', None)
+        
+        try:
+            with transaction.atomic():
+                # Update main product fields
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+                instance.save()
+                
+                if variantes_data is not None:
+                    # Sync variants
+                    variantes_in_mp = instance.variantes.all()
+                    existing_variantes = {v.id: v for v in variantes_in_mp}
+                    existing_ids = set(existing_variantes.keys())
+                    
+                    variantes_to_create = []
+                    incoming_ids = set()
+                    
+                    for v_data in variantes_data:
+                        v_id = v_data.get('id')
+                        
+                        if v_id and v_id in existing_ids:
+                            # Update existing variant
+                            incoming_ids.add(v_id)
+                            variante_obj = existing_variantes[v_id]
+                            for key, val in v_data.items():
+                                if key != 'id':
+                                    setattr(variante_obj, key, val)
+                            variante_obj.save() 
+                        
+                        elif not v_id:
+                            # Create new variant
+                            if 'id' in v_data:
+                                del v_data['id']
+                            variantes_to_create.append(
+                                ProductosElaboradosVariantes(
+                                    producto_elaborado=instance, 
+                                    **v_data
+                                )
+                            )
+                    
+                    if variantes_to_create:
+                        ProductosElaboradosVariantes.objects.bulk_create(variantes_to_create)
+                    
+                    ids_to_delete = existing_ids - incoming_ids
+                    if ids_to_delete:
+                        ProductosElaboradosVariantes.objects.filter(id__in=ids_to_delete).delete()
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        instance.refresh_from_db()
+        return Response(ProductosFinalesDetallesSerializer(instance).data)
 
     @action(detail=False, methods=['get'])
     def search(self, request):

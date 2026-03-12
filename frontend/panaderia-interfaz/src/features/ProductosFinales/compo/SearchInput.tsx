@@ -18,6 +18,8 @@ export default function SearchInput() {
     [setProductosFinalesSearchTerm],
   );
 
+  // Sync external term changes ONLY when they differ (prevents wiping while user types)
+
   useEffect(() => {
     if (productosFinalesSearchTerm !== localValue) {
       setLocalValue(productosFinalesSearchTerm);
@@ -50,7 +52,7 @@ export default function SearchInput() {
     <div className="w-[var(--search-input-width)] shadow-sm bg-white rounded-full flex items-center justify-between gap-4 p-1 relative border border-gray-200">
       <div className="flex-1 pl-4">
         <input
-          id="pfSearchInput"
+          id="searchInput"
           type="text"
           placeholder="Buscar producto final..."
           className="font-medium font-[Roboto] outline-none w-full"
@@ -64,7 +66,7 @@ export default function SearchInput() {
       {localValue && (
         <button
           onClick={resetSearch}
-          aria-label="Limpiar búsqueda"
+            aria-label="Limpiar búsqueda"
           className="absolute right-[13%] flex items-center justify-center p-0.5 rounded-full bg-gray-200 cursor-pointer hover:bg-gray-300 "
         >
           <img className="size-4" src={XIcon} alt="X" />
