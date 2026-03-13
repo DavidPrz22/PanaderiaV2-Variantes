@@ -85,6 +85,7 @@ export default function ProductosReventaLista() {
     displayData = displayData.filter(
       (p) =>
         p.nombre_producto.toLowerCase().includes(term) ||
+        (p.SKU || "").toLowerCase().includes(term) ||
         (p.categoria_nombre || "").toLowerCase().includes(term) ||
         (p.unidad_base_inventario_nombre || "").toLowerCase().includes(term),
     );
@@ -102,8 +103,13 @@ export default function ProductosReventaLista() {
     );
   }
 
-  if (agotadosFilter) {
+  if (agotadosFilter && bajoStockFilter) {
+    displayData = displayData.filter((p) => Number(p.stock_actual) === 0 || Number(p.stock_actual) < Number(p.punto_reorden));
+  }
+  else if (agotadosFilter) {
     displayData = displayData.filter((p) => Number(p.stock_actual) === 0);
+  } else if (bajoStockFilter) {
+    displayData = displayData.filter((p) => Number(p.stock_actual) < Number(p.punto_reorden));
   }
 
   const anyFilterActive =
@@ -131,11 +137,13 @@ export default function ProductosReventaLista() {
           headers={[
             "ID",
             "Nombre",
-            "Unidad Inv.",
-            "Categoría",
+            "SKU",
             "Stock",
-            "Unidad Venta",
-            "Fecha Creación",
+            "Punto de Reorden",
+            "Precio Venta",
+            "Categoría",
+            "Unidad de inventario",
+            "Fecha de creación",
           ]}
         />
         <PRTableBody

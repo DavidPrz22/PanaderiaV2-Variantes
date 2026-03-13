@@ -1,4 +1,4 @@
-import { fetchCategoriasMateriaPrima, fetchUnidadesMedida, fetchProveedores, fetchAtributosProducto, fetchCategoriasProductoIntermedio, fetchProductosIntermediosCategorias, fetchCategoriasProductoFinal } from "@/api/api";
+import { fetchCategoriasMateriaPrima, fetchUnidadesMedida, fetchProveedores, fetchAtributosProducto, fetchCategoriasProductoIntermedio, fetchCategoriasProductoFinal, fetchCategoriasProductoReventa } from "@/api/api";
 
 export const createUnidadesQueryOptions = () => ({
   queryKey: ["unidadesMedida"],
@@ -35,5 +35,11 @@ export const createCategoriasProductoIntermedioQueryOptions = () => ({
 export const createCategoriasProductoFinalQueryOptions = () => ({
   queryKey: ["categoriasProductoFinal"],
   queryFn: fetchCategoriasProductoFinal,
+  staleTime: Infinity,
+});
+
+export const createCategoriasProductoReventaQueryOptions = () => ({
+  queryKey: ["categoriasProductoReventa"],
+  queryFn: fetchCategoriasProductoReventa,
   staleTime: Infinity,
 });

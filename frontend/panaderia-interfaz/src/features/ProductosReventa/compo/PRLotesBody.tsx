@@ -76,7 +76,7 @@ export const PRLotesBody = ({ data, isLoading }: { data: LotesProductosReventa[]
                         <div>{item.stock_actual_lote}</div>
                         <div>{item.fecha_caducidad}</div>
                         <div>{item.fecha_recepcion}</div>
-                        <div>${item.coste_unitario_lote_divisa}</div>
+                        <div>${item.coste_unitario_lote_usd}</div>
                         <div className="font-medium">{item.estado}</div>
                         {canDelete && (
                             <div onClick={(e) => e.stopPropagation()}>

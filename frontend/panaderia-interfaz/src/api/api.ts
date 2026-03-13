@@ -7,12 +7,14 @@ import {
   ProveedorSchema,
   CategoriaProductoIntermedioSchema,
   CategoriaProductoFinalSchema,
+  CategoriaProductoReventaSchema,
   type TUnidadMedida,
   type TCategoriaMateriaPrima,
   type TProveedor,
   type TAtributosProductos,
   type TCategoriaProductoIntermedio,
   type TCategoriaProductoFinal,
+  type TCategoriaProductoReventa,
 } from "@/types/zod-types";
 
 import type { AxiosError } from "axios";
@@ -132,6 +134,23 @@ export const fetchCategoriasProductoFinal = async (): Promise<TCategoriaProducto
   try {
     const response = await apiClient.get("/api/core/categorias-producto-final/");
     const valid = z.array(CategoriaProductoFinalSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch categorias",
+    );
+  }
+};
+
+export const fetchCategoriasProductoReventa = async (): Promise<TCategoriaProductoReventa[]> => {
+  try {
+    const response = await apiClient.get("/api/core/categorias-productos-reventa/");
+    const valid = z.array(CategoriaProductoReventaSchema).safeParse(response.data);
     if (valid.success) {
       return valid.data;
     }

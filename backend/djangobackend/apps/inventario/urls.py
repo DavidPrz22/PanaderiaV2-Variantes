@@ -1,6 +1,24 @@
 from rest_framework.routers import DefaultRouter
-from apps.inventario.viewsets import ComponenteSearchViewSet, MateriaPrimaViewSet, LotesMateriaPrimaViewSet, ProductosFinalesDetallesViewSet, ProductosIntermediosViewSet, ProductosFinalesViewSet, ProductosIntermediosDetallesViewSet, ProductosElaboradosViewSet, ProductosFinalesSearchViewset, ProductosIntermediosSearchViewSet, ProductosFinalesListaTransformacionViewSet, LotesProductosElaboradosViewSet, ProductosReventaViewSet, ProductosReventaDetallesViewSet, LotesProductosReventaViewSet
-from apps.inventario.views import ProductosPedidoSearchView, ProductosComprasSearchView, CategoriasProductosView, ProductosVentasListaView
+from apps.inventario.viewsets import (
+    ComponenteSearchViewSet, 
+    MateriaPrimaViewSet, 
+    LotesMateriaPrimaViewSet, 
+    ProductosIntermediosViewSet, 
+    ProductosFinalesViewSet, 
+    ProductosIntermediosSearchViewSet, 
+    ProductosFinalesSearchViewset, 
+    ProductosFinalesListaTransformacionViewSet, 
+    ProductosElaboradosViewSet, 
+    LotesProductosElaboradosViewSet, 
+    ProductosReventaViewSet, 
+    LotesProductosReventaViewSet
+    )
+from apps.inventario.views import (
+    ProductosPedidoSearchView, 
+    ProductosComprasSearchView, 
+    CategoriasProductosView, 
+    ProductosVentasListaView
+    )
 from django.urls import include, path
 
 router = DefaultRouter()
@@ -13,17 +31,14 @@ router.register('componentes-search', ComponenteSearchViewSet, basename='compone
 
 # Productos Intermedios
 router.register('productos-intermedios', ProductosIntermediosViewSet, basename='productosintermedios')
-router.register('productos-intermedios-detalles', ProductosIntermediosDetallesViewSet, basename='productosintermedios-detalles')
 router.register('productos-intermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
 
 # Productos Finales
 router.register('productosfinales', ProductosFinalesViewSet, basename='productosfinales')
-router.register('productosfinales-detalles', ProductosFinalesDetallesViewSet, basename='productosfinales-detalles')
 router.register('productosfinales-search', ProductosFinalesSearchViewset, basename='productosfinales-search')
 
 # Productos Reventa
 router.register('productosreventa', ProductosReventaViewSet, basename='productosreventa')
-router.register('productosreventa-detalles', ProductosReventaDetallesViewSet, basename='productosreventa-detalles')
 router.register('lotes-productos-reventa', LotesProductosReventaViewSet, basename='lotes-productos-reventa')
 
 # Productos Elaborados

@@ -785,9 +785,12 @@ class ProductosReventa(ProductosStockManagement):
         default=1,
         help_text="Cuántas unidades de inventario equivalen a 1 unidad de venta"
     )
-
+    
+    es_perecedero = models.BooleanField(
+        default=False,
+        help_text="Si es True, esta variante es un perecedero"
+    )
     fecha_creacion_registro = models.DateField(auto_now_add=True)
-    fecha_modificacion_registro = models.DateField(auto_now=True)
 
     def expirar_lotes_viejos(self, force=False):
         """Expire old lots for this specific product"""
@@ -878,7 +881,7 @@ class ProductosReventa(ProductosStockManagement):
         return cantidad_venta * self.factor_conversion
 
     def __str__(self):
-        return f"Producto {self.id} - {self.nombre_producto} {self.stock_actual}"
+        return f"Producto {self.id} - {self.nombre_producto}"
 
     
 class ProductosReventaVariantes(models.Model):
@@ -898,10 +901,6 @@ class ProductosReventaVariantes(models.Model):
         null=False, 
         blank=False,
         help_text="Nombre descriptivo de la variante (ej: '6 unidades', 'Grande', 'Chocolate')"
-    )
-    es_pecedero = models.BooleanField(
-        default=False,
-        help_text="Si es True, esta variante es un pecedero"
     )
     # Pricing
     precio_venta_divisa = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
@@ -930,7 +929,6 @@ class ProductosReventaVariantes(models.Model):
         help_text="Si es True, esta variante puede ser vendida"
     )
 
-    
     fecha_creacion = models.DateField(auto_now_add=True)
     fecha_modificacion = models.DateField(auto_now=True)
     
@@ -1024,60 +1022,84 @@ def update_materia_prima_stock(sender, instance, **kwargs):
 
     MateriasPrimas.objects.filter(id=materia_prima.id).update(stock_actual=total_stock)
 
-# @receiver([post_save, post_delete], sender=LotesProductosReventa)
-# def update_producto_reventa_variante_stock(sender, instance, **kwargs):
-#     producto_reventa_variante = instance.producto_reventa_variante
+@receiver([post_save, post_delete], sender=LotesProductosReventa)
+def update_producto_reventa_variante_stock(sender, instance, **kwargs):
+    producto_reventa_variante = instance.producto_reventa_variante
+    producto_reventa = producto_reventa_variante.producto_reventa
 
-#     # Expire lots that have passed their expiration date
-#     if getattr(instance, "id", None) and instance.fecha_caducidad <= timezone.now().date() and instance.estado == LotesStatus.DISPONIBLE:
-#         expired_lots = LotesProductosReventa.objects.filter(
-#             producto_reventa_variante=producto_reventa_variante,
-#             fecha_caducidad__lte=timezone.now().date(),
-#             estado=LotesStatus.DISPONIBLE
-#         )
-#         expired_lots.update(estado=LotesStatus.EXPIRADO)
+    # Expire lots that have passed their expiration date
+    if getattr(instance, "id", None) and instance.fecha_caducidad <= timezone.now().date() and instance.estado == LotesStatus.DISPONIBLE:
+        expired_lots = LotesProductosReventa.objects.filter(
+            producto_reventa_variante=producto_reventa_variante,
+            fecha_caducidad__lte=timezone.now().date(),
+            estado=LotesStatus.DISPONIBLE
+        )
+        expired_lots.update(estado=LotesStatus.EXPIRADO)
 
-#     # Calculate total stock from available, non-expired lots
-#     total_stock = LotesProductosReventa.objects.filter(
-#         producto_reventa_variante=producto_reventa_variante,
-#         fecha_caducidad__gt=timezone.now().date(),
-#         estado=LotesStatus.DISPONIBLE
-#     ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
+    # Calculate total stock from available, non-expired lots for this variant
+    total_variant_stock = LotesProductosReventa.objects.filter(
+        producto_reventa_variante=producto_reventa_variante,
+        fecha_caducidad__gt=timezone.now().date(),
+        estado=LotesStatus.DISPONIBLE
+    ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
 
-#     ProductosReventaVariantes.objects.filter(id=producto_reventa_variante.id).update(stock_actual=total_stock)
+    # Update variant stock
+    producto_reventa_variante.__class__.objects.filter(id=producto_reventa_variante.id).update(stock_actual=total_variant_stock)
 
-#     from apps.core.services.services import NotificationService
-#     NotificationService.check_low_stock(ProductosReventaVariantes)
-#     NotificationService.check_sin_stock(ProductosReventaVariantes)
+    # Update base product stock (sum of all its variants)
+    total_product_stock = ProductosReventaVariantes.objects.filter(
+        producto_reventa=producto_reventa
+    ).aggregate(total=Sum('stock_actual'))['total'] or 0
+    
+    producto_reventa.__class__.objects.filter(id=producto_reventa.id).update(stock_actual=total_product_stock)
+
+    try:
+        from apps.core.services.services import NotificationService
+        NotificationService.check_low_stock(ProductosReventaVariantes)
+        NotificationService.check_sin_stock(ProductosReventaVariantes)
+    except ImportError:
+        pass
 
 
-# @receiver([post_save, post_delete], sender=LotesProductosElaborados)
-# def update_producto_elaborado_variante_stock(sender, instance, **kwargs):
-#     """
-#     Update variant stock when lots are created, updated, or deleted.
-#     This ensures the variant's stock_actual reflects the sum of all available lots.
-#     """
-#     variante = instance.producto_elaborado_variante
+@receiver([post_save, post_delete], sender=LotesProductosElaborados)
+def update_producto_elaborado_variante_stock(sender, instance, **kwargs):
+    """
+    Update variant stock when lots are created, updated, or deleted.
+    This ensures the variant's stock_actual reflects the sum of all available lots.
+    """
+    variante = instance.producto_elaborado_variante
+    producto_elaborado = variante.producto_elaborado
 
-#     # Expire lots that have passed their expiration date
-#     if getattr(instance, "id", None) and instance.fecha_caducidad <= timezone.now().date() and instance.estado == LotesStatus.DISPONIBLE:
-#         expired_lots = LotesProductosElaborados.objects.filter(
-#             producto_elaborado_variante=variante,
-#             fecha_caducidad__lte=timezone.now().date(),
-#             estado=LotesStatus.DISPONIBLE
-#         )
-#         expired_lots.update(estado=LotesStatus.EXPIRADO)
+    # Expire lots that have passed their expiration date
+    if getattr(instance, "id", None) and instance.fecha_caducidad <= timezone.now().date() and instance.estado == LotesStatus.DISPONIBLE:
+        expired_lots = LotesProductosElaborados.objects.filter(
+            producto_elaborado_variante=variante,
+            fecha_caducidad__lte=timezone.now().date(),
+            estado=LotesStatus.DISPONIBLE
+        )
+        expired_lots.update(estado=LotesStatus.EXPIRADO)
 
-#     # Calculate total stock from available, non-expired lots for this variant
-#     total_stock = LotesProductosElaborados.objects.filter(
-#         producto_elaborado_variante=variante,
-#         fecha_caducidad__gt=timezone.now().date(),
-#         estado=LotesStatus.DISPONIBLE
-#     ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
+    # Calculate total stock from available, non-expired lots for this variant
+    total_variant_stock = LotesProductosElaborados.objects.filter(
+        producto_elaborado_variante=variante,
+        fecha_caducidad__gt=timezone.now().date(),
+        estado=LotesStatus.DISPONIBLE
+    ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
 
-#     ProductosElaboradosVariantes.objects.filter(id=variante.id).update(stock_actual=total_stock)
+    # Update variant stock
+    variante.__class__.objects.filter(id=variante.id).update(stock_actual=total_variant_stock)
 
-#     from apps.core.services.services import NotificationService
-#     # Check notifications for the variant
-#     NotificationService.check_low_stock(ProductosElaboradosVariantes)
-#     NotificationService.check_sin_stock(ProductosElaboradosVariantes)
+    # Update base product stock (sum of all its variants)
+    total_product_stock = ProductosElaboradosVariantes.objects.filter(
+        producto_elaborado=producto_elaborado
+    ).aggregate(total=Sum('stock_actual'))['total'] or 0
+
+    producto_elaborado.__class__.objects.filter(id=producto_elaborado.id).update(stock_actual=total_product_stock)
+
+    try:
+        from apps.core.services.services import NotificationService
+        # Check notifications for the variant
+        NotificationService.check_low_stock(ProductosElaboradosVariantes)
+        NotificationService.check_sin_stock(ProductosElaboradosVariantes)
+    except ImportError:
+        pass

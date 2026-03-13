@@ -4,8 +4,8 @@ from .models import (
     MateriasPrimas, LotesMateriasPrimas, 
     ProductosIntermedios, ProductosFinales,
     ProductosElaborados, LotesProductosElaborados, 
-    ProductosReventa, LotesProductosReventa, 
-    MateriasPrimasVariantes, ProductosElaboradosVariantes
+    ProductosReventa, LotesProductosReventa, ProductosReventaVariantes,
+    MateriasPrimasVariantes, ProductosElaboradosVariantes,
 )
 
 from apps.core.models import UnidadesDeMedida, CategoriasMateriaPrima, CategoriasProductosElaborados, CategoriasProductosReventa
@@ -552,79 +552,65 @@ class ProductosIntermediosSearchSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre_producto', 'unidad_medida']
 
 
-class ProductosReventaSerializer(serializers.ModelSerializer):
-    # Read-only fields for displaying related object names
-    categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
-    unidad_base_inventario_nombre = serializers.CharField(source='unidad_base_inventario.nombre_completo', read_only=True)
+class ProductosReventaVariantesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    SKU = serializers.CharField(validators=[])
+
+    class Meta:
+        model = ProductosReventaVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'SKU',
+            'descripcion',
+            'stock_actual',
+            'punto_reorden',
+            'atributo',
+            'precio_venta_divisa',
+            'precio_venta_local',
+            'costo_divisa',
+            'costo_local'
+        ]
+
+class ProductosReventaListSerializer(serializers.ModelSerializer):
     unidad_venta_nombre = serializers.CharField(source='unidad_venta.nombre_completo', read_only=True)
-    proveedor_preferido_nombre = serializers.CharField(source='proveedor_preferido.nombre_proveedor', read_only=True)
+    unidad_base_inventario_nombre = serializers.CharField(source='unidad_base_inventario.nombre_completo', read_only=True)
+    categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
+    stock_actual = serializers.SerializerMethodField()
 
-    # Write-only fields for create/update operations
-    categoria = serializers.PrimaryKeyRelatedField(
-        queryset=CategoriasProductosReventa.objects.all(), write_only=True
-    )
-    unidad_base_inventario = serializers.PrimaryKeyRelatedField(
-        queryset=UnidadesDeMedida.objects.all(), write_only=True
-    )
-    unidad_venta = serializers.PrimaryKeyRelatedField(
-        queryset=UnidadesDeMedida.objects.all(), write_only=True
-    )
-    proveedor_preferido = serializers.PrimaryKeyRelatedField(
-        queryset=Proveedores.objects.all(), write_only=True, required=False, allow_null=True
-    )
+    def get_stock_actual(self, obj):
+        return 0
 
+    class Meta:
+        model = ProductosReventa
+        fields = [
+            'id', 
+            'nombre_producto',
+            'unidad_base_inventario_nombre', 
+            'categoria_nombre', 
+            'stock_actual',
+            'unidad_venta_nombre',
+            'fecha_creacion_registro',
+        ]
+
+
+class ProductosReventaSerializer(serializers.ModelSerializer):
+    variantes = ProductosReventaVariantesSerializer(many=True, required=False)
     class Meta:
         model = ProductosReventa
         fields = [
             'id',
             'nombre_producto',
             'descripcion',
-            'SKU',
             'categoria',
-            'categoria_nombre',
             'marca',
             'proveedor_preferido',
-            'proveedor_preferido_nombre',
             'unidad_base_inventario',
-            'unidad_base_inventario_nombre',
             'unidad_venta',
-            'unidad_venta_nombre',
             'factor_conversion',
-            'precio_venta_usd',
-            'punto_reorden',    
-            'stock_actual',
-            'precio_compra_usd',
-            'perecedero',
-            'fecha_creacion_registro',
-            'fecha_modificacion_registro',
+            'es_perecedero',
+            'variantes',
         ]
-        read_only_fields = [
-            'id',
-            'stock_actual',
-            'fecha_creacion_registro',
-            'fecha_modificacion_registro',
-        ]
-
-    def create(self, validated_data):
-        # Set default values for fields not provided in the form
-        validated_data['stock_actual'] = 0
-
-        return super().create(validated_data)
-
-    def to_representation(self, instance):
-        """Customize the output representation."""
-        data = super().to_representation(instance)
-
-        # Remove write_only fields from output
-        write_only_fields = ['categoria', 'unidad_base_inventario', 'unidad_venta', 'proveedor_preferido']
-        for field in write_only_fields:
-            data.pop(field, None)
-
-        # Handle optional proveedor_preferido
-        if not instance.proveedor_preferido:
-            data['proveedor_preferido_nombre'] = None
-
-        return data
 
 
 class LotesProductosReventaSerializer(serializers.ModelSerializer):
@@ -636,22 +622,31 @@ class LotesProductosReventaSerializer(serializers.ModelSerializer):
         queryset=Proveedores.objects.all(),
         write_only=True
     )
+    producto_reventa_variante_detalles = serializers.SerializerMethodField()
 
     class Meta:
         model = LotesProductosReventa
         fields = [
             'id',
-            'producto_reventa',
+            'producto_reventa_variante',
+            'producto_reventa_variante_detalles',
             'fecha_recepcion',
             'fecha_caducidad',
             'cantidad_recibida',
             'stock_actual_lote',
             'coste_unitario_lote_usd',
+            'coste_unitario_lote_local',
             'detalle_oc',
             'proveedor',
             'proveedor_id',
             'estado',
         ]
+
+    def get_producto_reventa_variante_detalles(self, obj):
+        return {
+            'id': obj.producto_reventa_variante.id,
+            'nombre_variante': obj.producto_reventa_variante.nombre_variante,
+        }
 
     def validate(self, data):
         """Validate dates for lot registration."""
@@ -659,7 +654,7 @@ class LotesProductosReventaSerializer(serializers.ModelSerializer):
         fecha_caducidad = data.get('fecha_caducidad')
 
         # Import datetime here to avoid circular imports
-        from datetime import date, timedelta
+        from datetime import date
 
         # Validate that fecha_recepcion is not in the future
         if fecha_recepcion and fecha_recepcion > date.today():
@@ -688,8 +683,7 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
     proveedor_preferido = serializers.SerializerMethodField()
     unidad_base_inventario = serializers.SerializerMethodField()
     unidad_venta = serializers.SerializerMethodField()
-    convert_inventory_to_sale_units = serializers.SerializerMethodField()
-    convert_sale_to_inventory_units = serializers.SerializerMethodField()
+    variantes = ProductosReventaVariantesSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductosReventa
@@ -697,63 +691,50 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             'id',
             'nombre_producto',
             'descripcion',
-            'SKU',
             'categoria',
             'marca',
             'proveedor_preferido',
             'unidad_base_inventario',
             'unidad_venta',
             'factor_conversion',
-            'stock_actual',
-            'punto_reorden',
-            'precio_venta_usd',
-            'precio_compra_usd',
-            'perecedero',
+            'es_perecedero',
+            'variantes',
             'fecha_creacion_registro',
-            'fecha_modificacion_registro',
-            'convert_inventory_to_sale_units',
-            'convert_sale_to_inventory_units',
         ]
 
     def get_categoria(self, obj):
-        categoria = CategoriasProductosReventa.objects.get(id=obj.categoria.id)
+        if not obj.categoria:
+            return None
         return {
-            'id': categoria.id,
-            'nombre_categoria': categoria.nombre_categoria,
+            'id': obj.categoria.id,
+            'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
     def get_proveedor_preferido(self, obj):
         if obj.proveedor_preferido:
-            proveedor = Proveedores.objects.get(id=obj.proveedor_preferido.id)
             return {
-                'id': proveedor.id,
-                'nombre_proveedor': proveedor.nombre_proveedor,
+                'id': obj.proveedor_preferido.id,
+                'nombre_proveedor': obj.proveedor_preferido.nombre_proveedor,
             }
         return None
 
     def get_unidad_base_inventario(self, obj):
-        unidad = UnidadesDeMedida.objects.get(id=obj.unidad_base_inventario.id)
+        if not obj.unidad_base_inventario:
+            return None
         return {
-            'id': unidad.id,
-            'nombre_completo': unidad.nombre_completo,
-            'abreviatura': unidad.abreviatura,
+            'id': obj.unidad_base_inventario.id,
+            'nombre_completo': obj.unidad_base_inventario.nombre_completo,
+            'abreviatura': obj.unidad_base_inventario.abreviatura,
         }
 
     def get_unidad_venta(self, obj):
-        unidad = UnidadesDeMedida.objects.get(id=obj.unidad_venta.id)
+        if not obj.unidad_venta:
+            return None
         return {
-            'id': unidad.id,
-            'nombre_completo': unidad.nombre_completo,
-            'abreviatura': unidad.abreviatura,
+            'id': obj.unidad_venta.id,
+            'nombre_completo': obj.unidad_venta.nombre_completo,
+            'abreviatura': obj.unidad_venta.abreviatura,
         }
-
-    def get_convert_inventory_to_sale_units(self, obj):
-        # Since it's a method that takes parameter, return the factor as example
-        return f"Divide by {obj.factor_conversion}"
-
-    def get_convert_sale_to_inventory_units(self, obj):
-        # Since it's a method that takes parameter, return the factor as example
-        return f"Multiply by {obj.factor_conversion}"
 
 
 class CajaProductosSerializer(serializers.Serializer):

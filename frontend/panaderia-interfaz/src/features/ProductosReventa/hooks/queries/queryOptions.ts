@@ -1,22 +1,21 @@
 import {
-  getCategoriasProductosReventa,
   getLotesProductosReventa,
   getProductosReventa,
   getProductosReventaDetalles,
-  getUnidadesMedida,
   getProveedores,
 } from "../../api/api";
+import { fetchCategoriasProductoReventa, fetchUnidadesMedida } from "@/api/api";
 import type { LoteProductoReventaPagination, ProductosReventaPagination } from "../../types/types";
 
 export const unidadesMedidaQueryOptions = {
-  queryKey: ["unidades-medida"],
-  queryFn: getUnidadesMedida,
+  queryKey: ["unidadesMedida"],
+  queryFn: fetchUnidadesMedida,
   staleTime: Infinity,
 };
 
 export const categoriasProductosReventaQueryOptions = {
-  queryKey: ["categorias-productos-reventa"],
-  queryFn: getCategoriasProductosReventa,
+  queryKey: ["categoriasProductoReventa"],
+  queryFn: fetchCategoriasProductoReventa,
   staleTime: Infinity,
 };
 

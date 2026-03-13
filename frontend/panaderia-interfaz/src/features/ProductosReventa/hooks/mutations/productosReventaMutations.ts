@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  createProductosReventa,
+  createUpdateProductosReventa,
   deleteProductosReventa,
-  updateProductosReventa,
   createLoteProductosReventa,
   updateLoteProductosReventa,
   deleteLoteProductosReventa,
@@ -16,41 +15,41 @@ import {
   lotesProductosReventaQueryOptions,
 } from "../queries/queryOptions";
 
-export const useCreateProductosReventaMutation = () => {
+import { useProductosReventaContext } from "@/context/ProductosReventaContext";
+import { useToast } from "@/utils/use-toast";
+
+export const useCreateUpdateProductosReventaMutation = () => {
   const queryClient = useQueryClient();
+  const { productoReventaId } = useProductosReventaContext();
+  const { toast } = useToast();
+
+  
   return useMutation({
-    mutationFn: (data: TProductosReventaSchema) => createProductosReventa(data),
+    mutationFn: (data: TProductosReventaSchema) => createUpdateProductosReventa(data, productoReventaId),
     onSuccess: () => {
+      
       queryClient.invalidateQueries({
         queryKey: productosReventaQueryOptions.queryKey,
+      });
+      if (productoReventaId) {
+        queryClient.invalidateQueries({
+          queryKey: productosReventaDetallesQueryOptions(productoReventaId).queryKey,
+        });
+      }
+
+      const message = productoReventaId ? "actualizado" : "creado";
+      toast({
+        title: `Producto reventa ${message}`,
+        description: `El producto reventa ha sido ${message} exitosamente`,
       });
     },
     onError: (error) => {
       console.error("Error creating producto reventa:", error);
-    },
-  });
-};
-
-export const useUpdateProductosReventaMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number;
-      data: TProductosReventaSchema;
-    }) => updateProductosReventa(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({
-        queryKey: productosReventaQueryOptions.queryKey,
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Error al guardar el producto reventa",
       });
-      queryClient.invalidateQueries({
-        queryKey: productosReventaDetallesQueryOptions(id).queryKey,
-      });
-    },
-    onError: (error) => {
-      console.error("Error updating producto reventa:", error);
     },
   });
 };

@@ -9,12 +9,15 @@ export const DetailsTable = ({
 }) => {
   return (
     <div className="flex items-center gap-20">
-      <div className="grid grid-rows-10 grid-cols-1 gap-2">
+      <div className="grid grid-rows-12 grid-cols-1 gap-2">
         <DetailsField extraClass="min-h-[25px] flex items-center">
           Nombre del producto
         </DetailsField>
         <DetailsField extraClass="min-h-[25px] flex items-center">
           Id del producto
+        </DetailsField>
+        <DetailsField extraClass="min-h-[25px] flex items-center">
+          SKU
         </DetailsField>
         <DetailsField extraClass="min-h-[25px] flex items-center">
           Categoría
@@ -35,6 +38,15 @@ export const DetailsTable = ({
           Stock actual
         </DetailsField>
         <DetailsField extraClass="min-h-[25px] flex items-center">
+          Punto de Reorden
+        </DetailsField>
+        <DetailsField extraClass="min-h-[25px] flex items-center">
+          Precio venta USD
+        </DetailsField>
+        <DetailsField extraClass="min-h-[25px] flex items-center">
+          Precio de compra por unidad (USD)
+        </DetailsField>
+        <DetailsField extraClass="min-h-[25px] flex items-center">
           Perecedero
         </DetailsField>
         <DetailsField extraClass="min-h-[25px] flex items-center">
@@ -50,12 +62,15 @@ export const DetailsTable = ({
           Descripción
         </DetailsField>
       </div>
-      <div className="grid grid-rows-10 grid-cols-1 gap-2">
+      <div className="grid grid-rows-12 grid-cols-1 gap-2">
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.nombre_producto}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.id}
+        </DetailFieldValue>
+        <DetailFieldValue extraClass="min-h-[25px] ">
+          {productosReventaDetalles.SKU || "N/A"}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.categoria.nombre_categoria}
@@ -74,6 +89,15 @@ export const DetailsTable = ({
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.stock_actual}
+        </DetailFieldValue>
+        <DetailFieldValue extraClass="min-h-[25px] ">
+          {productosReventaDetalles.punto_reorden || "N/A"}
+        </DetailFieldValue>
+        <DetailFieldValue extraClass="min-h-[25px] ">
+          ${productosReventaDetalles.precio_venta_usd}
+        </DetailFieldValue>
+        <DetailFieldValue extraClass="min-h-[25px] ">
+          ${productosReventaDetalles.precio_compra_usd}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.perecedero ? "Sí" : "No"}

@@ -4,17 +4,17 @@ from apps.inventario.models import (
     ProductosIntermedios,
     ProductosFinales, 
     ProductosElaborados, ProductosElaboradosVariantes, LotesProductosElaborados, 
-    ProductosReventa, LotesProductosReventa, 
+    ProductosReventa, ProductosReventaVariantes, LotesProductosReventa, 
     ComponentesStockManagement
     )
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.inventario.serializers import (
     ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
-    MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer, 
+    MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, 
     ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
-    ProductosElaboradosSerializer, ProductosFinalesDetallesSerializer, ProductosFinalesSearchSerializer, ProductosFinalesListSerializer,
+    ProductosElaboradosSerializer, ProductosFinalesSearchSerializer, ProductosFinalesListSerializer,
     ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
-    ProductosReventaSerializer, ProductosReventaDetallesSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer
+    ProductosReventaSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer
 )
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -820,16 +820,6 @@ class ProductosFinalesViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class ProductosIntermediosDetallesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductosIntermedios.objects.all()
-    serializer_class = ProductosIntermediosDetallesSerializer
-
-
-class ProductosFinalesDetallesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductosFinales.objects.all()
-    serializer_class = ProductosFinalesDetallesSerializer
-
-
 class ProductosFinalesSearchViewset(viewsets.ReadOnlyModelViewSet):
     queryset = ProductosFinales.objects.all()
     serializer_class = ProductosFinalesSearchSerializer
@@ -918,10 +908,98 @@ class ProductosReventaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductosReventaListSerializer
+        elif self.action == 'retrieve':
+            return ProductosReventaDetallesSerializer
+        return super().get_serializer_class()
 
-class ProductosReventaDetallesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductosReventa.objects.all()
-    serializer_class = ProductosReventaDetallesSerializer
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        variantes = serializer.validated_data.pop('variantes', [])
+        
+        try:
+            with transaction.atomic():
+                producto_reventa = ProductosReventa.objects.create(
+                    **serializer.validated_data, 
+                )
+                variantes_create = []
+                for variant in variantes:
+                    variantes_create.append(
+                        ProductosReventaVariantes(
+                            producto_reventa=producto_reventa,
+                            **variant
+                        )
+                    )
+                ProductosReventaVariantes.objects.bulk_create(variantes_create)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({
+            'message': "Producto de reventa creado exitosamente", 
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        # Extract variantes data
+        variantes_data = validated_data.pop('variantes', None)
+        
+        try:
+            with transaction.atomic():
+                # Update main Productos Reventa fields
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+                instance.save()
+                
+                if variantes_data is not None:
+                    # Sync variants
+                    existing_variantes = {v.id: v for v in instance.variantes.all()}
+                    existing_ids = set(existing_variantes.keys())
+                    
+                    variantes_to_create = []
+                    variantes_to_update = []
+                    variantes_to_delete = []
+                    
+                    for variant in variantes_data:
+                        variant_id = variant.get('id')
+                        if variant_id in existing_ids:
+                            # Update existing variant
+                            existing_variant = existing_variantes.pop(variant_id)
+                            for attr, value in variant.items():
+                                setattr(existing_variant, attr, value)
+                            variantes_to_update.append(existing_variant)
+                        else:
+                            # Create new variant
+                            variantes_to_create.append(
+                                ProductosReventaVariantes(
+                                    producto_reventa=instance,
+                                    **variant
+                                )
+                            )
+                    
+                    # Delete variants that are no longer in the request
+                    for variant in existing_variantes.values():
+                        variantes_to_delete.append(variant)
+                    
+                    # Save changes
+                    ProductosReventaVariantes.objects.bulk_create(variantes_to_create)
+                    ProductosReventaVariantes.objects.bulk_update(variantes_to_update, fields=variantes_to_update[0].get_fields())
+                    ProductosReventaVariantes.objects.bulk_delete(variantes_to_delete)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({
+            'message': "Producto de reventa actualizado exitosamente", 
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 class LotesProductosReventaViewSet(viewsets.ModelViewSet):

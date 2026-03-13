@@ -92,23 +92,34 @@ export type setValueProps = {
   setValue?: UseFormSetValue<TProductosReventaSchema>;
 };
 
+export type VariantesProductosReventa = {
+  id: number;
+  nombre_variante: string;
+  SKU: string;
+  precio_venta_divisa: number;
+  precio_venta_local: number;
+  stock_actual: number;
+  punto_reorden: number;
+  atributo: string;
+  descripcion: string;
+  costo_divisa?: number;
+  costo_local?: number;
+};
+
 export type ProductosReventa = {
   id: number;
   nombre_producto: string;
-  SKU: string | null;
   stock_actual: number;
-  precio_venta_usd: number;
   categoria_nombre: string;
   unidad_base_inventario_nombre: string | null;
+  unidad_venta_nombre: string | null;
   fecha_creacion_registro: string;
-  punto_reorden: number;
 };
 
 export type ProductosReventaDetalles = {
   id: number;
   nombre_producto: string;
   descripcion: string | null;
-  SKU: string | null;
   categoria: { id: number; nombre_categoria: string };
   marca: string | null;
   proveedor_preferido: { id: number; nombre_proveedor: string } | null;
@@ -116,28 +127,29 @@ export type ProductosReventaDetalles = {
   unidad_venta: { id: number; nombre_completo: string; abreviatura: string };
   factor_conversion: number;
   stock_actual: number;
-  precio_venta_usd: number;
-  precio_compra_usd: number;
-  perecedero: boolean;
+  es_pecedero: boolean;
   fecha_creacion_registro: string;
   fecha_modificacion_registro: string;
-  convert_inventory_to_sale_units: string;
-  convert_sale_to_inventory_units: string;
-  punto_reorden: number;
+  variantes: VariantesProductosReventa[];
 };
 
-export type LotesProductosReventa = {
+export interface LotesProductosReventa {
   id: number;
-  producto_reventa: number;
+  producto_reventa_variante: number;
+  producto_reventa_variante_detalles: {
+    id: number;
+    nombre_variante: string;
+  };
   fecha_recepcion: string;
   fecha_caducidad: string;
   cantidad_recibida: number;
   stock_actual_lote: number;
-  coste_unitario_lote_usd: number;
-  detalle_oc: number | null;
-  proveedor: { id: number; nombre_proveedor: string } | null;
+  coste_unitario_lote_divisa: number;
+  coste_unitario_lote_local: number;
+  detalle_oc?: number | null;
+  proveedor: Proveedor;
   estado: string;
-};
+}
 
 export type ProductosReventaPagination = {
   count: number;
