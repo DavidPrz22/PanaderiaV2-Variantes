@@ -572,14 +572,11 @@ class ProductosReventaVariantesSerializer(serializers.ModelSerializer):
             'costo_local'
         ]
 
+
 class ProductosReventaListSerializer(serializers.ModelSerializer):
     unidad_venta_nombre = serializers.CharField(source='unidad_venta.nombre_completo', read_only=True)
     unidad_base_inventario_nombre = serializers.CharField(source='unidad_base_inventario.nombre_completo', read_only=True)
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
-    stock_actual = serializers.SerializerMethodField()
-
-    def get_stock_actual(self, obj):
-        return 0
 
     class Meta:
         model = ProductosReventa
@@ -616,37 +613,23 @@ class ProductosReventaSerializer(serializers.ModelSerializer):
 class LotesProductosReventaSerializer(serializers.ModelSerializer):
     fecha_recepcion = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
     fecha_caducidad = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
-    proveedor = ProveedoresSerializer(read_only=True)
-    proveedor_id = serializers.PrimaryKeyRelatedField(
-        source='proveedor',
-        queryset=Proveedores.objects.all(),
-        write_only=True
-    )
-    producto_reventa_variante_detalles = serializers.SerializerMethodField()
-
+    
     class Meta:
         model = LotesProductosReventa
         fields = [
             'id',
             'producto_reventa_variante',
-            'producto_reventa_variante_detalles',
             'fecha_recepcion',
             'fecha_caducidad',
             'cantidad_recibida',
             'stock_actual_lote',
-            'coste_unitario_lote_usd',
+            'coste_unitario_lote_divisa',
             'coste_unitario_lote_local',
             'detalle_oc',
             'proveedor',
-            'proveedor_id',
-            'estado',
+            'estado'
         ]
 
-    def get_producto_reventa_variante_detalles(self, obj):
-        return {
-            'id': obj.producto_reventa_variante.id,
-            'nombre_variante': obj.producto_reventa_variante.nombre_variante,
-        }
 
     def validate(self, data):
         """Validate dates for lot registration."""
@@ -656,11 +639,6 @@ class LotesProductosReventaSerializer(serializers.ModelSerializer):
         # Import datetime here to avoid circular imports
         from datetime import date
 
-        # Validate that fecha_recepcion is not in the future
-        if fecha_recepcion and fecha_recepcion > date.today():
-            raise serializers.ValidationError({
-                'fecha_recepcion': 'La fecha de recepción no puede ser una fecha futura.'
-            })
 
         # Validate that fecha_caducidad is after fecha_recepcion
         if fecha_recepcion and fecha_caducidad:

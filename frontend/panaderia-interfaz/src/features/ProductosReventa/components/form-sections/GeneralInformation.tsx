@@ -127,7 +127,7 @@ export const GeneralInformation = ({
       />
         <Controller
           control={control}
-          name="perecedero"
+          name="es_pecedero"
           render={({ field }) => (
             <FormSelect
               label="¿Es perecedero?"
@@ -136,9 +136,9 @@ export const GeneralInformation = ({
                 { value: "false", label: "No" },
                 { value: "true", label: "Sí" },
               ]}
-              value={field.value?.toString()}
+              value={field.value ? "true" : "false"}
               onValueChange={(val) => field.onChange(val === "true")}
-              error={errors.perecedero?.message}
+              error={errors.es_pecedero?.message}
             />
           )}
         />

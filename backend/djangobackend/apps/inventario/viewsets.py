@@ -990,9 +990,18 @@ class ProductosReventaViewSet(viewsets.ModelViewSet):
                         variantes_to_delete.append(variant)
                     
                     # Save changes
-                    ProductosReventaVariantes.objects.bulk_create(variantes_to_create)
-                    ProductosReventaVariantes.objects.bulk_update(variantes_to_update, fields=variantes_to_update[0].get_fields())
-                    ProductosReventaVariantes.objects.bulk_delete(variantes_to_delete)
+                    if variantes_to_create:
+                        ProductosReventaVariantes.objects.bulk_create(variantes_to_create)
+                    
+                    if variantes_to_update:
+                        ProductosReventaVariantes.objects.bulk_update(variantes_to_update, fields=[
+                            'nombre_variante', 'precio_venta_divisa', 'precio_venta_local', 
+                            'costo_divisa', 'costo_local', 'SKU', 'descripcion', 
+                            'punto_reorden', 'atributo', 'is_vendible'
+                        ])
+                    
+                    if variantes_to_delete:
+                        ProductosReventaVariantes.objects.filter(id__in=[v.id for v in variantes_to_delete]).delete()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -1008,51 +1017,36 @@ class LotesProductosReventaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsStaffOrVendedorReadOnly]
     pagination_class = StandardResultsSetPagination
 
-    def get_queryset(self):
+    def get_queryset(self, product_id=None):
         queryset = super().get_queryset()
         producto_reventa = self.request.query_params.get('producto_reventa')
-        if producto_reventa:
-            queryset = queryset.filter(producto_reventa=producto_reventa)
+        if producto_reventa or product_id:
+            queryset = queryset.filter(producto_reventa_variante__producto_reventa=producto_reventa or product_id)
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        """List lots after expiring old ones"""
-        # Get producto_reventa parameter
-        producto_reventa_id = request.query_params.get('producto_reventa')
-        
-        # If filtering by product, expire lots for that product
-        if producto_reventa_id:
-            try:
-                producto = ProductosReventa.objects.get(id=producto_reventa_id)
-                producto.expirar_lotes_viejos()
-            except ProductosReventa.DoesNotExist:
-                pass
-        else:
-            ProductosReventa.expirar_todos_lotes_viejos()
-        
-        return super().list(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
-        from django.db import transaction
-        try:
-            instance = self.get_object()
-            producto = instance.producto_reventa
+    # def destroy(self, request, *args, **kwargs):
+    #     from django.db import transaction
+    #     try:
+    #         instance = self.get_object()
+    #         producto = instance.producto_reventa_variante.producto_reventa
             
-            with transaction.atomic():
-                self.perform_destroy(instance)
+    #         with transaction.atomic():
+    #             self.perform_destroy(instance)
                 
-                # Check stock notifications after lot deletion
-                try:
-                    NotificationService.check_low_stock(ProductosReventa)
-                    NotificationService.check_sin_stock(ProductosReventa)
-                except Exception as notif_error:
-                    import logging
-                    logger = logging.getLogger(__name__)
-                    logger.error(f"Failed to create notifications: {str(notif_error)}")
+    #             # Check stock notifications after lot deletion
+    #             try:
+    #                 NotificationService.check_low_stock(ProductosReventa)
+    #                 NotificationService.check_sin_stock(ProductosReventa)
+    #             except Exception as notif_error:
+    #                 import logging
+    #                 logger = logging.getLogger(__name__)
+    #                 logger.error(f"Failed to create notifications: {str(notif_error)}")
             
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -1063,17 +1057,20 @@ class LotesProductosReventaViewSet(viewsets.ModelViewSet):
 
         # Save through perform_create
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         
-        # Check expiration notifications for newly created lot
-        try:
-            NotificationService.check_expiration_date(ProductosReventa, LotesProductosReventa)
-        except Exception as notif_error:
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.error(f"Failed to create notifications: {str(notif_error)}")
+        # Get all lots for the product
+        # Get the variant instance (already in memory from validation)
+        variante = serializer.validated_data['producto_reventa_variante']
+
+        # Access the product ID directly (it's a field on the variant)
+        producto_reventa_id = variante.producto_reventa_id
+
+        # Pass it to your queryset filter
+        lotes = self.get_queryset(product_id=producto_reventa_id)
+
+        serializer = self.get_serializer(lotes, many=True)
         
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'message': 'Lote creado exitosamente', 'lotes': serializer.data}, status=status.HTTP_201_CREATED)
     
 
     @action(detail=True, methods=['get'], url_path='change-estado-lote')
@@ -1081,26 +1078,28 @@ class LotesProductosReventaViewSet(viewsets.ModelViewSet):
         try:
             lote_id = kwargs.get('pk')
             lote = LotesProductosReventa.objects.get(id=lote_id)
+            es_perecedero = lote.producto_reventa_variante.producto_reventa.es_perecedero
+            
             if lote.estado == 'DISPONIBLE':
-                if lote.fecha_caducidad > datetime.now().date():
-                    lote.estado = LotesStatus.INACTIVO
-                    lote.save(update_fields=['estado'])
-                    # Stock will be automatically updated by the signal
-                else:
-                    return Response(
+                if es_perecedero:
+                    if lote.fecha_caducidad < datetime.now().date():
+                        return Response(
                         status=status.HTTP_400_BAD_REQUEST, 
                         data={"error": "Este Lote ya caducó"}
                     )
+                lote.estado = LotesStatus.INACTIVO
+                lote.save(update_fields=['estado'])
+
             elif lote.estado == 'INACTIVO':
-                if lote.fecha_caducidad > datetime.now().date():
-                    lote.estado = LotesStatus.DISPONIBLE
-                    lote.save(update_fields=['estado'])
-                    # Stock will be automatically updated by the signal
-                else:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST, 
-                        data={"error": "Este Lote ya caducó"}
-                    )
+                if es_perecedero:
+                    if lote.fecha_caducidad < datetime.now().date():
+                        return Response(
+                            status=status.HTTP_400_BAD_REQUEST, 
+                            data={"error": "Este Lote ya caducó"}
+                        )
+                lote.estado = LotesStatus.DISPONIBLE
+                lote.save(update_fields=['estado'])
+                # Stock will be automatically updated by the signal
             
             return Response({"message": "Estado del lote cambiado correctamente"}, status=status.HTTP_200_OK)
         except Exception as e:

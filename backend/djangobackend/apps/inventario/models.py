@@ -757,7 +757,7 @@ class ProductosReventa(ProductosStockManagement):
     categoria = models.ForeignKey(CategoriasProductosReventa, on_delete=models.CASCADE)
     marca = models.CharField(max_length=100, null=True, blank=True)
     proveedor_preferido = models.ForeignKey('compras.Proveedores', on_delete=models.CASCADE, null=True, blank=True)
-    
+    stock_actual = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     # Replace tipo_manejo_venta with separate units
     unidad_base_inventario = models.ForeignKey(
         UnidadesDeMedida, 
@@ -984,7 +984,7 @@ class GruposProductosReventa(models.Model):
 class LotesProductosReventa(models.Model):
     producto_reventa_variante = models.ForeignKey(ProductosReventaVariantes, on_delete=models.CASCADE, null=False, blank=False)
     fecha_recepcion = models.DateField(null=False, blank=False)
-    fecha_caducidad = models.DateField(null=False, blank=False)
+    fecha_caducidad = models.DateField(null=True, blank=True)
     cantidad_recibida = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     stock_actual_lote = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     coste_unitario_lote_divisa = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -1053,12 +1053,6 @@ def update_producto_reventa_variante_stock(sender, instance, **kwargs):
     
     producto_reventa.__class__.objects.filter(id=producto_reventa.id).update(stock_actual=total_product_stock)
 
-    try:
-        from apps.core.services.services import NotificationService
-        NotificationService.check_low_stock(ProductosReventaVariantes)
-        NotificationService.check_sin_stock(ProductosReventaVariantes)
-    except ImportError:
-        pass
 
 
 @receiver([post_save, post_delete], sender=LotesProductosElaborados)

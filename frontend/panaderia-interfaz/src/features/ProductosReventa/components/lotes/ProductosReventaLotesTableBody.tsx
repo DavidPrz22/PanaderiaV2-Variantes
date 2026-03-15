@@ -69,7 +69,7 @@ export const ProductosReventaLotesTableBody = ({
       new Date(b.fecha_caducidad).getTime()
     );
   });
-
+  console.log(sortedData)
   return (
     <>
       <div className="divide-y divide-gray-200">
@@ -83,7 +83,7 @@ export const ProductosReventaLotesTableBody = ({
             <div>{item.stock_actual_lote}</div>
             <div>{item.fecha_caducidad}</div>
             <div>{item.fecha_recepcion}</div>
-            <div>${item.coste_unitario_lote_usd}</div>
+            <div>${item.coste_unitario_lote_divisa}</div>
             <div className="font-medium">
               <span
                 className={`px-2 py-1 rounded-full text-xs ${

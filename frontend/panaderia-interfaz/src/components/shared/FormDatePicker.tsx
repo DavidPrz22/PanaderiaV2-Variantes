@@ -20,6 +20,7 @@ interface FormDatePickerProps {
     placeholder?: string;
     className?: string;
     buttonClassName?: string;
+    disabled?: any; // Add this line
 }
 
 export const FormDatePicker = ({
@@ -31,6 +32,7 @@ export const FormDatePicker = ({
     placeholder = "Seleccionar fecha",
     className,
     buttonClassName,
+    disabled,
 }: FormDatePickerProps) => {
     return (
         <FormItem label={label} error={error} required={required} className={className}>
@@ -59,6 +61,7 @@ export const FormDatePicker = ({
                         mode="single"
                         selected={selected}
                         onSelect={onSelect}
+                        disabled={disabled}
                         className="rounded-md border shadow-lg"
                     />
                 </PopoverContent>

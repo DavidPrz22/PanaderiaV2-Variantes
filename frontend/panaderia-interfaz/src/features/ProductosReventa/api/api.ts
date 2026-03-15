@@ -76,17 +76,12 @@ export const deleteProductosReventa = async (id: number) => {
 };
 
 export const getLotesProductosReventa = async ({
-  pageParam,
   producto_reventa_id,
 }: {
-  pageParam?: string | null;
   producto_reventa_id?: number;
 } = {}): Promise<LoteProductoReventaPagination> => {
   try {
-    let url = pageParam || "/api/lotes-productos-reventa/";
-    if (!pageParam && producto_reventa_id) {
-      url += `?producto_reventa_variante__producto_reventa=${producto_reventa_id}`;
-    }
+    const url = `/api/inventario/lotes-productos-reventa/?producto_reventa=${producto_reventa_id}`;
     const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
@@ -95,16 +90,20 @@ export const getLotesProductosReventa = async ({
   }
 };
 
-export const createLoteProductosReventa = async (
+export const createUpdateLoteProductosReventa = async (
   data: Omit<TLoteProductosReventaSchema, 'fecha_recepcion' | 'fecha_caducidad'> & {
     fecha_recepcion: string;
-    fecha_caducidad: string;
-    stock_actual_lote: number;
-    detalle_oc: null;
+    fecha_caducidad: string | undefined;
   },
+  id?: number | null
 ) => {
   try {
-    const response = await apiClient.post("/api/lotes-productos-reventa/", data);
+    let response;
+    if (id) {
+      response = await apiClient.put(`/api/inventario/lotes-productos-reventa/${id}/`, data);
+    } else {
+      response = await apiClient.post("/api/inventario/lotes-productos-reventa/", data);
+    }
     return response.data;
   } catch (error) {
     console.error("Error creating lote productos reventa:", error);
@@ -112,27 +111,10 @@ export const createLoteProductosReventa = async (
   }
 };
 
-export const updateLoteProductosReventa = async (
-  id: number,
-  data: Omit<TLoteProductosReventaSchema, 'fecha_recepcion' | 'fecha_caducidad'> & {
-    fecha_recepcion: string;
-    fecha_caducidad: string;
-    stock_actual_lote: number;
-    detalle_oc: null;
-  },
-) => {
-  try {
-    const response = await apiClient.put(`/api/lotes-productos-reventa/${id}/`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating lote productos reventa:", error);
-    throw error;
-  }
-};
 
 export const deleteLoteProductosReventa = async (id: number) => {
   try {
-    const response = await apiClient.delete(`/api/lotes-productos-reventa/${id}/`);
+    const response = await apiClient.delete(`/api/inventario/lotes-productos-reventa/${id}/`);
     return response.data;
   } catch (error) {
     console.error("Error deleting lote productos reventa:", error);
@@ -142,7 +124,7 @@ export const deleteLoteProductosReventa = async (id: number) => {
 
 export const changeEstadoLoteProductosReventa = async (id: number) => {
   try {
-    const response = await apiClient.get(`/api/lotes-productos-reventa/${id}/change-estado-lote/`);
+    const response = await apiClient.get(`/api/inventario/lotes-productos-reventa/${id}/change-estado-lote/`);
     return response.data;
   } catch (error) {
     console.error("Error changing estado lote productos reventa:", error);

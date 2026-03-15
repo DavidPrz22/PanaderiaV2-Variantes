@@ -1,6 +1,5 @@
 import { DeleteComponent } from "./DeleteComponent";
 import { useProductosReventaContext } from "@/context/ProductosReventaContext";
-import ProductosReventaForm from "./ProductosReventaForm";
 import { TitleDetails } from "@/components/TitleDetails";
 import { DetailsTable } from "./DetailsTable";
 import { useGetProductosReventaDetalles } from "../hooks/queries/queries";
@@ -20,10 +19,10 @@ import { userHasPermission } from "@/features/Authentication/lib/utils";
 export default function ProductosReventaDetalles() {
   const {
     showProductosReventaDetalles,
-    updateRegistro,
     setUpdateRegistro,
     setRegistroDelete,
     setShowProductosReventaDetalles,
+    setShowProductosReventaForm,
     registroDelete,
     productoReventaId,
     enabledDetalles,
@@ -63,22 +62,16 @@ export default function ProductosReventaDetalles() {
     setEnabledDetalles,
   ]);
 
-
   if (!showProductosReventaDetalles) return <></>;
 
   const handleClose = () => {
     setShowProductosReventaDetalles(false);
   };
 
-  if (updateRegistro) {
-    return (
-      <ProductosReventaForm />
-    );
-  }
 
   const handleDelete = async () => {
     await deleteProductosReventa(productoReventaId!);
-    setShowProductosReventaDetalles(false);
+    handleClose();
     setRegistroDelete(false);
   };
 
@@ -87,7 +80,6 @@ export default function ProductosReventaDetalles() {
       <ProductosReventaLoteForm
         title="Nuevo Lote"
         onClose={() => setShowPRLotesForm(false)}
-        onSubmitSuccess={() => setShowPRLotesForm(false)}
       />
     );
   }
@@ -100,7 +92,11 @@ export default function ProductosReventaDetalles() {
     <div className="flex flex-col gap-5 mx-8 border border-gray-200 p-5 rounded-lg shadow-md h-full relative">
       <DetallesHeader
         title={productosReventaDetalles?.nombre_producto}
-        onEdit={userCanEdit ? () => setUpdateRegistro(true) : undefined}
+        onEdit={userCanEdit ? () => {
+          setUpdateRegistro(true);
+          setShowProductosReventaForm(true);
+          handleClose()
+        } : undefined}
         onDelete={userCanDelete ? () => setRegistroDelete(true) : undefined}
         onClose={handleClose}
       />

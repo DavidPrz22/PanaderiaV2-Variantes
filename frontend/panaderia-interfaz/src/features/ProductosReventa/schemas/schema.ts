@@ -55,8 +55,8 @@ export const productosReventaSchema = z.object({
 export const loteProductosReventaSchema = z.object({
   producto_reventa_variante: z.coerce.number().min(1, "La variante es requerida"),
   cantidad_recibida: z.coerce.number().min(1, "La cantidad debe ser mayor a 0"),
-  costo_unitario_divisa: z.coerce.number().min(0, "El costo debe ser mayor o igual a 0"),
-  costo_unitario_local: z.coerce.number().min(0, "El costo local debe ser mayor o igual a 0").optional(),
+  coste_unitario_lote_divisa: z.coerce.number().min(0, "El costo debe ser mayor o igual a 0"),
+  coste_unitario_lote_local: z.coerce.number().min(0, "El costo local debe ser mayor o igual a 0").optional(),
   proveedor_id: z.coerce.number().min(1, "El proveedor es requerido"),
   fecha_recepcion: z.coerce.date({
     required_error: "La fecha de recepción es requerida",
@@ -66,6 +66,27 @@ export const loteProductosReventaSchema = z.object({
     required_error: "La fecha de caducidad es requerida",
     invalid_type_error: "La fecha de caducidad no es válida",
   }).optional(),
+}).superRefine((data, ctx) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (data.fecha_caducidad) {
+    if (data.fecha_caducidad < today) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "La fecha de caducidad debe ser hoy o una fecha posterior",
+        path: ["fecha_caducidad"],
+      });
+    }
+
+    if (data.fecha_recepcion && data.fecha_caducidad <= data.fecha_recepcion) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "La fecha de caducidad debe ser posterior a la fecha de recepción",
+        path: ["fecha_caducidad"],
+      });
+    }
+  }
 });
 
 export type TProductosReventaSchema = z.infer<typeof productosReventaSchema>;

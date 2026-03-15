@@ -14,6 +14,7 @@ export const PRTableRow = ({
     setProductoReventaId(item.id || null);
     setEnabledDetalles(true);
   };
+  console.log(item);
   return (
     <div
       onClick={setDetails}
@@ -24,7 +25,7 @@ export const PRTableRow = ({
       <div>{item.nombre_producto || "-"}</div>
       <div>{item.unidad_base_inventario_nombre || "-"}</div>
       <div>{item.categoria_nombre || "-"}</div>
-      <div>{item.stock_actual || "-"}</div>
+      <div>{item.stock_actual ? item.stock_actual : "sin stock"}</div>
       <div>{item.unidad_venta_nombre || "-"}</div>
       <div>{item.fecha_creacion_registro || "-"}</div>
     </div>

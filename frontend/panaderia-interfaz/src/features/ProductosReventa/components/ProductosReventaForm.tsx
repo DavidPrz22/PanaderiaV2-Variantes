@@ -8,7 +8,6 @@ import { GeneralInformation } from "./form-sections/GeneralInformation";
 import { VariantesSection } from "./form-sections/VariantesSection";
 import { ActionBar } from "./form-sections/ActionBar";
 import { useGetProductosReventaDetalles } from "../hooks/queries/queries";
-import { useEffect } from "react";
 import { PendingTubeSpinner } from "./PendingTubeSpinner";
 
 export default function ProductosReventaForm() {
@@ -22,7 +21,7 @@ export default function ProductosReventaForm() {
   } = useProductosReventaContext();
 
   const { data: initialData, isLoading: isLoadingDetails } = useGetProductosReventaDetalles(productoReventaId!);
-
+  console.log(initialData)
   const {
     mutateAsync: createUpdateProducto,
     isPending: isPendingCreateUpdate,
@@ -39,21 +38,8 @@ export default function ProductosReventaForm() {
   } = useForm<TProductosReventaSchema>({
     resolver: zodResolver(productosReventaSchema),
     mode: "onSubmit",
-    defaultValues: {
-      variantes: [{
-        nombre_variante: "Única",
-        SKU: "",
-        descripcion: "",
-        precio_venta_divisa: 0,
-        punto_reorden: 0,
-        atributo: "CANTIDAD",
-      }]
-    }
-  });
-
-  useEffect(() => {
-    if (updateRegistro && initialData) {
-      reset({
+    defaultValues: (updateRegistro && initialData)
+      ? {
         nombre_producto: initialData.nombre_producto,
         descripcion: initialData.descripcion || "",
         categoria: initialData.categoria.id,
@@ -70,15 +56,21 @@ export default function ProductosReventaForm() {
           descripcion: v.descripcion,
           precio_venta_divisa: v.precio_venta_divisa,
           precio_venta_local: v.precio_venta_local,
+          costo_divisa: v.costo_divisa,
+          costo_local: v.costo_local,
           punto_reorden: v.punto_reorden,
           atributo: v.atributo,
         })),
-      });
-    } else if (!updateRegistro) {
-      reset({
+      }
+      : {
         nombre_producto: "",
         descripcion: "",
+        categoria: 0,
         marca: "",
+        proveedor_preferido: undefined,
+        unidad_base_inventario: 0,
+        unidad_venta: 0,
+        factor_conversion: 0,
         es_pecedero: false,
         variantes: [{
           nombre_variante: "Única",
@@ -88,9 +80,8 @@ export default function ProductosReventaForm() {
           punto_reorden: 0,
           atributo: "CANTIDAD",
         }]
-      });
-    }
-  }, [updateRegistro, initialData, reset]);
+      },
+  });
 
   if (!showProductosReventaForm) return <></>;
 
@@ -119,21 +110,22 @@ export default function ProductosReventaForm() {
           extraClass="absolute bg-white opacity-50 w-full h-full z-10"
         />
       )}
-        <form onSubmit={handleSubmit(onSubmit)} id="productos-reventa-form" className="w-4xl max-w-4xl mx-auto">
-          <GeneralInformation
-            register={register}
-            errors={errors}
-            control={control}
-          />
-          <VariantesSection
-            register={register}
-            errors={errors}
-            control={control}
-          />
+      <form onSubmit={handleSubmit(onSubmit)} id="productos-reventa-form" className="w-4xl max-w-4xl mx-auto">
+        <GeneralInformation
+          register={register}
+          errors={errors}
+          control={control}
+        />
+        <VariantesSection
+          register={register}
+          errors={errors}
+          control={control}
+        />
       </form>
       <ActionBar
         onCancel={handleClose}
         isPending={isPending}
+        formId="productos-reventa-form"
       />
     </div>
   );

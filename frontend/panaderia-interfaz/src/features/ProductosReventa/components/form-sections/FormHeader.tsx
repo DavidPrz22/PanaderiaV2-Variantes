@@ -8,7 +8,7 @@ interface FormHeaderProps {
 
 export const FormHeader = ({ onClose, updateRegistro }: FormHeaderProps) => {
   return (
-    <div className="border-b font-[Roboto]">
+    <div className="border-b font-[Roboto] border-gray-200 ">
             <div className="flex items-center gap-4 pb-4 w-4xl max-w-4xl mx-auto">
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full" type="button">
                     <ArrowLeft className="h-5 w-5" />

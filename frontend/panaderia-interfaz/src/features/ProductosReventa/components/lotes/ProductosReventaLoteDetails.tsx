@@ -41,7 +41,8 @@ export const ProductosReventaLoteDetails = () => {
           <DetailsField>Fecha de caducidad</DetailsField>
           <DetailsField>Cantidad recibida</DetailsField>
           <DetailsField>Stock actual del lote</DetailsField>
-          <DetailsField>Costo unitario</DetailsField>
+          <DetailsField>Costo unitario divisa</DetailsField>
+          <DetailsField>Costo unitario local</DetailsField>
           <DetailsField>Proveedor</DetailsField>
           <DetailsField>Estado</DetailsField>
         </div>
@@ -53,7 +54,8 @@ export const ProductosReventaLoteDetails = () => {
           <DetailFieldValue>{lotesProductosReventaDetalles.fecha_caducidad || "-"}</DetailFieldValue>
           <DetailFieldValue>{lotesProductosReventaDetalles.cantidad_recibida || "-"}</DetailFieldValue>
           <DetailFieldValue>{lotesProductosReventaDetalles.stock_actual_lote || "-"}</DetailFieldValue>
-          <DetailFieldValue>${lotesProductosReventaDetalles.coste_unitario_lote_usd || "-"}</DetailFieldValue>
+          <DetailFieldValue>${lotesProductosReventaDetalles.coste_unitario_lote_divisa || "-"}</DetailFieldValue>
+          <DetailFieldValue>{lotesProductosReventaDetalles.coste_unitario_lote_local || "-"}</DetailFieldValue>
           <DetailFieldValue>{lotesProductosReventaDetalles.proveedor?.nombre_proveedor || "-"}</DetailFieldValue>
           <DetailFieldValue>{lotesProductosReventaDetalles.estado || "-"}</DetailFieldValue>
         </div>
