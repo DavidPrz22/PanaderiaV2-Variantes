@@ -1,4 +1,6 @@
 import { DeleteComponent } from "./DeleteComponent";
+import { ProductosReventaVariantesTable } from "./ProductosReventaVariantesTable";
+
 import { useProductosReventaContext } from "@/context/ProductosReventaContext";
 import { TitleDetails } from "@/components/TitleDetails";
 import { DetailsTable } from "./DetailsTable";
@@ -89,7 +91,7 @@ export default function ProductosReventaDetalles() {
   }
 
   return (
-    <div className="flex flex-col gap-5 mx-8 border border-gray-200 p-5 rounded-lg shadow-md h-full relative">
+    <div className="flex flex-col gap-5 rounded-lg relative ">
       <DetallesHeader
         title={productosReventaDetalles?.nombre_producto}
         onEdit={userCanEdit ? () => {
@@ -99,8 +101,9 @@ export default function ProductosReventaDetalles() {
         } : undefined}
         onDelete={userCanDelete ? () => setRegistroDelete(true) : undefined}
         onClose={handleClose}
-      />
+      >
 
+      </DetallesHeader>
       {registroDelete && productoReventaId !== null && (
         <DeleteComponent
           deleteFunction={handleDelete}
@@ -117,59 +120,34 @@ export default function ProductosReventaDetalles() {
           extraClass="absolute bg-white opacity-50 w-full h-full"
         />
       )}
-      <div className="flex flex-col gap-6">
-        <TitleDetails>Detalles</TitleDetails>
-        <DetailsTable
-          productosReventaDetalles={productosReventaDetalles!}
-        />
-      </div>
+      
+      <div className="w-4xl max-w-4xl mx-auto">
+        <div className="flex flex-col gap-6">
+          <DetailsTable
+            productosReventaDetalles={productosReventaDetalles!}
+          />
+        </div>
 
-      <div className="space-y-4 mt-4">
-        <Title extraClass="text-blue-600">Variantes ({productosReventaDetalles?.variantes.length})</Title>
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-100 text-gray-700 uppercase text-[10px] font-bold">
-              <tr>
-                <th className="px-4 py-3">Nombre</th>
-                <th className="px-4 py-3 font-medium">Atributo</th>
-                <th className="px-4 py-3 font-medium">Precio (USD)</th>
-                <th className="px-4 py-3 text-right">Stock</th>
-                <th className="px-4 py-3 text-right">Punto Reorden</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {productosReventaDetalles?.variantes.map((variante) => (
-                <tr key={variante.id} className="hover:bg-gray-50 transition-colors bg-white">
-                  <td className="px-4 py-3 font-medium">
-                    {variante.nombre_variante}
-                    {variante.SKU && <p className="text-[10px] text-gray-500 font-normal">SKU: {variante.SKU}</p>}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{variante.atributo}</td>
-                  <td className="px-4 py-3 text-gray-900 font-medium">${variante.precio_venta_divisa}</td>
-                  <td className={`px-4 py-3 text-right font-medium ${variante.stock_actual <= variante.punto_reorden ? "text-red-600" : "text-gray-900"}`}>
-                    {variante.stock_actual}
-                  </td>
-                  <td className="px-4 py-3 text-right text-gray-500">{variante.punto_reorden}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-4 mt-4">
+          <Title extraClass="text-blue-600">Variantes ({productosReventaDetalles?.variantes.length})</Title>
+          <ProductosReventaVariantesTable variantes={productosReventaDetalles?.variantes || []} />
+        </div>
+
+        <div className="space-y-4 mt-4">
+          <div className="flex items-center justify-between">
+            <Title extraClass="text-blue-600">Lotes de producto de reventa</Title>
+            {userCanAddLot && (
+              <Button type="add" onClick={() => setShowPRLotesForm(true)}>
+                <div className="flex items-center gap-2">
+                  Agregar Lote <PlusCircle className="inline-block ml-2" />
+                </div>
+              </Button>
+            )}
+          </div>
+          <ProductosReventaLotesTable />
         </div>
       </div>
-
-      <div className="space-y-4 mt-4">
-        <div className="flex items-center justify-between">
-          <Title extraClass="text-blue-600">Lotes de producto de reventa</Title>
-          {userCanAddLot && (
-            <Button type="add" onClick={() => setShowPRLotesForm(true)}>
-              <div className="flex items-center gap-2">
-                Agregar Lote <PlusCircle className="inline-block ml-2" />
-              </div>
-            </Button>
-          )}
-        </div>
-        <ProductosReventaLotesTable />
-      </div>
+      
     </div>
   );
 }

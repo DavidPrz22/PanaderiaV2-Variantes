@@ -7,7 +7,7 @@ import { useProductosReventaContext } from "@/context/ProductosReventaContext";
 export const ProductosReventaLoteDetailsContainer = () => {
   const { setShowPRLotesDetalles } = useProductosReventaContext();
   return (
-    <div className="flex flex-col gap-6 mx-8 border border-gray-200 p-8 rounded-lg shadow-md h-full relative bg-white">
+    <div className="flex flex-col gap-6 border border-gray-200 p-8 rounded-lg shadow-md w-4xl max-w-4xl mx-auto relative ">
       <div className="absolute top-6 right-6">
         <Button type="close" onClick={() => setShowPRLotesDetalles(false)}>
           <img src={CerrarIcon} alt="Cerrar" className="size-5" />

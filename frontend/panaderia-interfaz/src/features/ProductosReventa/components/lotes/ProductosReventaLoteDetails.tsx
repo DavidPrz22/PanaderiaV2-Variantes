@@ -3,6 +3,7 @@ import { DetailFieldValue } from "@/components/DetailFieldValue";
 import { BorrarIcon, CheckIcon } from "@/assets/DashboardAssets";
 import { useProductosReventaContext } from "@/context/ProductosReventaContext";
 import { useChangeEstadoLoteProductosReventa } from "../../hooks/mutations/productosReventaMutations";
+import {  Button  } from "@/components/ui/button";
 
 export const ProductosReventaLoteDetails = () => {
   const { 
@@ -26,7 +27,7 @@ export const ProductosReventaLoteDetails = () => {
   if (!lotesProductosReventaDetalles) return null;
 
   return (
-    <div className="flex items-start gap-12 relative p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="space-y-10 relative mt-4">
       {isPending && (
         <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center z-10 rounded-lg">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -63,21 +64,21 @@ export const ProductosReventaLoteDetails = () => {
 
       <div className="flex flex-col gap-2 min-w-[120px]">
         {lotesProductosReventaDetalles.estado === "DISPONIBLE" ? (
-          <button
+          <Button
             onClick={handleChangeEstadoLote}
-            className="flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors shadow-sm w-60"
           >
             <img src={BorrarIcon} alt="Inactivar" className="size-5 filter brightness-0 invert" />
             <span>Inactivar</span>
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={handleChangeEstadoLote}
-            className="flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors shadow-sm w-60"
           >
             <img src={CheckIcon} alt="Activar" className="size-5 filter brightness-0 invert" />
             <span>Activar</span>
-          </button>
+          </Button>
         )}
       </div>
     </div>

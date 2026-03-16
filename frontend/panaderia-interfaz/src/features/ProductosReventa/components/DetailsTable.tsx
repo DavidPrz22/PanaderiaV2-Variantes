@@ -44,9 +44,6 @@ export const DetailsTable = ({
           Fecha creación
         </DetailsField>
         <DetailsField extraClass="min-h-[25px] flex items-center">
-          Fecha modificación
-        </DetailsField>
-        <DetailsField extraClass="min-h-[25px] flex items-center">
           Descripción
         </DetailsField>
       </div>
@@ -76,16 +73,13 @@ export const DetailsTable = ({
           {productosReventaDetalles.stock_actual}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
-          {productosReventaDetalles.perecedero ? "Sí" : "No"}
+          {productosReventaDetalles.es_pecedero ? "Sí" : "No"}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.marca || "N/A"}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.fecha_creacion_registro}
-        </DetailFieldValue>
-        <DetailFieldValue extraClass="min-h-[25px] ">
-          {productosReventaDetalles.fecha_modificacion_registro}
         </DetailFieldValue>
         <DetailFieldValue extraClass="min-h-[25px] ">
           {productosReventaDetalles.descripcion || "No hay descripción"}

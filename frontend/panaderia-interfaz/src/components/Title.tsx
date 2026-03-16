@@ -6,7 +6,7 @@ export default function Title({
   children: React.ReactNode;
 }) {
   return (
-    <h2 className={`text-xl font-semibold font-[Roboto] ${extraClass}`}>
+    <h2 className={`text-lg font-semibold font-[Roboto] ${extraClass}`}>
       {children}
     </h2>
   );
