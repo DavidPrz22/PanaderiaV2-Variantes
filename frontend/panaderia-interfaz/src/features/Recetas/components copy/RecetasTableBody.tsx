@@ -1,5 +1,5 @@
 import { RecetasTablerows } from "./RecetasTablerows";
-import type { RecetaInfo } from "../types/types";
+import type { recetaItem } from "../types/types";
 import { PendingTubeSpinner } from "./PendingTubeSpinner";
 import { NoDataMessage } from "./NoDataMessage";
 
@@ -7,8 +7,8 @@ export const RecetasTableBody = ({
   data,
   isFetching,
 }: {
-  data: RecetaInfo[];
-  isFetching: boolean;  
+  data: recetaItem[];
+  isFetching: boolean;
 }) => {
   return (
     <>

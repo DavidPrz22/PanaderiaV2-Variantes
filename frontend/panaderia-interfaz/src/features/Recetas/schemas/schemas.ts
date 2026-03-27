@@ -1,35 +1,23 @@
 import { z } from "zod";
 
-const materiaPrimaComponenteSchema = z.object({
+
+const componentesRecetasSchema = z.object({
   componente_id: z.coerce
     .number()
     .min(1, { message: "El componente debe ser valido" }),
-  materia_prima: z.boolean(),
+  tipo: z.enum(["MateriaPrima", "ProductoIntermedio"]),
   cantidad: z.coerce
     .number()
     .min(1, { message: "La cantidad debe ser mayor que 0" }),
 });
 
-const productoIntermedioComponenteSchema = z.object({
-  componente_id: z.coerce
+const recetaRelacionadaSchema = z.object({
+  receta_id: z.coerce
     .number()
-    .min(1, { message: "El componente debe ser valido" }),
-  producto_intermedio: z.boolean(),
-  cantidad: z.coerce
-    .number()
-    .min(1, { message: "La cantidad debe ser mayor que 0" }),
+    .min(0, { message: "La receta relacionada debe ser valida" }),
 });
 
-const componentesRecetasSchema = z.union([
-  materiaPrimaComponenteSchema,
-  productoIntermedioComponenteSchema,
-]);
-
-const recetaRelacionadaSchema = z.coerce
-  .number()
-  .min(0, { message: "La receta relacionada debe ser valida" });
-
-export const recetasFormSchema = z.object({
+export const recetaSchema = z.object({
   nombre: z
     .string({
       required_error: "El nombre es requerido",
@@ -43,10 +31,15 @@ export const recetasFormSchema = z.object({
     .optional()
     .or(z.literal(null))
     .or(z.literal("")),
-
-  componente_receta: z.array(componentesRecetasSchema).min(1, {
+  componentes: z.array(componentesRecetasSchema).min(1, {
     message: "El componente es requerido",
   }),
+  producto_elaborado_variante: z.coerce
+    .number()
+    .min(1, { message: "El producto elaborado variante debe ser valido" })
+    .optional()
+    .or(z.literal(null))
+    .or(z.literal("")),
   notas: z
     .string()
     .refine((val) => !val || val.length >= 3, {
@@ -56,7 +49,9 @@ export const recetasFormSchema = z.object({
       message: "Las notas no pueden tener más de 250 caracteres",
     })
     .optional(),
-  receta_relacionada: z.array(recetaRelacionadaSchema).default([]),
+  recetas_relacionadas: z.array(recetaRelacionadaSchema).optional(),
 });
 
-export type TRecetasFormSchema = z.infer<typeof recetasFormSchema>;
+export type TcomponentesRecetasSchema = z.infer<typeof componentesRecetasSchema>;
+export type TrecetaRelacionadaSchema = z.infer<typeof recetaRelacionadaSchema>;
+export type TRecetaSchema = z.infer<typeof recetaSchema>;

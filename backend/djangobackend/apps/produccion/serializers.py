@@ -2,12 +2,35 @@ from rest_framework import serializers
 from .models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.produccion.models import Produccion, DetalleProduccionCosumos
 
+
+class componentsSerializer(serializers.Serializer):
+    componente_id = serializers.IntegerField()
+    cantidad = serializers.DecimalField(max_digits=10, decimal_places=3)
+    tipo = serializers.CharField()
+
+
 class RecetasSerializer(serializers.ModelSerializer):
-    componente_receta = serializers.ListField(write_only=True, required=False)
+
+    recetas_relacionadas = serializers.ListField(write_only=True, required=False)
+    componentes = serializers.ListField(child=componentsSerializer(), write_only=True, required=False)
+    class Meta:
+        model = Recetas
+        fields = [
+            'nombre',
+            'rendimiento',
+            'notas',
+            'componentes',
+            'producto_elaborado_variante',
+            'recetas_relacionadas'
+        ]
+
+
+class RecetasDetallesSerializer(serializers.ModelSerializer):
+    componentes = serializers.ListField(write_only=True, required=False)
     receta_relacionada = serializers.ListField(write_only=True, required=False)
     esCompuesta = serializers.SerializerMethodField(read_only=True)
-    producto_elaborado = serializers.CharField(source='producto_elaborado.nombre_producto', read_only=True)
-    unidad_medida_producto = serializers.CharField(source='producto_elaborado.unidad_produccion.nombre_completo', read_only=True)
+    unidad_medida_producto = serializers.CharField(source='producto_elaborado_variante.producto_elaborado.unidad_produccion.nombre_completo', read_only=True)
+    producto_elaborado = serializers.SerializerMethodField()
 
     class Meta:
         model = Recetas
@@ -18,12 +41,22 @@ class RecetasSerializer(serializers.ModelSerializer):
                     'nombre',
                     'rendimiento',
                     'fecha_creacion',
-                    'fecha_modificacion',
                     'notas',
-                    'componente_receta',
+                    'componentes',
                     'receta_relacionada',
                     'esCompuesta'
                 ]
+
+    def get_producto_elaborado(self, obj):
+        variante = obj.producto_elaborado_variante
+        if not variante:
+            return None
+        return {
+            'id': variante.id,
+            'nombre': f"{variante.producto_elaborado.nombre_producto} - {variante.nombre_variante}",
+            'unidad_medida': variante.producto_elaborado.unidad_produccion.nombre_completo if variante.producto_elaborado.unidad_produccion else None
+        }
+    
 
     def get_esCompuesta(self, obj):
         return RelacionesRecetas.objects.filter(receta_principal=obj).exists()
@@ -35,13 +68,19 @@ class RecetasSerializer(serializers.ModelSerializer):
             )
         return value
 
+
 class RecetasSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recetas
         fields = ['id', 'nombre']
 
 
-class RecetasDetallesSerializer(serializers.ModelSerializer):
+class RecetasListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recetas
+        fields = ['id', 'nombre', 'fecha_creacion']
+
+class RecetaDetalleItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecetasDetalles
@@ -52,11 +91,6 @@ class RecetasDetallesSerializer(serializers.ModelSerializer):
             'componente_producto_intermedio',
             'cantidad'
         ]
-
-class componentsSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    cantidad = serializers.DecimalField(max_digits=10, decimal_places=3)
-    tipo = serializers.CharField()
 
 
 class ProduccionSerializer(serializers.Serializer):

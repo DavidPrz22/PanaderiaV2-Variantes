@@ -1,199 +1,207 @@
-import { DeleteComponent } from "./DeleteComponent";
-import { useRecetasContext } from "@/context/RecetasContext";
-import RecetasFormShared from "./RecetasFormShared";
-import Title from "@/components/Title";
-import Button from "@/components/Button";
+import { ArrowLeft, BookOpen, Wheat, FlaskConical, Link2, Pencil, Trash2 } from "lucide-react";
 
-import { EditarIcon, BorrarIcon, CerrarIcon } from "@/assets/DashboardAssets";
-import { TitleDetails } from "@/components/TitleDetails";
-import { DetailsComponentsTable } from "./DetailsComponentsTable";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRecetaDetallesQuery } from "../hooks/queries/queries";
-import { useEffect } from "react";
-import type { TRecetasFormSchema } from "../schemas/schemas";
-import type { componenteListadosReceta } from "../types/types";
-import { useDeleteRecetaMutation } from "../hooks/mutations/recetasMutations";
-import { DetailsTable } from "./DetailsTable";
-import DetailsRecetasRelacionadas from "./DetailsRecetasRelacionadas";
+import { useRecetasContext } from "@/context/RecetasContext";
 
-export default function RecetasDetalles() {
-  const {
-    showRecetasDetalles,
-    updateRegistro,
-    setUpdateRegistro,
-    setRegistroDelete,
-    setShowRecetasDetalles,
-    setRecetaDetalles,
-    setRecetaDetallesLoading,
-    registroDelete,
-    recetaDetalles,
-    recetaId,
-    setEnabledRecetaDetalles,
-    enabledRecetaDetalles,
-    setComponentesListadosReceta,
-    setRecetasListadas,
-  } = useRecetasContext();
-  const {
-    mutateAsync: deleteRecetaMutation,
-    isPending: isDeleteRecetaPending,
-  } = useDeleteRecetaMutation();
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-  const {
-    data: recetaDetallesData,
-    isSuccess,
-    isLoading,
-  } = useRecetaDetallesQuery(recetaId!);
+interface RecipeDetailsPanelProps {
+  onClose: () => void;
+}
 
-  useEffect(() => {
-    if (recetaId && enabledRecetaDetalles && isSuccess) {
-      setRecetaDetalles(recetaDetallesData);
-      setShowRecetasDetalles(true);
-      setEnabledRecetaDetalles(false);
-    }
-  }, [
-    recetaId,
-    enabledRecetaDetalles,
-    isSuccess,
-    recetaDetallesData,
-    setRecetaDetalles,
-    setShowRecetasDetalles,
-    setEnabledRecetaDetalles,
-  ]);
+export function RecipeDetailsPanel({ onClose }: RecipeDetailsPanelProps) {
 
-  useEffect(() => {
-    setRecetaDetallesLoading(isLoading);
-  }, [isLoading, setRecetaDetallesLoading]);
+  const { recetaId, setUpdateRegistro, setShowRecetasForm, setShowRecetasDetalles } = useRecetasContext();
+  const { data: recipeDetails, isFetching } = useRecetaDetallesQuery(recetaId!);
+  console.log(recipeDetails);
+  const piIngredients = recipeDetails?.componentes.filter((c) => c.tipo === 'ProductoIntermedio') || [];
+  const mpIngredients = recipeDetails?.componentes.filter((c) => c.tipo === 'MateriaPrima') || [];
+  const totalCantidad = recipeDetails?.componentes.reduce((acc, c) => acc + c.cantidad, 0) || 0;
 
-  useEffect(() => {
-    if (updateRegistro && recetaDetalles?.componentes) {
-      const ListedComponentes: componenteListadosReceta[] =
-        recetaDetalles.componentes.map(({ id, nombre, tipo, unidad_medida, cantidad }) => {
-          return {
-            id_componente: id,
-            componente_tipo:
-              tipo === "Materia Prima" ? "MateriaPrima" : "ProductoIntermedio",
-            cantidad: cantidad || 0,
-            unidad_medida: unidad_medida || "",
-            nombre,
-          };
-        });
-      setComponentesListadosReceta(ListedComponentes);
-    }
-  }, [updateRegistro, recetaDetalles, setComponentesListadosReceta]);
+  const relatedRecipes = recipeDetails?.relaciones_recetas || [];
 
-  useEffect(() => {
-    if (
-      recetaDetalles &&
-      recetaDetalles.relaciones_recetas.length > 0 &&
-      updateRegistro
-    ) {
-      setRecetasListadas(recetaDetalles.relaciones_recetas);
-    }
-  }, [recetaDetalles, setRecetasListadas, updateRegistro]);
-
-  if (!showRecetasDetalles) return <></>;
-
-  const handleCloseUpdate = () => {
+  const handleUpdate = () => {
+    setUpdateRegistro(true);
+    setShowRecetasForm(true);
     setShowRecetasDetalles(false);
-    setUpdateRegistro(false);
   };
-
-  function handleClose() {
-    setShowRecetasDetalles(false);
-  }
-
-  if (updateRegistro) {
-    const componentesReceta = recetaDetalles?.componentes.map(
-      ({ tipo, id, cantidad }) => {
-        if (tipo === "Materia Prima") {
-          return {
-            componente_id: id,
-            materia_prima: true,
-            cantidad: cantidad || 0
-          };
-        }
-        if (tipo === "Producto Intermedio") {
-          return {
-            componente_id: id,
-            producto_intermedio: true,
-            cantidad: cantidad || 0
-          };
-        }
-      },
-    );
-
-    const formatData: TRecetasFormSchema = {
-      nombre: recetaDetalles!.receta.nombre,
-      rendimiento: recetaDetalles!.receta.rendimiento,
-      componente_receta:
-        componentesReceta as TRecetasFormSchema["componente_receta"],
-      notas: recetaDetalles!.receta.notas || "",
-      receta_relacionada: recetaDetalles!.relaciones_recetas.map(
-        ({ id }) => id,
-      ),
-    };
-
-    return (
-      <RecetasFormShared
-        title="Editar Receta"
-        initialData={formatData}
-        isUpdate={true}
-        onClose={handleCloseUpdate}
-        onSubmitSuccess={handleCloseUpdate}
-      />
-    );
-  }
-
+    
   return (
-    <div className="flex flex-col gap-5 mx-8 border border-gray-200 p-5 rounded-lg shadow-md h-full">
-      <div className="flex justify-between items-center">
-        <Title>{recetaDetalles?.receta.nombre}</Title>
-        <div className="flex gap-2">
-          <Button
-            type="edit"
-            onClick={() => {
-              setUpdateRegistro(true);
-            }}
-          >
-            <div className="flex items-center gap-2">
+    <div className="h-full flex flex-col bg-background font-[Roboto]">
+      {isFetching && (
+        <div className="flex items-center gap-3 border-b bg-card px-8 py-4">
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-foreground">Cargando...</h1>
+          </div>
+        </div>
+      )}
+      <div
+        className="gap-3 border-b"
+      >
+        <div className="flex items-center gap-3 max-w-5xl mx-auto px-8 py-4">
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <BookOpen className="h-6 w-6 text-primary" />
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-foreground">{recipeDetails?.receta.nombre}</h1>
+            <p className="text-sm text-muted-foreground">Creada el {recipeDetails?.receta.fecha_creacion?.split("T")[0]}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleUpdate}>
+              <Pencil className="h-4 w-4 mr-2" />
               Editar
-              <img src={EditarIcon} alt="Editar" />
-            </div>
-          </Button>
-          <Button
-            type="delete"
-            onClick={() => {
-              setRegistroDelete(true);
-            }}
-          >
-            <div className="flex items-center gap-2">
+            </Button>
+            <Button variant="destructive" size="sm" onClick={() => {}}>
+              <Trash2 className="h-4 w-4 mr-2" />
               Eliminar
-              <img src={BorrarIcon} alt="Eliminar" />
-            </div>
-          </Button>
-          <div className="ml-6">
-            <Button type="close" onClick={handleClose}>
-              <img src={CerrarIcon} alt="Cerrar" />
             </Button>
           </div>
         </div>
       </div>
 
-      {registroDelete && recetaId !== null && (
-        <DeleteComponent
-          deleteFunction={() => deleteRecetaMutation(recetaId)}
-          isLoading={isDeleteRecetaPending}
-        />
-      )}
-      <div className="flex flex-col gap-6">
-        <TitleDetails>Detalles de la receta</TitleDetails>
-        <DetailsTable />
-        <DetailsComponentsTable />
+      <ScrollArea className="flex-1">
+        <div className="max-w-5xl mx-auto p-8 space-y-8">
+            {/* Yield */}
+            <>
+              <div className="bg-card border rounded-lg p-6">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
+                  Rendimiento
+                </h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl font-bold text-foreground">{recipeDetails?.receta.rendimiento}</span>
+                  <Badge variant="outline" className="text-sm">{recipeDetails?.receta.producto_elaborado?.unidad_medida}</Badge>
+                </div>
+              </div>
+            </>
 
-        {recetaDetalles?.relaciones_recetas &&
-          recetaDetalles?.relaciones_recetas.length > 0 && (
-            <DetailsRecetasRelacionadas />
-          )}
-      </div>
+            {/* Ingredients */}
+            <div className="space-y-8">
+              <h2 className="text-lg font-semibold text-foreground mb-4">Componentes</h2>
+
+              {piIngredients.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
+                    <FlaskConical className="h-4 w-4 text-recipe-pi" />
+                    Productos Intermedios
+                  </h3>
+                  <div className="border rounded-lg">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Ingrediente</TableHead>
+                          <TableHead>Tipo</TableHead>
+                          <TableHead className="text-right">Cantidad</TableHead>
+                          <TableHead className="text-right">Peso %</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {piIngredients.map((ing) => (
+                          <TableRow key={ing.id}>
+                            <TableCell className="font-medium">{ing.nombre}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="border-recipe-pi/30 text-recipe-pi text-xs">
+                                PI
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {ing.cantidad} {ing.unidad_medida}
+                            </TableCell>
+                            <TableCell className="text-right text-muted-foreground">
+                              {totalCantidad > 0 ? ((ing.cantidad / totalCantidad) * 100).toFixed(1) : 0}%
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
+
+              {mpIngredients.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
+                    <Wheat className="h-4 w-4 text-recipe-mp" />
+                    Materias Primas
+                  </h3>
+                  <div className="border rounded-lg">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Ingrediente</TableHead>
+                          <TableHead>Tipo</TableHead>
+                          <TableHead className="text-right">Cantidad</TableHead>
+                          <TableHead className="text-right">Peso %</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {mpIngredients.map((ing) => (
+                          <TableRow key={ing.id}>
+                            <TableCell className="font-medium">{ing.nombre}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="border-recipe-mp/30 text-recipe-mp text-xs">
+                                MP
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {ing.cantidad} {ing.unidad_medida}
+                            </TableCell>
+                            <TableCell className="text-right text-muted-foreground">
+                              {totalCantidad > 0 ? ((ing.cantidad / totalCantidad) * 100).toFixed(1) : 0}%
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
+
+              {/* Related Recipes */}
+              {relatedRecipes.length > 0 && (
+                <>
+                  <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Link2 className="h-5 w-5" />
+                    Recetas Relacionadas
+                  </h2>
+                  <div className="bg-card border rounded-lg divide-y">
+                    {relatedRecipes.map((related) => {
+                      return (
+                        <div key={related.id} className="flex items-center gap-3 p-4">
+                          <BookOpen className="h-5 w-5 text-primary" />
+                          <span className="text-sm font-medium text-foreground">
+                            {related?.nombre}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+
+              {/* Notes */}
+              {recipeDetails?.receta.notas && (
+                <>
+                  <h2 className="text-lg font-semibold text-foreground mb-4">Notas</h2>
+                  <div className="bg-card border rounded-lg p-6">
+                    <p className="text-sm text-foreground whitespace-pre-wrap">{recipeDetails?.receta.notas}</p>
+                  </div>
+                </>
+              )}
+            </div>
+        </div>
+      </ScrollArea>
+    
     </div>
   );
 }

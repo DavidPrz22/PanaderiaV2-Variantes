@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { TRecetasFormSchema } from "../schemas/schemas";
+import type { TRecetaSchema } from "../schemas/schemas";
 import type {
   FieldErrors,
   Path,
@@ -12,17 +12,9 @@ export type childrenType = {
   children: ReactNode;
 };
 
-export type RecetasFormSharedProps = {
-  title: string;
-  isUpdate?: boolean;
-  initialData?: TRecetasFormSchema;
-  onClose: () => void;
-  onSubmitSuccess: () => void;
-};
-
 export type RecetasFormInputProps = {
-  register?: UseFormRegister<TRecetasFormSchema>;
-  name?: Path<TRecetasFormSchema>;
+  register?: UseFormRegister<TRecetaSchema>;
+  name?: Path<TRecetaSchema>;
   typeInput: string;
   placeholder?: string;
 };
@@ -34,10 +26,10 @@ export type RecetasFormSearchInputProps = {
 };
 
 export type RecetasFormInputContainerProps = {
-  register?: UseFormRegister<TRecetasFormSchema>;
+  register?: UseFormRegister<TRecetaSchema>;
   title: string;
-  name?: Path<TRecetasFormSchema>;
-  errors: FieldErrors<TRecetasFormSchema>;
+  name?: Path<TRecetaSchema>;
+  errors: FieldErrors<TRecetaSchema>;
   inputType: string;
   optional?: boolean;
   componenteBusqueda?: boolean;
@@ -46,24 +38,47 @@ export type RecetasFormInputContainerProps = {
   placeholder?: string;
 };
 
-export type itemRecetasSearchList = {
+
+export type ComponentesListaPorCategoria = {
+  [categoria: string]: componenteRecetaItem[];
+}
+
+export type componenteRecetaItem = {
   id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   unidad_medida: string;
 };
 
-export type RecetasSearchListContentProps = {
-  category: string;
-  items: itemRecetasSearchList[];
+export type componenteRecetaItemConCantidad = {
+  id: number;
+  nombre: string;
+  tipo: "MateriaPrima" | "ProductoIntermedio";
+  unidad_medida: string;
+  cantidad: number;
 };
 
-export type recetasSearchList = {
-  [categoria: string]: itemRecetasSearchList[];
+export type RecetasSearchListContentProps = {
+  category: string;
+  items: componenteRecetaItem[];
+};
+
+export type productoElaboradoVariante = {
+  id: number;
+  nombre_variante: string;
+  SKU: string;
+};
+
+export type productoElaboradoItem = {
+  producto_id: number;
+  nombre_producto: string;
+  tipo: "ProductoIntermedio" | "ProductoFinal";
+  unidad_produccion: string;
+  variantes: productoElaboradoVariante[];
 };
 
 export type componenteListadosReceta = {
-  id_componente: number;
+  id: number;
   componente_tipo: "MateriaPrima" | "ProductoIntermedio";
   nombre: string;
   unidad_medida: string;
@@ -86,45 +101,47 @@ export type recetasComponentListProps = {
 };
 
 export type watchSetValueProps = {
-  watch: UseFormWatch<TRecetasFormSchema>;
-  setValue: UseFormSetValue<TRecetasFormSchema>;
+  watch: UseFormWatch<TRecetaSchema>;
+  setValue: UseFormSetValue<TRecetaSchema>;
 };
 
-export type recetaItem = {
+export type RecetaInfo = {
   id: number;
   nombre: string;
   fecha_creacion: string;
-  fecha_modificacion: string | null;
   notas: string | null;
   esCompuesta: boolean;
   rendimiento?: number | null;
-  producto_elaborado?: string;
-  unidad_medida_producto?: string;
+  producto_elaborado?: {
+    id: number;
+    nombre: string;
+    unidad_medida: string;
+  };
 };
 
-export type recetaDetallesItemComponente = {
+export type RecetaDetallesItemComponente = {
   id: number;
   nombre: string;
-  tipo: "Materia Prima" | "Producto Intermedio";
+  tipo: "MateriaPrima" | "ProductoIntermedio";
   cantidad: number;
   unidad_medida: string;
 };
 
-export type recetaDetallesItem = {
-  receta: recetaItem;
-  componentes: recetaDetallesItemComponente[];
-  relaciones_recetas: recetaRelacionada[];
+export type RecetaDetalles = {
+  receta: RecetaInfo;
+  componentes: RecetaDetallesItemComponente[];
+  relaciones_recetas: RecetaRelacionada[];
 };
 
-export type recetaRelacionada = {
+export type RecetaRelacionada = {
   id: number;
   nombre: string;
 };
 
 export type RecetaComponentsContainerProps = {
-  watch: UseFormWatch<TRecetasFormSchema>;
-  setValue: UseFormSetValue<TRecetasFormSchema>;
-  errors: FieldErrors<TRecetasFormSchema>;
+  watch: UseFormWatch<TRecetaSchema>;
+  setValue: UseFormSetValue<TRecetaSchema>;
+  errors: FieldErrors<TRecetaSchema>;
 };
 
 export type recetaListItemProps = {
@@ -133,11 +150,17 @@ export type recetaListItemProps = {
   last?: boolean;
 };
 
+export type RecetaItem = {
+  id: number;
+  nombre: string;
+  fecha_creacion: string;
+};
+
 export type RecetasPagination = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: recetaItem[];
+  results: RecetaItem[];
 };
 
 export type fechaSeleccionadaFiltro = {

@@ -1,7 +1,7 @@
 import type {
+  productoElaboradoItem,
   recetaDetallesItem,
   recetaRelacionada,
-  recetasSearchList,
 } from "@/features/Recetas/types/types";
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import type { componenteListadosReceta, fechaSeleccionadaFiltro } from "@/features/Recetas/types/types";
@@ -20,8 +20,6 @@ type RecetasContextType = {
   searchListComponentesRef: React.RefObject<HTMLInputElement | null>;
   searchListActiveComponentes: boolean;
   setSearchListActiveComponentes: (active: boolean) => void;
-  searchListComponentes: recetasSearchList[];
-  setSearchListComponentes: (items: recetasSearchList[]) => void;
   timer: NodeJS.Timeout | null;
   setTimer: (timer: NodeJS.Timeout | null) => void;
   componentesListadosReceta: componenteListadosReceta[];
@@ -51,6 +49,8 @@ type RecetasContextType = {
   setSeachTermFilter: (searchTermFilter: string | null) => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  selectedItemProducto: productoElaboradoItem | null;
+  setSelectedItemProducto: (selectedItemProducto: productoElaboradoItem | null) => void;
 };
 
 const RecetasContext = createContext<RecetasContextType | null>(null);
@@ -76,14 +76,11 @@ export const RecetasProvider = ({
 
   const searchListComponentesRef = useRef<HTMLInputElement | null>(null);
   const [searchListActiveComponentes, setSearchListActiveComponentes] = useState(false);
-  const [searchListComponentes, setSearchListComponentes] = useState<recetasSearchList[]>(
-    [],
-  );
   const [componentesListadosReceta, setComponentesListadosReceta] = useState<
     componenteListadosReceta[]
   >([]);
 
-
+  const [selectedItemProducto, setSelectedItemProducto] = useState<productoElaboradoItem | null>(null);
 
   const searchListRecetaListRef = useRef<HTMLInputElement | null>(null);
   const [searchListActiveRecetaList, setSearchListActiveRecetaList] = useState(false);
@@ -121,6 +118,8 @@ export const RecetasProvider = ({
   return (
     <RecetasContext.Provider
       value={{
+        selectedItemProducto,
+        setSelectedItemProducto,
         showRecetasDetalles,
         setShowRecetasDetalles,
         recetaId,
@@ -134,8 +133,6 @@ export const RecetasProvider = ({
         searchListComponentesRef,
         searchListActiveComponentes,
         setSearchListActiveComponentes,
-        searchListComponentes,
-        setSearchListComponentes,
         timer,
         setTimer,
         componentesListadosReceta,

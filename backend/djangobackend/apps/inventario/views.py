@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from apps.inventario.models import MateriasPrimas, ProductosElaborados, ProductosReventa, ProductosFinales
+from apps.inventario.models import MateriasPrimas, ProductosElaborados, ProductosReventa, ProductosFinales, ProductosIntermedios
 from django.db.models import Value, CharField
 from apps.core.models import CategoriasProductosReventa, CategoriasProductosElaborados
 from apps.inventario.serializers import CajaProductosSerializer
-
+from collections import defaultdict
 
 class ProductosPedidoSearchView(APIView):
     def get(self, request, *args, **kwargs):
@@ -142,6 +142,7 @@ class ProductosVentasListaView(APIView):
 
 
 class CategoriasProductosView(APIView):
+
     def get(self, request, *args, **kwargs):
         categorias_pf = CategoriasProductosElaborados.objects.filter(es_intermediario=False).values_list('nombre_categoria', flat=True)
         categorias_pr = CategoriasProductosReventa.objects.values_list('nombre_categoria', flat=True)
@@ -153,3 +154,50 @@ class CategoriasProductosView(APIView):
         }
         
         return Response({"categorias": categorias}, status=status.HTTP_200_OK)
+
+
+class ComponenteRecetasView(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        search_query = request.query_params.get('search')
+        stock_requested = request.query_params.get('stock')
+
+        if not search_query:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "El parámetro 'search' es requerido"})
+
+        materia_primas = MateriasPrimas.objects.filter(
+            nombre__icontains=search_query
+        ).select_related('categoria')
+
+        productos_intermedios = ProductosIntermedios.objects.filter(
+            nombre_producto__icontains=search_query
+        ).select_related('categoria')
+
+        categorias_dict = defaultdict(list)
+        for materia_prima in materia_primas:
+            categoria = materia_prima.categoria.nombre_categoria
+            componente_data = {
+                'id': materia_prima.id, 
+                'nombre': materia_prima.nombre,
+                'tipo': 'MateriaPrima',
+                'unidad_medida': materia_prima.unidad_medida_base.abreviatura
+            }
+            if stock_requested: 
+                componente_data['stock'] = materia_prima.stock_actual
+
+            categorias_dict[categoria].append(componente_data)
+
+        for intermedio in productos_intermedios:
+            categoria = intermedio.categoria.nombre_categoria
+            componente_data = {
+                'id': intermedio.id,
+                'nombre': intermedio.nombre_producto,
+                'tipo': 'ProductoIntermedio',
+                'unidad_medida': intermedio.unidad_produccion.abreviatura
+            }
+            if stock_requested:
+                componente_data['stock'] = intermedio.stock_actual
+
+            categorias_dict[categoria].append(componente_data)
+
+        return Response(categorias_dict)

@@ -11,9 +11,9 @@ urlpatterns = [
     path('api/inventario/', include('apps.inventario.urls')),
     path('api/core/', include('apps.core.urls')),
     path('api/compras/', include('apps.compras.urls')),
-    path('api/', include('apps.produccion.urls')),
-    path('api/', include('apps.ventas.urls')),
-    path('api/', include('apps.transformacion.urls')),
+    path('api/produccion/', include('apps.produccion.urls')),
+    path('api/ventas/', include('apps.ventas.urls')),
+    path('api/transformacion/', include('apps.transformacion.urls')),
     path('api/reportes/', include('apps.reportes.urls')),
     path('api/dashboard/', include('apps.dashboard.urls')),
 ]

@@ -1,41 +1,35 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  componentesRecetaSearch,
   deleteReceta,
-  getRecetasSearch,
-  registerReceta,
-  updateReceta,
+  registerUpdateReceta,
 } from "../../api/api";
+
 import { useRecetasContext } from "@/context/RecetasContext";
-import type { TRecetasFormSchema } from "../../schemas/schemas";
+import type { TRecetaSchema } from "../../schemas/schemas";
+
 import {
   recetasDetallesQueryOptions,
   recetasQueryOptions,
 } from "../queries/RecetasQueryOptions";
+
 import type { QueryClient } from "@tanstack/react-query";
 import type { RecetasPagination } from "../../types/types";
 
-export const useComponentesRecetaSearchMutation = () => {
-  const { setSearchListComponentes } = useRecetasContext();
-  return useMutation({
-    mutationFn: (search: string) => componentesRecetaSearch(search),
-    onSuccess: (data) => {
-      setSearchListComponentes(data);
-    },
-    onError: (error) => {
-      console.error("Error fetching componentes receta search:", error);
-    },
-  });
-};
 
-export const useRegisterRecetaMutation = () => {
+
+export const useRegisterUpdateRecetaMutation = () => {
   const { setComponentesListadosReceta, setRecetasListadas } =
     useRecetasContext();
 
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TRecetasFormSchema) => registerReceta(data),
+    mutationFn: ({ data, id }: { data: TRecetaSchema, id?: number }) => {
+      if (id) {
+        return registerUpdateReceta(data, id);
+      }
+      return registerUpdateReceta(data);
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: recetasQueryOptions.queryKey,
@@ -85,33 +79,6 @@ const invalidatePage = async (page: number, queryClient: QueryClient) => {
 };
 
 
-export const useUpdateRecetaMutation = () => {
-  const { setRecetasListadas, setComponentesListadosReceta, currentPage } =
-    useRecetasContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      recetaId,
-      data,
-    }: {
-      recetaId: number;
-      data: TRecetasFormSchema;
-    }) => updateReceta(recetaId, data),
-    onSuccess: async (_, { recetaId }) => {
-      await queryClient.invalidateQueries({
-        queryKey: recetasDetallesQueryOptions(recetaId).queryKey,
-      });
-
-      await invalidatePage(currentPage, queryClient)
-      // await queryClient.invalidateQueries({
-      //   queryKey: recetasQueryOptions.queryKey,
-      // });
-
-      setRecetasListadas([]);
-      setComponentesListadosReceta([]);
-    },
-  });
-};
 
 export const useDeleteRecetaMutation = () => {
   const queryClient = useQueryClient();
@@ -124,16 +91,6 @@ export const useDeleteRecetaMutation = () => {
       queryClient.removeQueries({
         queryKey: recetasDetallesQueryOptions(recetaId).queryKey,
       });
-    },
-  });
-};
-
-export const useRecetasSearchMutation = () => {
-  const { setSearchListRecetaList } = useRecetasContext();
-  return useMutation({
-    mutationFn: ({ search, recetaId }: { search: string, recetaId?: number }) => getRecetasSearch(search, recetaId),
-    onSuccess: (data) => {
-      setSearchListRecetaList(data);
     },
   });
 };

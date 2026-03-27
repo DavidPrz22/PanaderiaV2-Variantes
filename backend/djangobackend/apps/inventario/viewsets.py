@@ -10,11 +10,12 @@ from apps.inventario.models import (
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.inventario.serializers import (
     ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
-    MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, 
+    MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer,
     ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
     ProductosElaboradosSerializer, ProductosFinalesSearchSerializer, ProductosFinalesListSerializer,
     ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
-    ProductosReventaSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer
+    ProductosReventaSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer,
+    VarianteSearchSerializer
 )
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -195,60 +196,6 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-class ComponenteSearchViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = MateriasPrimas.objects.none()
-    serializer_class = ComponentesSearchSerializer
-    
-    def list(self, request, *args, **kwargs):
-        search_query = request.query_params.get('search')
-        stock_requested = request.query_params.get('stock')
-
-        if not search_query:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "El parámetro 'search' es requerido"})
-
-        materia_primas = MateriasPrimas.objects.filter(
-            nombre__icontains=search_query
-        ).select_related('categoria')
-
-        productos_intermedios = ProductosIntermedios.objects.filter(
-            nombre_producto__icontains=search_query
-        ).select_related('categoria')
-
-        categorias_dict = defaultdict(list)
-        for materia_prima in materia_primas:
-            categoria = materia_prima.categoria.nombre_categoria
-            componente_data = {
-                'id': materia_prima.id, 
-                'nombre': materia_prima.nombre,
-                'tipo': 'MateriaPrima',
-                'unidad_medida': materia_prima.unidad_medida_base.abreviatura
-            }
-            if stock_requested: 
-                componente_data['stock'] = materia_prima.stock_actual
-
-            categorias_dict[categoria].append(componente_data)
-
-        for intermedio in productos_intermedios:
-            categoria = intermedio.categoria.nombre_categoria
-            componente_data = {
-                'id': intermedio.id,
-                'nombre': intermedio.nombre_producto,
-                'tipo': 'ProductoIntermedio',
-                'unidad_medida': intermedio.unidad_produccion.abreviatura
-            }
-            if stock_requested:
-                componente_data['stock'] = intermedio.stock_actual
-
-            categorias_dict[categoria].append(componente_data)
-
-        # Use the serializer to format the data
-        componentes_por_categoria = []
-        for categoria, items in categorias_dict.items():
-            serializer = self.get_serializer(items, many=True)
-            componentes_por_categoria.append({categoria: serializer.data})
-
-        return Response(componentes_por_categoria)
 
 
 class LotesMateriaPrimaViewSet(viewsets.ModelViewSet):
@@ -504,6 +451,42 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
         serializer = LotesProductosElaboradosSerializer(lotes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=['get'], url_path='search')
+    def search(self, request):
+        search_term = request.query_params.get('search', '')
+        
+        if len(search_term) < 2:
+            return Response({"error": "El término de búsqueda debe tener al menos 2 caracteres"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not search_term:
+            return Response({"error": "El término de búsqueda no puede estar vacío"}, status=status.HTTP_400_BAD_REQUEST)
+
+        productos_variantes = ProductosElaboradosVariantes.objects.filter(
+            receta_producto_elaborado_variante__isnull=True,
+            producto_elaborado__nombre_producto__icontains=search_term
+        ).prefetch_related('producto_elaborado')
+
+        productos_elaborados_ids = productos_variantes.values_list('producto_elaborado_id', flat=True)
+        
+        pe_map = defaultdict(list)
+        for variante in productos_variantes:
+            pe_map[variante.producto_elaborado_id].append(variante)
+        
+        productos_data = []
+        for variante in productos_variantes:
+            
+            if variante.producto_elaborado_id in [p['producto_id'] for p in productos_data]:
+                continue
+            
+            productos_data.append({
+                'producto_id': variante.producto_elaborado.id,
+                'nombre_producto': variante.producto_elaborado.nombre_producto,
+                'tipo': 'ProductoIntermedio' if variante.producto_elaborado.es_intermediario else 'ProductoFinal',
+                'unidad_produccion': variante.producto_elaborado.unidad_produccion.nombre_completo,
+                'variantes': VarianteSearchSerializer(pe_map[variante.producto_elaborado_id], many=True).data
+            })
+
+        return Response(productos_data, status=status.HTTP_200_OK)
 
 class LotesProductosElaboradosViewSet(viewsets.ModelViewSet):
     queryset = LotesProductosElaborados.objects.order_by('fecha_caducidad')

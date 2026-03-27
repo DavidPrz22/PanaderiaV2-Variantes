@@ -23,6 +23,17 @@ class ComponentesSearchSerializer(serializers.Serializer):
     unidad_medida = serializers.CharField()
 
 
+class VarianteSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductosElaboradosVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'SKU',
+        ]
+
+
+
 class LotesMateriaPrimaSerializer(serializers.ModelSerializer):
     proveedor_id = serializers.PrimaryKeyRelatedField(
         source='proveedor',

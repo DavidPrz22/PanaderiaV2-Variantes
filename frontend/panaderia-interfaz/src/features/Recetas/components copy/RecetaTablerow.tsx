@@ -1,20 +1,20 @@
 import { useRecetasContext } from "@/context/RecetasContext";
-import type { RecetaItem } from "../types/types";
+import type { recetaItem } from "../types/types";
 
 export const RecetaTablerow = ({
   item,
   index,
   last,
 }: {
-  item: RecetaItem;
+  item: recetaItem;
   index: number;
   last?: boolean;
 }) => {
-  const { setRecetaId, setShowRecetasDetalles } = useRecetasContext();
+  const { setRecetaId, setEnabledRecetaDetalles } = useRecetasContext();
 
   const activateRecetaDetalles = () => {
     setRecetaId(item.id);
-    setShowRecetasDetalles(true);
+    setEnabledRecetaDetalles(true);
   };
 
   return (
@@ -25,7 +25,7 @@ export const RecetaTablerow = ({
     >
       <div>{item.id || "-"}</div>
       <div>{item.nombre || "-"}</div>
-      <div>{item.fecha_creacion?.split("T")[0] || "-"}</div>
+      <div>{item.fecha_creacion.split("T")[0] || "-"}</div>
     </div>
   );
 };

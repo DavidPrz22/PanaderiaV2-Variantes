@@ -1,6 +1,5 @@
 from rest_framework.routers import DefaultRouter
 from apps.inventario.viewsets import (
-    ComponenteSearchViewSet, 
     MateriaPrimaViewSet, 
     LotesMateriaPrimaViewSet, 
     ProductosIntermediosViewSet, 
@@ -17,7 +16,8 @@ from apps.inventario.views import (
     ProductosPedidoSearchView, 
     ProductosComprasSearchView, 
     CategoriasProductosView, 
-    ProductosVentasListaView
+    ProductosVentasListaView,
+    ComponenteRecetasView
     )
 from django.urls import include, path
 
@@ -25,9 +25,6 @@ router = DefaultRouter()
 # Materias Primas
 router.register('materiaprima', MateriaPrimaViewSet, basename='materiaprima')
 router.register('lotesmateriaprima', LotesMateriaPrimaViewSet, basename='lotesmateriaprima')
-
-# Componentes Receta
-router.register('componentes-search', ComponenteSearchViewSet, basename='componentes-search')
 
 # Productos Intermedios
 router.register('productos-intermedios', ProductosIntermediosViewSet, basename='productosintermedios')
@@ -43,7 +40,7 @@ router.register('lotes-productos-reventa', LotesProductosReventaViewSet, basenam
 
 # Productos Elaborados
 router.register('lotes-productos-elaborados', LotesProductosElaboradosViewSet, basename='lotes-productos-elaborados')
-router.register('productoselaborados', ProductosElaboradosViewSet, basename='productoselaborados')
+router.register('productos-elaborados', ProductosElaboradosViewSet, basename='productos-elaborados')
 
 
 # Transformaciones
@@ -54,5 +51,6 @@ urlpatterns = [
     path('productos-compras-search/', ProductosComprasSearchView.as_view(), name="productos-compras-search"),
     path('caja-categorias/', CategoriasProductosView.as_view(), name="categorias"),
     path('caja-productos-lista/', ProductosVentasListaView.as_view(), name="caja-productos-lista"),
+    path('componentes-recetas/', ComponenteRecetasView.as_view(), name="componentes-recetas"),
     path('', include(router.urls))
     ]

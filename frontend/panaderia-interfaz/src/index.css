@@ -24,7 +24,8 @@
   --estado-inactivo: #6b7280;
   --estado-agotado: #ef4444;
   --estado-expirado: #f59e0b;
-
+  --color-recipe-mp: #10b981; /* emerald-500 */
+  --color-recipe-pi: #f97316; /* orange-500 */
 }
 
 @theme inline {

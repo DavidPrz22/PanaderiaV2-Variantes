@@ -184,7 +184,7 @@ export const LoteForm = ({ initialData, onClose, onSuccess }: LoteFormProps) => 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Costo Unitario Divisa */}
                         <FormInput
-                            label={`Costo Unitario (${unidadBase.toUpperCase()})`}
+                            label={`Costo Unitario Divisa (${unidadBase.toUpperCase()})`}
                             required
                             error={errors.costo_unitario_divisa?.message}
                             type="number"
@@ -196,7 +196,7 @@ export const LoteForm = ({ initialData, onClose, onSuccess }: LoteFormProps) => 
 
                         {/* Costo Unitario Local */}
                         <FormInput
-                            label={`Costo Unitario (${unidadBase.toUpperCase()})`}
+                            label={`Costo Unitario Local (${unidadBase.toUpperCase()})`}
                             required
                             type="number"
                             step="0.01"

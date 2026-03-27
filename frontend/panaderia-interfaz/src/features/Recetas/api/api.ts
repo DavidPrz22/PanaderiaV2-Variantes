@@ -1,36 +1,53 @@
 import apiClient from "@/api/client";
-import type { TRecetasFormSchema } from "../schemas/schemas";
+import type { TRecetaSchema } from "../schemas/schemas";
 import type {
-  recetaDetallesItem,
-  recetaItem,
-  recetaRelacionada,
-  recetasSearchList,
+  RecetaRelacionada,
   RecetasPagination,
+  ComponentesListaPorCategoria,
+  productoElaboradoItem,
+  RecetaDetalles,
 } from "../types/types";
 
-export const componentesRecetaSearch = async (
+export const getComponentesRecetas = async (
   search: string,
-): Promise<recetasSearchList[]> => {
+): Promise<ComponentesListaPorCategoria> => {
   try {
-    const response = await apiClient.get("/api/componentes-search/", {
+    const response = await apiClient.get("/api/inventario/componentes-recetas/", {
       params: {
         search,
       },
     });
-
     return response.data;
   } catch (error) {
-    console.error("Error fetching componentes receta search:", error);
+    console.error("Error fetching componentes recetas:", error);
     throw error;
   }
 };
 
-export const registerReceta = async (data: TRecetasFormSchema) => {
+export const getProductosElaborados = async (searchTerm: string): Promise<productoElaboradoItem[]> => {
   try {
-    const response = await apiClient.post("/api/recetas/", data);
+    const response = await apiClient.get("/api/inventario/productos-elaborados/search/", {
+      params: {
+        search: searchTerm,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error("Error registering receta:", error);
+    console.error("Error fetching productos elaborados:", error);
+    throw error;
+  }
+}
+
+export const registerUpdateReceta = async (data: TRecetaSchema, id?: number) => {
+  try {
+    if (id) {
+      const response = await apiClient.put(`/api/produccion/recetas/${id}/update_receta/`, data);
+      return response.data;
+    }
+    const response = await apiClient.post("/api/produccion/recetas/", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error registering/updating receta:", error);
     throw error;
   }
 };
@@ -40,9 +57,10 @@ export const getRecetas = async ({
 }: {
   pageParam?: string | null
 } = {}): Promise<RecetasPagination> => {
-  try {
-    const url = pageParam || "/api/recetas/";
+  try { 
+    const url = pageParam || "/api/produccion/recetas/";
     const response = await apiClient.get(url);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching recetas:", error);
@@ -52,12 +70,11 @@ export const getRecetas = async ({
 
 export const getRecetaDetalles = async (
   id: number,
-): Promise<recetaDetallesItem> => {
+): Promise<RecetaDetalles> => {
   try {
     const response = await apiClient.get(
-      `/api/recetas/${id}/get_receta_detalles/`,
+      `/api/produccion/recetas/${id}/`,
     );
-    console.log(response.data, "response.data");
     return response.data;
   } catch (error) {
     console.error("Error fetching receta detalles:", error);
@@ -67,7 +84,7 @@ export const getRecetaDetalles = async (
 
 export const updateReceta = async (
   recetaId: number,
-  data: TRecetasFormSchema,
+  data: TRecetaSchema,
 ) => {
   try {
     const response = await apiClient.put(
@@ -83,7 +100,7 @@ export const updateReceta = async (
 
 export const deleteReceta = async (id: number) => {
   try {
-    const response = await apiClient.delete(`/api/recetas/${id}/`);
+    const response = await apiClient.delete(`/api/produccion/recetas/${id}/`);
     return response.data;
   } catch (error) {
     console.error("Error deleting receta:", error);
@@ -94,11 +111,11 @@ export const deleteReceta = async (id: number) => {
 export const getRecetasSearch = async (
   search: string,
   recetaId?: number,
-): Promise<recetaRelacionada[]> => {
+): Promise<RecetaRelacionada[]> => {
   const searchOnReceta = true
   try {
     const response = await apiClient.get(
-      `/api/recetas-search/list_recetas/`,
+      `/api/produccion/recetas/search/`,
       { params: { search, recetaId, searchOnReceta } }
     );
     return response.data;
