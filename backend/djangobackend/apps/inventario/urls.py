@@ -3,9 +3,7 @@ from apps.inventario.viewsets import (
     MateriaPrimaViewSet, 
     LotesMateriaPrimaViewSet, 
     ProductosIntermediosViewSet, 
-    ProductosFinalesViewSet, 
-    ProductosIntermediosSearchViewSet, 
-    ProductosFinalesSearchViewset, 
+    ProductosFinalesViewSet,
     ProductosFinalesListaTransformacionViewSet, 
     ProductosElaboradosViewSet, 
     LotesProductosElaboradosViewSet, 
@@ -28,11 +26,9 @@ router.register('lotesmateriaprima', LotesMateriaPrimaViewSet, basename='lotesma
 
 # Productos Intermedios
 router.register('productos-intermedios', ProductosIntermediosViewSet, basename='productosintermedios')
-router.register('productos-intermedios-search', ProductosIntermediosSearchViewSet, basename='productosintermedios-search')
 
 # Productos Finales
 router.register('productosfinales', ProductosFinalesViewSet, basename='productosfinales')
-router.register('productosfinales-search', ProductosFinalesSearchViewset, basename='productosfinales-search')
 
 # Productos Reventa
 router.register('productosreventa', ProductosReventaViewSet, basename='productosreventa')

@@ -12,9 +12,9 @@ const componenteSchema = z.object({
 });
 
 export const productionSchema = z.object({
-  productoId: z
+  producto_variante_id: z
     .number()
-    .min(0, { message: "El ID del producto debe ser un número positivo" }),
+    .min(0, { message: "El ID del producto debe ser un número positivo" }).nullable(),
   componentes: z
     .array(componenteSchema)
     .min(1, { message: "Debe haber al menos un componente" }),

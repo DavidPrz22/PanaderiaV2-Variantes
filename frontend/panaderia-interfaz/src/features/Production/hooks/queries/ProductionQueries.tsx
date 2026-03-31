@@ -7,7 +7,7 @@ import {
 import { componentsProductionOptions } from "./ProductionQueryOptions";
 import { useProductionContext } from "@/context/ProductionContext";
 
-export const useProductSearchQuery = () => {
+export const useProductSearchQueries = () => {
   return useQueries({
     queries: [finalesSearchOptions, intermediosSearchOptions],
   });

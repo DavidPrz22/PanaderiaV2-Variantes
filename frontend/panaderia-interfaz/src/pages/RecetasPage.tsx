@@ -10,7 +10,8 @@ const RecetasContent = () => {
     showRecetasForm, 
     setShowRecetasForm, 
     showRecetasDetalles, 
-    setShowRecetasDetalles 
+    setShowRecetasDetalles,
+    setSelectedItemProducto
   } = useRecetasContext();
 
   return (
@@ -19,7 +20,10 @@ const RecetasContent = () => {
         <main className="pt-7 pb-3 h-full">
           <RecetasPanel />
           {showRecetasForm && (
-            <RecetaForma onClose={() => setShowRecetasForm(false)} />
+            <RecetaForma onClose={() => {
+              setShowRecetasForm(false);
+              setSelectedItemProducto(null);
+            }} />
           )}
           {showRecetasDetalles && (
             <RecipeDetailsPanel onClose={() => setShowRecetasDetalles(false)} />

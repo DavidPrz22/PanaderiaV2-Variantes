@@ -27,7 +27,7 @@ export const getProductoFinalDetalles = async (
 ): Promise<ProductoFinalDetalles> => {
   try {
     const response = await apiClient.get(
-      `/api/inventario/productosfinales-detalles/${id}/`,
+      `/api/inventario/productosfinales/${id}/`,
     );
     console.log(response.data);
     return response.data;

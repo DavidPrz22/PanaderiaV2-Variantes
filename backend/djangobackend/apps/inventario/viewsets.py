@@ -12,9 +12,9 @@ from apps.inventario.serializers import (
     ComponentesSearchSerializer, MateriaPrimaDetailsSerializer, MateriaPrimaListSerializer, MateriaPrimaSerializer, 
     MateriaPrimaVariantesDetallesSerializer, LotesMateriaPrimaSerializer, LotesMateriaPrimaDetailsSerializer,
     ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
-    ProductosElaboradosSerializer, ProductosFinalesSearchSerializer, ProductosFinalesListSerializer,
-    ProductosIntermediosSearchSerializer, ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
-    ProductosReventaSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer,
+    ProductosElaboradosSerializer, ProductosFinalesListSerializer, ProductosFinalesDetallesSerializer,
+    ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
+    ProductosReventaSerializer, ProductionSearchSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer,
     VarianteSearchSerializer
 )
 from rest_framework.response import Response
@@ -197,7 +197,6 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class LotesMateriaPrimaViewSet(viewsets.ModelViewSet):
     queryset = LotesMateriasPrimas.objects.all()
     serializer_class = LotesMateriaPrimaSerializer
@@ -354,10 +353,10 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
         elif detalle.componente_producto_intermedio:
             component = detalle.componente_producto_intermedio
             cantidad = detalle.cantidad
-            unit = component.unidad_produccion
+            unit = component.producto_elaborado.unidad_produccion
             return {
                 "id": component.id,
-                "nombre": component.nombre_producto,
+                "nombre": component.producto_elaborado.nombre_producto,
                 "unidad_medida": unit.abreviatura,
                 "stock": component.stock_actual,
                 "cantidad": cantidad,
@@ -380,7 +379,7 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
             receta_id__in=sub_recetas_ids
         ).select_related(
             'componente_materia_prima__unidad_medida_base',
-            'componente_producto_intermedio__unidad_produccion'
+            'componente_producto_intermedio__producto_elaborado__unidad_produccion'
         )
 
         # Group details by recipe id for efficient lookup
@@ -405,24 +404,26 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
     def get_receta_producto(self, request, *args, **kwargs):
         producto_id = kwargs.get('pk')
         try:
-            receta_principal = Recetas.objects.get(producto_elaborado=producto_id)
+            receta_principal = Recetas.objects.select_related(
+                'producto_elaborado_variante__producto_elaborado__unidad_produccion'
+            ).get(producto_elaborado_variante_id=producto_id)
         except Recetas.DoesNotExist:
             return Response({"error": "No se encontró la receta asociada"}, status=status.HTTP_404_NOT_FOUND)
 
         # Expire all old lots before getting recipe data
-        ComponentesStockManagement.expirar_todos_lotes_viejos()
+        # ComponentesStockManagement.expirar_todos_lotes_viejos()
 
         detalles_receta_principal = RecetasDetalles.objects.filter(
             receta_id=receta_principal.id
         ).select_related(
             'componente_materia_prima__unidad_medida_base',
-            'componente_producto_intermedio__unidad_produccion'
+            'componente_producto_intermedio__producto_elaborado__unidad_produccion'
         )
 
         subrecetas = []
         self._get_all_sub_recetas(receta_principal.id, subrecetas)
         # Derive unit-based production flags from product's unidad_produccion
-        producto_elaborado = receta_principal.producto_elaborado
+        producto_elaborado = receta_principal.producto_elaborado_variante.producto_elaborado
         unidad_prod = getattr(producto_elaborado, 'unidad_produccion', None)
         medida_produccion = getattr(unidad_prod, 'nombre_completo', None)
         es_por_unidad = False
@@ -464,7 +465,7 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
         productos_variantes = ProductosElaboradosVariantes.objects.filter(
             receta_producto_elaborado_variante__isnull=True,
             producto_elaborado__nombre_producto__icontains=search_term
-        ).prefetch_related('producto_elaborado')
+        ).select_related('producto_elaborado__unidad_produccion')
 
         productos_elaborados_ids = productos_variantes.values_list('producto_elaborado_id', flat=True)
         
@@ -487,6 +488,24 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
             })
 
         return Response(productos_data, status=status.HTTP_200_OK)
+
+
+    @action(detail=False, methods=['get'], url_path='production-search')
+    def production_search(self, request):
+        tipo = request.query_params.get('tipo', '')
+
+        if tipo == 'producto-intermedio':
+            productos_intermedios = ProductosIntermedios.objects.filter(variantes__receta_producto_elaborado_variante__isnull=False)
+            serializer = ProductionSearchSerializer(productos_intermedios, many=True)
+        elif tipo == 'producto-final':
+            productos_finales = ProductosFinales.objects.filter(variantes__receta_producto_elaborado_variante__isnull=False)
+            serializer = ProductionSearchSerializer(productos_finales, many=True)
+        else:
+            return Response({"error": "Tipo de producto no válido"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'productos': serializer.data, 'tipo': tipo}, status=status.HTTP_200_OK)
+
+
 
 class LotesProductosElaboradosViewSet(viewsets.ModelViewSet):
     queryset = LotesProductosElaborados.objects.order_by('fecha_caducidad')
@@ -803,28 +822,6 @@ class ProductosFinalesViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class ProductosFinalesSearchViewset(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductosFinales.objects.all()
-    serializer_class = ProductosFinalesSearchSerializer
-
-    def list(self, request, *args, **kwargs):
-
-        productos = self.get_queryset()
-        
-        productos_con_recetas_ids = Recetas.objects.filter(
-            producto_elaborado__in=productos
-        ).values_list('producto_elaborado_id', flat=True).distinct()
-        
-        productos = productos.filter(id__in=productos_con_recetas_ids)
-        
-        page = self.paginate_queryset(productos)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-            
-        serializer = self.get_serializer(productos, many=True)
-        return Response(serializer.data)
-
 
 class ProductosFinalesListaTransformacionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductosFinalesListaTransformacionSerializer
@@ -840,11 +837,6 @@ class ProductosFinalesListaTransformacionViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             print("ProductosFinalesListaTransformacionViewSet.get_queryset no q param")
         return queryset
-
-
-class ProductosIntermediosSearchViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductosIntermedios.objects.all()
-    serializer_class = ProductosIntermediosSearchSerializer
 
 
 class ProductosReventaViewSet(viewsets.ModelViewSet):

@@ -30,10 +30,16 @@ export const useRegisterUpdateRecetaMutation = () => {
       }
       return registerUpdateReceta(data);
     },
-    onSuccess: async () => {
+    onSuccess: async (_, { id }) => {
       await queryClient.invalidateQueries({
         queryKey: recetasQueryOptions.queryKey,
       });
+
+      if (id) await queryClient.invalidateQueries({
+        queryKey: recetasDetallesQueryOptions(id).queryKey,
+      });
+
+
       setComponentesListadosReceta([]);
       setRecetasListadas([]);
     },

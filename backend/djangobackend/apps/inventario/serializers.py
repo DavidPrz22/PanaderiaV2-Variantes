@@ -223,6 +223,35 @@ class MateriaPrimaDetailsSerializer(MateriaPrimaListSerializer):
         ]
 
 
+class VariantesProductionSearchSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ProductosElaboradosVariantes
+        fields = [
+            'id',
+            'nombre_variante',
+            'SKU',
+            'atributo'
+        ]
+
+
+class ProductionSearchSerializer(serializers.ModelSerializer):
+    variantes = VariantesProductionSearchSerializer(many=True, required=False)
+    producto_id = serializers.IntegerField(source='id', read_only=True)
+    categoria = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
+    unidad_produccion = UnidadMedidaSerializer(read_only=True)
+    
+    class Meta:
+        model = ProductosElaborados
+        fields = [
+            'producto_id',
+            'nombre_producto',
+            'unidad_produccion',
+            'categoria',
+            'variantes',
+        ]
+
+
 class ProductosIntermediosListSerializer(serializers.ModelSerializer):
     """Lighter serializer for table/list views."""
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
@@ -265,9 +294,12 @@ class ProductosIntermediosVariantesSerializer(serializers.ModelSerializer):
 
 class ProductosIntermediosSerializer(serializers.ModelSerializer):
     variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
+    producto_id = serializers.IntegerField(required=False)
+
     class Meta:
         model = ProductosIntermedios
         fields = [
+            'producto_id'
             'nombre_producto', 
             'categoria',
             'unidad_produccion',
@@ -275,6 +307,8 @@ class ProductosIntermediosSerializer(serializers.ModelSerializer):
             'variantes',
         ]
 
+    def get_producto_id(self, obj):
+        return obj.id
 
 class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
     categoria_producto = serializers.SerializerMethodField()
@@ -547,21 +581,6 @@ class ProductosElaboradosSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductosElaborados
         fields = "__all__"
-
-
-class ProductosFinalesSearchSerializer(serializers.ModelSerializer):
-    unidad_medida = serializers.CharField(source='unidad_produccion.abreviatura', read_only=True)
-    class Meta:
-        model = ProductosFinales
-        fields = ['id', 'nombre_producto', 'unidad_medida']
-
-
-class ProductosIntermediosSearchSerializer(serializers.ModelSerializer):
-    unidad_medida = serializers.CharField(source='unidad_produccion.abreviatura', read_only=True)
-    class Meta:
-        model = ProductosIntermedios
-        fields = ['id', 'nombre_producto', 'unidad_medida']
-
 
 class ProductosReventaVariantesSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)

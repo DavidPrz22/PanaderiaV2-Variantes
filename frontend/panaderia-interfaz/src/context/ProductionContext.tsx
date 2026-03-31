@@ -1,5 +1,5 @@
 import React, { createContext, useContext  } from "react";
-import type { ComponentesLista, ProductionType, componentesRecetaProducto, componentesSearchList, newComponentItem } from "@/features/Production/types/types";
+import type { ComponentesLista, ProductionType, componentesRecetaProducto, componentesSearchList, newComponentItem, searchItemVariante } from "@/features/Production/types/types";
 import { useState, useRef } from "react";
 
 type ProductionContextType = {
@@ -45,6 +45,8 @@ type ProductionContextType = {
     setEsPorUnidad: (value: boolean | null) => void;
     detailPage: number;
     setDetailPage: (value: number) => void;
+    selectedProduct: searchItemVariante | null;
+    setSelectedProduct: (value: searchItemVariante | null) => void;
 };
 
 const ProductionContextProvider = createContext<ProductionContextType | null>(null);
@@ -73,6 +75,8 @@ export function ProductionProvider({ children }: { children: React.ReactNode }) 
   const [medidaFisica, setMedidaFisica] = useState<"UNIDAD" | "PESO" | "VOLUMEN" | null>(null);
   const [esPorUnidad, setEsPorUnidad] = useState<boolean | null>(null);
   const [detailPage, setDetailPage] = useState<number>(1);
+  const [selectedProduct, setSelectedProduct] = useState<searchItemVariante | null>(null);
+  
   return (
     <ProductionContextProvider.Provider value={{
       productType,
@@ -117,6 +121,8 @@ export function ProductionProvider({ children }: { children: React.ReactNode }) 
       setEsPorUnidad,
       detailPage,
       setDetailPage,
+      selectedProduct,
+      setSelectedProduct,
       }}>
         {children}
     </ProductionContextProvider.Provider>

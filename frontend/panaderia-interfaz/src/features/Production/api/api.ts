@@ -7,9 +7,14 @@ import type {
 } from "../types/types";
 import type { TProductionFormData } from "../schemas/schemas";
 
-export const searchProductosIntermedios = async (): Promise<searchItem[]> => {
+type searchProductosResponse = {
+  productos: searchItem[];
+  tipo: string;
+}
+
+export const searchProductosIntermedios = async (): Promise<searchProductosResponse> => {
   try {
-    const response = await apiClient.get(`/api/productosintermedios-search/`);
+    const response = await apiClient.get(`/api/inventario/productos-elaborados/production-search/?tipo=producto-intermedio`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -18,9 +23,9 @@ export const searchProductosIntermedios = async (): Promise<searchItem[]> => {
   }
 };
 
-export const searchProductosFinales = async (): Promise<searchItem[]> => {
+export const searchProductosFinales = async (): Promise<searchProductosResponse> => {
   try {
-    const response = await apiClient.get(`/api/productosfinales-search/`);
+    const response = await apiClient.get(`/api/inventario/productos-elaborados/production-search/?tipo=producto-final`);
     return response.data;
   } catch (error) {
     console.error("Error searching Productos Finales:", error);
@@ -33,7 +38,7 @@ export const getRecetaComponentes = async (
 ): Promise<componentesRecetaProducto> => {
   try {
     const response = await apiClient.get(
-      `/api/productoselaborados/${producto_id}/get-receta-producto/`,
+      `/api/inventario/productos-elaborados/${producto_id}/get-receta-producto/`,
     );
     console.log(response.data);
     return response.data;
