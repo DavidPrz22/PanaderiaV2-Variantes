@@ -27,7 +27,7 @@ export type searchItem = {
 };
 
 export type RecetaComponenteProduccion = {
-  id: number;
+  componente_id: number;
   nombre: string;
   unidad_medida: string;
   stock: number;
@@ -68,7 +68,7 @@ export type watchSetvalueTypeProductionWithSubmit = watchSetvalueTypeProduction 
 };
 
 export type componentesSearchItem = {
-  id: number;
+  componente_id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   stock: number;
@@ -76,7 +76,7 @@ export type componentesSearchItem = {
 };
 
 export type newComponentItem = {
-  id: number;
+  componente_id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   cantidad: number;
@@ -104,7 +104,8 @@ export type ProductionDetails = {
   unidad_medida_produccion: string;
   fecha_produccion: string;
   fecha_expiracion: string;
-  costo_total_componentes_usd: string;
+  costo_total_componentes_divisa: string;
+  costo_total_componentes_local: string;
   componentes_produccion: ProductionComponentDetail[];
   usuario_produccion: string;
 };

@@ -20,7 +20,7 @@ export const ProductionSearchListContent = ({
     setShowComponentSearch(false);
     setComponentSearchList([]);
 
-    const componente = componentesBaseProduccion.findIndex((c) => c.id === item.id);
+    const componente = componentesBaseProduccion.findIndex((c) => c.componente_id === item.componente_id);
     if (componente !== -1) {
       setNewComponentSelected({...item, cantidad: 0, invalid: true});
     } else {

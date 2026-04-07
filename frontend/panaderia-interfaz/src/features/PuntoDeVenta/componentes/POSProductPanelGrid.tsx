@@ -46,7 +46,6 @@ export const POSProductPanelGrid = () => {
                         <ProductCard
                             key={product.id}
                             product={product}
-                            onAdd={() => { }}
                         />
                     ))}
                 </div>

@@ -15,13 +15,13 @@ export const cierreCajaSchema = z.object({
 // Ventas SCHEMA
 
 const detalles = z.object({
-    producto_elaborado_id: z.number().min(1, "Por favor, selecciona un producto").nullable(),
-    producto_reventa_id: z.number().min(1, "Por favor, selecciona un producto").nullable(),
+    producto_elaborado_id: z.number().min(0, "Por favor, selecciona un producto").nullable(),
+    producto_reventa_id: z.number().min(0, "Por favor, selecciona un producto").nullable(),
     cantidad: z.number().min(1, "La cantidad debe ser mayor a 0").max(1000000, "La cantidad debe ser menor a 1000000"),
-    precio_unitario_usd: z.number().min(1, "El precio debe ser mayor a 0").max(1000000, "El precio debe ser menor a 1000000"),
-    precio_unitario_ves: z.number().min(1, "El precio debe ser mayor a 0").max(1000000, "El precio debe ser menor a 1000000"),
-    subtotal_linea_usd: z.number().min(1, "El subtotal debe ser mayor a 0").max(1000000, "El subtotal debe ser menor a 1000000"),
-    subtotal_linea_ves: z.number().min(1, "El subtotal debe ser mayor a 0").max(1000000, "El subtotal debe ser menor a 1000000"),
+    precio_unitario_usd: z.number().min(0, "El precio debe ser mayor a 0").max(1000000, "El precio debe ser menor a 1000000"),
+    precio_unitario_ves: z.number().min(0, "El precio debe ser mayor a 0").max(1000000, "El precio debe ser menor a 1000000"),
+    subtotal_linea_usd: z.number().min(0, "El subtotal debe ser mayor a 0").max(1000000, "El subtotal debe ser menor a 1000000"),
+    subtotal_linea_ves: z.number().min(0, "El subtotal debe ser mayor a 0").max(1000000, "El subtotal debe ser menor a 1000000"),
 })
 
 const pagoSchema = z.object({

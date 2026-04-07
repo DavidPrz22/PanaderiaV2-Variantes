@@ -23,7 +23,7 @@ export const ProductionForm = () => {
     setComponentesBaseProduccion([]);
     setInsufficientStock(null);
   };
-
+  console.log(watch())
   // Custom validation: check if any component quantity exceeds its stock
   useEffect(() => {
     const componentes = watch("componentes");
@@ -37,7 +37,7 @@ export const ProductionForm = () => {
     // Set errors for components with insufficient stock
     if (insufficientStock.length > 0) {
       insufficientStock.forEach((insufficientComponent) => {
-        const componentIndex = componentes.findIndex(c => c.id === insufficientComponent.id);
+        const componentIndex = componentes.findIndex(c => c.componente_id === insufficientComponent.componente_id);
         if (componentIndex !== -1) {
           setError(`componentes.${componentIndex}.cantidad`, {
             type: "custom",

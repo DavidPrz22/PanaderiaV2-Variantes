@@ -26,7 +26,7 @@ from .serializers import (
     VentasSerializer
     )
 
-from apps.inventario.models import ProductosElaborados, ProductosReventa, ProductosFinales
+from apps.inventario.models import( ProductosElaborados, ProductosReventa, ProductosFinales, ProductosElaboradosVariantes, ProductosReventaVariantes)
 from django.db import transaction
 from rest_framework.response import Response
 from rest_framework import status
@@ -523,10 +523,10 @@ class VentasViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
 
             venta = Ventas.objects.create(
-                cliente_id=data['cliente'],
-                monto_total_usd=data['monto_total_usd'],
-                monto_total_ves=data['monto_total_ves'],
-                tasa_cambio_aplicada=data['tasa_cambio_aplicada'],
+                cliente_id=data.get('cliente'),
+                monto_total_usd=data.get('monto_total_usd'),
+                monto_total_ves=data.get('monto_total_ves'),
+                tasa_cambio_aplicada=data.get('tasa_cambio_aplicada'),
                 usuario_cajero=request.user,
                 apertura_caja=caja_activa,
                 fecha_venta=timezone.now().date()
@@ -540,7 +540,8 @@ class VentasViewSet(viewsets.ModelViewSet):
                 reventa_id = detalle.get('producto_reventa_id')
                 cantidad_total = Decimal(str(detalle['cantidad']))
                 
-                producto = ProductosFinales.objects.filter(id=elaborado_id).first() if elaborado_id else ProductosReventa.objects.filter(id=reventa_id).first()
+                producto = ProductosElaboradosVariantes.objects.filter(id=elaborado_id).first() if elaborado_id else ProductosReventaVariantes.objects.filter(id=reventa_id).first()
+                unidad_venta = producto.producto_elaborado.unidad_venta if elaborado_id else producto.producto_reventa.unidad_venta
                 if not producto:
                     raise ValidationError(f'El producto con ID {elaborado_id or reventa_id} no existe')
                 
@@ -551,12 +552,12 @@ class VentasViewSet(viewsets.ModelViewSet):
                     venta=venta,
                     producto_elaborado_id=detalle.get('producto_elaborado_id'),
                     producto_reventa_id=detalle.get('producto_reventa_id'),
-                    unidad_medida_venta=producto.unidad_venta,
-                    cantidad_vendida=detalle['cantidad'],
-                    precio_unitario_usd=detalle['precio_unitario_usd'],
-                    precio_unitario_ves=detalle['precio_unitario_ves'],
-                    subtotal_linea_usd=detalle['subtotal_linea_usd'],
-                    subtotal_linea_ves=detalle['subtotal_linea_ves']
+                    unidad_medida_venta=unidad_venta,
+                    cantidad_vendida=detalle.get('cantidad'),
+                    precio_unitario_usd=detalle.get('precio_unitario_usd'),
+                    precio_unitario_ves=detalle.get('precio_unitario_ves'),
+                    subtotal_linea_usd=detalle.get('subtotal_linea_usd'),
+                    subtotal_linea_ves=detalle.get('subtotal_linea_ves')
                 )
 
                 for lote in lotes_consumidos:
@@ -577,9 +578,9 @@ class VentasViewSet(viewsets.ModelViewSet):
 
             for pago in pagos:
                 try:
-                    metodo_enum = TiposMetodosDePago(pago['metodo_pago'])
+                    metodo_enum = TiposMetodosDePago(pago.get('metodo_pago'))
                 except ValueError:
-                     return Response({'error': f"Método de pago inválido: {pago['metodo_pago']}"}, status=status.HTTP_400_BAD_REQUEST)
+                     return Response({'error': f"Método de pago inválido: {pago.get('metodo_pago')}"}, status=status.HTTP_400_BAD_REQUEST)
 
                 metodo_pago_obj = MetodosDePago.objects.filter(nombre_metodo__iexact=metodo_enum.label).first()
                 if not metodo_pago_obj:
@@ -588,15 +589,15 @@ class VentasViewSet(viewsets.ModelViewSet):
                 pago_ref = Pagos(
                     venta_asociada=venta,
                     metodo_pago=metodo_pago_obj,
-                    monto_pago_usd=pago['monto_pago_usd'],
-                    monto_pago_ves=pago['monto_pago_ves'],
+                    monto_pago_usd=pago.get('monto_pago_usd'),
+                    monto_pago_ves=pago.get('monto_pago_ves'),
                     cambio_efectivo_usd=pago.get('cambio_efectivo_usd', 0),
                     cambio_efectivo_ves=pago.get('cambio_efectivo_ves', 0),
                     cambio_pago_movil_usd=pago.get('cambio_pago_movil_usd', 0),
                     cambio_pago_movil_ves=pago.get('cambio_pago_movil_ves', 0),
                     referencia_pago=pago.get('referencia_pago', ''),
                     usuario_registrador=request.user,
-                    tasa_cambio_aplicada=data['tasa_cambio_aplicada'],
+                    tasa_cambio_aplicada=data.get('tasa_cambio_aplicada'),
                     fecha_pago=timezone.now().date()
                 )
                 PagosRegistro.append(pago_ref)

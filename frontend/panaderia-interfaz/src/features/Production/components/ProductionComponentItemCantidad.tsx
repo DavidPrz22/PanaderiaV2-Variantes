@@ -7,7 +7,7 @@ import "@/styles/validationStyles.css";
 import { useProductionContext } from "@/context/ProductionContext";
 
 type itemProps = {
-  id: number;
+  componente_id: number;
   stock: number;
   unidad: string;
   cantidad: number;
@@ -15,7 +15,7 @@ type itemProps = {
 };
 
 export const ProductionComponentItemCantidad = ({
-  id,
+  componente_id,
   stock,
   unidad,
   cantidad,
@@ -40,7 +40,7 @@ export const ProductionComponentItemCantidad = ({
 
   // Helpers
   const getAllInputsForComponent = () =>
-    document.querySelectorAll<HTMLInputElement>(`#componente-cantidad-${id}`);
+    document.querySelectorAll<HTMLInputElement>(`#componente-cantidad-${componente_id}`);
 
   const toggleInputsValidityClass = (isValid: boolean) => {
     getAllInputsForComponent().forEach((input) => {
@@ -72,14 +72,14 @@ export const ProductionComponentItemCantidad = ({
       | number
       | undefined;
     const current: Componente = {
-      id,
+      componente_id,
       nombre,
       unidad_medida: unidad,
       stock,
       cantidad: typeof currentCantidad === "number" ? currentCantidad : 0,
     };
     const list = insufficientStock ?? [];
-    if (list.some((c) => c.id === current.id)) return;
+    if (list.some((c) => c.componente_id === current.componente_id)) return;
     setInsufficientStock([...list, current]);
   };
 
@@ -87,7 +87,7 @@ export const ProductionComponentItemCantidad = ({
     if (!setInsufficientStock) return;
     const list = insufficientStock ?? [];
     if (list.length === 0) return;
-    const next = list.filter((c) => c.id !== componentId);
+    const next = list.filter((c) => c.componente_id !== componentId);
     setInsufficientStock(next);
   };
 
@@ -102,7 +102,7 @@ export const ProductionComponentItemCantidad = ({
     setInputValue(value);
 
     const componentIndex =
-      watch("componentes")?.findIndex((c) => c.id === id) ?? -1;
+      watch("componentes")?.findIndex((c) => c.componente_id === componente_id) ?? -1;
     if (componentIndex === -1) return;
 
     // Recalcular sumando todos los inputs duplicados (receta base + subrecetas)
@@ -115,7 +115,7 @@ export const ProductionComponentItemCantidad = ({
     } else {
       updateFormCantidad(componentIndex, nuevaCantidad);
       toggleInputsValidityClass(true);
-      removeFromInsufficient(id);
+      removeFromInsufficient(componente_id);
     }
   };
 
@@ -124,13 +124,13 @@ export const ProductionComponentItemCantidad = ({
     const parsed = parseFloat(raw);
     if (raw === "" || parsed < 0 || isNaN(parsed)) {
       setInputValue(0);
-      const componentIndex = watch?.("componentes")?.findIndex((c) => c.id === id) ?? -1;
+      const componentIndex = watch?.("componentes")?.findIndex((c) => c.componente_id === componente_id) ?? -1;
       if (componentIndex !== -1) {
         updateFormCantidad(componentIndex, 0);
       }
       toggleInputsValidityClass(false);
       // No es un caso de insuficiencia de stock; asegurarse que no esté listado
-      removeFromInsufficient(id);
+      removeFromInsufficient(componente_id);
       return;
     }
   };
@@ -165,7 +165,7 @@ export const ProductionComponentItemCantidad = ({
       <div className="rounded-md shadow-sm">
         <input
           type="number"
-          id={`componente-cantidad-${id}`}
+          id={`componente-cantidad-${componente_id}`}
           min={1}
           max={stock}
           value={inputValue}

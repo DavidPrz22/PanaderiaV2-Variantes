@@ -38,9 +38,9 @@ const ProductionComponentsBase = ({
     // Preserve previously added additional components
     setComponentesBaseProduccion((prev: ComponentesLista) => {
       const additional = (prev || []).filter((c) => c.isAdditional);
-      const baseIds = new Set(base.map((c) => c.id));
-      const additionalFiltered = additional.filter((c) => !baseIds.has(c.id));
-      return [...base, ...additionalFiltered] as ComponentesLista;
+    const baseIds = new Set(base.map((c) => c.componente_id));
+    const additionalFiltered = additional.filter((c) => !baseIds.has(c.componente_id));
+    return [...base, ...additionalFiltered] as ComponentesLista;
     });
   }, [isFetched, productionComponentes, setComponentesBaseProduccion]);
 
@@ -93,8 +93,8 @@ const ProductionComponentsBase = ({
     ];
     subrecetasProducts.forEach(({ componentes }) => {
       componentes.forEach((componente) => {
-        const index = all.findIndex((c) => c.id === componente.id);
-        if (componente.id && index === -1) {
+        const index = all.findIndex((c) => c.componente_id === componente.componente_id);
+        if (componente.componente_id && index === -1) {
           all.push({ ...componente });
         } else if (index !== -1) {
           const newComponent = { ...all[index] };
@@ -108,15 +108,15 @@ const ProductionComponentsBase = ({
     return all;
   }, [componentesPrincipalesProducts, subrecetasProducts]);
 
-  const watchedComponentes = watch?.("componentes") as { id: number; cantidad: number }[] | undefined;
+  const watchedComponentes = watch?.("componentes") as { componente_id: number; cantidad: number }[] | undefined;
 
   const currentInsufficientStock = useMemo(() => {
-    const formMap = new Map((watchedComponentes ?? []).map((c) => [c.id, c.cantidad]));
+    const formMap = new Map((watchedComponentes ?? []).map((c) => [c.componente_id, c.cantidad]));
 
     return componentesEnProducto.filter((c) => {
       let quantityToCheck = c.cantidad;
       if (!esPorUnidad) {
-        quantityToCheck = formMap.get(c.id) ?? c.cantidad;
+        quantityToCheck = formMap.get(c.componente_id) ?? c.cantidad;
       }
       return c.stock < quantityToCheck;
     });
@@ -130,17 +130,17 @@ const ProductionComponentsBase = ({
   useEffect(() => {
     if (!isFetched) return;
 
-    const existing = (watch?.("componentes") as { id: number; cantidad: number; tipo?: string }[] | undefined) ?? [];
-    const byId = new Map(existing.map((c) => [c.id, c]));
+    const existing = (watch?.("componentes") as { componente_id: number; cantidad: number; tipo?: string }[] | undefined) ?? [];
+    const byId = new Map(existing.map((c) => [c.componente_id, c]));
 
-    const merged = componentesEnProducto.map(({ id, cantidad, tipo }) => {
-      const prev = byId.get(id);
+    const merged = componentesEnProducto.map(({ componente_id, cantidad, tipo }) => {
+      const prev = byId.get(componente_id);
       const chosenCantidad = esPorUnidad
         ? roundTo3(cantidad) // scale/refresh when unit-based
         : typeof prev?.cantidad === "number"
           ? roundTo3(prev.cantidad) // preserve user edits when not unit-based
           : roundTo3(cantidad);     // initial load fallback
-      return { id, cantidad: chosenCantidad, tipo: tipo || "MateriaPrima" };
+      return { componente_id, cantidad: chosenCantidad, tipo: tipo || "MateriaPrima" };
     });
 
     setValue?.("componentes", merged, { shouldValidate: true });
@@ -165,8 +165,8 @@ const ProductionComponentsBase = ({
           <div className="flex flex-col gap-2 mt-8">
             {componentesPrincipalesProducts.map((componente) => (
               <ProductionComponentItem
-                key={componente.id}
-                id={componente.id}
+                key={componente.componente_id}
+                componente_id={componente.componente_id}
                 titulo={componente.nombre}
                 stock={componente.stock}
                 unidad={componente.unidad_medida}

@@ -14,7 +14,7 @@ export const POSCartPanel = ({watch, setValue}: WatchSetValue) => {
       if (setValue) {
         setValue('monto_total_usd', RoundToTwo(total_usd * iva));
         setValue('monto_total_ves', RoundToTwo(total_usd * tasa_cambio * iva))
-        setValue('tasa_cambio_aplicada', tasa_cambio)
+        setValue('tasa_cambio_aplicada', RoundToTwo(tasa_cambio))
       }
     }
     return (

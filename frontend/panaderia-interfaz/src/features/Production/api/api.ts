@@ -40,7 +40,6 @@ export const getRecetaComponentes = async (
     const response = await apiClient.get(
       `/api/inventario/productos-elaborados/${producto_id}/get-receta-producto/`,
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching receta componentes:", error);
@@ -50,7 +49,7 @@ export const getRecetaComponentes = async (
 
 export const createProduction = async (data: TProductionFormData) => {
   try {
-    const response = await apiClient.post(`/api/produccion/`, data);
+    const response = await apiClient.post(`/api/produccion/produccion/`, data);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -85,7 +84,7 @@ type ProductionDetailsResponse = {
 }
 export const getProductionDetails = async (page: number): Promise<ProductionDetailsResponse> => {
   try {
-    const response = await apiClient.get(`/api/produccion-detalles/?page=${page}`);
+    const response = await apiClient.get(`/api/produccion/produccion/?page=${page}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching production details:", error);

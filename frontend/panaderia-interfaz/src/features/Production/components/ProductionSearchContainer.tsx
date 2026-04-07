@@ -38,9 +38,9 @@ export const ProductSearchContainer = ({
   const handleClick = (producto: producto) => {
     if (productSearchRef.current) {
       productSearchRef.current.value = producto.nombre_producto;
-      productUnitRef.current!.textContent = producto.unidad_medida;
-      onSelection(producto.id);
-      setProductoId(producto.id);
+      productUnitRef.current!.textContent = producto.unidad_produccion.nombre_completo;
+      onSelection(producto.producto_id);
+      setProductoId(producto.producto_id);
     }
   };
 
@@ -51,9 +51,9 @@ export const ProductSearchContainer = ({
       {filteredData.length > 0 ? (
         filteredData.map((producto) => (
           <ProductSearchItem
-            key={producto.id}
+            key={producto.producto_id}
             product={producto.nombre_producto}
-            id={producto.id}
+            id={producto.producto_id}
             onClick={() => handleClick(producto)}
           />
         ))

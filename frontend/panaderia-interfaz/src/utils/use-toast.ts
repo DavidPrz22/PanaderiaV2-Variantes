@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react"
 import { toast as sonnerToast } from "sonner"
 
 type ToastProps = {
@@ -16,7 +17,7 @@ type ToastProps = {
 }
 
 export function useToast() {
-    function toast({ title, description, variant, action, ...props }: ToastProps) {
+    const toast = useCallback(({ title, description, variant, action, ...props }: ToastProps) => {
         const toastOptions = {
             description,
             action: action ? {
@@ -38,7 +39,7 @@ export function useToast() {
             default:
                 return sonnerToast(title, toastOptions)
         }
-    }
+    }, [])
 
-    return { toast }
+    return useMemo(() => ({ toast }), [toast])
 }

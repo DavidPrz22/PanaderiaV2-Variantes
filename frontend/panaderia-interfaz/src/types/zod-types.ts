@@ -49,6 +49,16 @@ export const AtributosProductosSchema = z.object({
     atributos: z.array(z.string()),
 });
 
+export const ClienteSchema = z.object({
+    id: z.number(),
+    nombre_cliente: z.string(),
+    apellido_cliente: z.string().nullable(),
+    email: z.string().nullable(),
+    telefono: z.string().nullable(),
+    fecha_registro: z.string(),
+    notas: z.string().nullable(),
+});
+
 
 export type TUnidadMedida = z.infer<typeof UnidadMedidaSchema>;
 export type TCategoriaMateriaPrima = z.infer<typeof CategoriaMateriaPrimaSchema>;
@@ -57,3 +67,4 @@ export type TCategoriaProductoFinal = z.infer<typeof CategoriaProductoFinalSchem
 export type TCategoriaProductoReventa = z.infer<typeof CategoriaProductoReventaSchema>;
 export type TProveedor = z.infer<typeof ProveedorSchema>;
 export type TAtributosProductos = z.infer<typeof AtributosProductosSchema>;
+export type TCliente = z.infer<typeof ClienteSchema>;

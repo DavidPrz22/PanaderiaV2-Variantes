@@ -107,7 +107,7 @@ export function RecipeDetailsPanel({ onClose }: RecipeDetailsPanelProps) {
                       </TableHeader>
                       <TableBody>
                         {piIngredients.map((ing) => (
-                          <TableRow key={ing.id}>
+                          <TableRow key={ing.componente_id}>
                             <TableCell className="font-medium">{ing.nombre}</TableCell>
                             <TableCell>
                               <Badge variant="outline" className="border-recipe-pi/30 text-recipe-pi text-xs">
@@ -146,7 +146,7 @@ export function RecipeDetailsPanel({ onClose }: RecipeDetailsPanelProps) {
                       </TableHeader>
                       <TableBody>
                         {mpIngredients.map((ing) => (
-                          <TableRow key={ing.id}>
+                          <TableRow key={ing.componente_id}>
                             <TableCell className="font-medium">{ing.nombre}</TableCell>
                             <TableCell>
                               <Badge variant="outline" className="border-recipe-mp/30 text-recipe-mp text-xs">

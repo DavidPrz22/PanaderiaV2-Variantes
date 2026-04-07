@@ -125,14 +125,15 @@ export type LotesProductosFinales = {
   fecha_caducidad: string;
   cantidad_inicial_lote: string;
   stock_actual_lote: string;
-  coste_total_lote_usd: string;
+  coste_total_lote_divisa: string;
+  coste_total_lote_local: string;
   estado: "DISPONIBLE" | "INACTIVO" | "EXPIRADO" | "AGOTADO";
   produccion_origen: number;
   peso_total_lote_gramos: string | null;
   volumen_total_lote_ml: string | null;
   peso_promedio_por_unidad: number | null;
   volumen_promedio_por_unidad: number | null;
-  costo_unitario_usd: number;
+  costo_unitario_divisa: number;
 };
 
 export type ProductosFinalesPagination = {

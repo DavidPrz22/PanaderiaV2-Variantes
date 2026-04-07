@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/table";
 
 import { PendingTubeSpinner } from "./PendingTubeSpinner";
-import type { recetaDetallesItem } from "@/features/Recetas/types/types";
+import type { RecetaDetalles } from "@/features/Recetas/types/types";
 
 interface RecipeModalProps {
-    data?: recetaDetallesItem;
+    data?: RecetaDetalles;
     isLoading: boolean;
     isOpen: boolean;
     onClose: () => void;
@@ -29,8 +29,8 @@ interface RecipeModalProps {
 export function RecipeModal({ data, isLoading, isOpen, onClose }: RecipeModalProps) {
 
     const recipeIngredients = data?.componentes || [];
-    const materiasPrimas = recipeIngredients.filter((i) => i.tipo === "Materia Prima");
-    const productosIntermedios = recipeIngredients.filter((i) => i.tipo === "Producto Intermedio");
+    const materiasPrimas = recipeIngredients.filter((i) => i.tipo === "MateriaPrima");
+    const productosIntermedios = recipeIngredients.filter((i) => i.tipo === "ProductoIntermedio");
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -84,7 +84,7 @@ export function RecipeModal({ data, isLoading, isOpen, onClose }: RecipeModalPro
                                             </TableHeader>
                                             <TableBody>
                                                 {productosIntermedios.map((ingredient) => (
-                                                    <TableRow key={ingredient.id}>
+                                                    <TableRow key={ingredient.componente_id}>
                                                         <TableCell className="font-medium">{ingredient.nombre}</TableCell>
                                                         <TableCell>
                                                             <Badge variant="secondary">Intermedio</Badge>
@@ -117,7 +117,7 @@ export function RecipeModal({ data, isLoading, isOpen, onClose }: RecipeModalPro
                                             </TableHeader>
                                             <TableBody>
                                                 {materiasPrimas.map((ingredient) => (
-                                                    <TableRow key={ingredient.id}>
+                                                    <TableRow key={ingredient.componente_id}>
                                                         <TableCell className="font-medium whitespace-nowrap">{ingredient.nombre}</TableCell>
                                                         <TableCell>
                                                             <Badge variant="outline">Materia Prima</Badge>

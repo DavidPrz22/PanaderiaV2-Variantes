@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, X, Edit } from "lucide-react";
+import { ArrowLeft, X, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -184,7 +184,8 @@ export const ProductosFinalesDetails = ({
               {producto.receta_relacionada && (
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Receta</p>
-                  <Button variant="link" onClick={() => setShowRecipeModal(true)}>
+                  <Button className="text-blue-500" variant="link" onClick={() => setShowRecipeModal(true)}>
+                    <Eye className="h-4 w-4" />
                     {producto.receta_relacionada.nombre}
                   </Button>
                 </div>

@@ -57,7 +57,7 @@ export function RecetaForma({ onClose }: RecetaFormContainerProps) {
         rendimiento: recipeDetails.receta.rendimiento,
         notas: recipeDetails.receta.notas || "",
         componentes: recipeDetails.componentes.map(comp => ({
-          componente_id: comp.id,
+          componente_id: comp.componente_id,
           tipo: comp.tipo as "MateriaPrima" | "ProductoIntermedio",
           cantidad: comp.cantidad
         })),

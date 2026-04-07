@@ -8,6 +8,7 @@ import {
   CategoriaProductoIntermedioSchema,
   CategoriaProductoFinalSchema,
   CategoriaProductoReventaSchema,
+  ClienteSchema,
   type TUnidadMedida,
   type TCategoriaMateriaPrima,
   type TProveedor,
@@ -15,6 +16,7 @@ import {
   type TCategoriaProductoIntermedio,
   type TCategoriaProductoFinal,
   type TCategoriaProductoReventa,
+  type TCliente,
 } from "@/types/zod-types";
 
 import type { AxiosError } from "axios";
@@ -163,3 +165,22 @@ export const fetchCategoriasProductoReventa = async (): Promise<TCategoriaProduc
     );
   }
 };
+
+export const fetchClientes = async (): Promise<TCliente[]> => {
+  try {
+    const response = await apiClient.get("/api/ventas/clientes/");
+    console.log(response.data)
+    const valid = z.array(ClienteSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch clientes",
+    );
+  }
+};
+

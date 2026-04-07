@@ -25,6 +25,7 @@ export const componentsProductionOptions = (id: number) => {
     queryKey: [COMPONENTES_PRODUCCION, id],
     queryFn: () => getRecetaComponentes(id),
     staleTime: Infinity,
+    retry: false,
   };
 };
 

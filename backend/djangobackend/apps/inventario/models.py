@@ -42,18 +42,11 @@ class ComponentesStockManagement(models.Model):
 
             self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
             return stock_total
-    
-        elif isinstance(self, ProductosElaborados):
+        
+        # Fallback to product stock management if available (for ProductosElaborados)
+        if hasattr(self, 'actualizar_product_stock'):
+            return self.actualizar_product_stock()
 
-            lote_total = LotesProductosElaborados.objects.filter(
-                producto_elaborado_variante__producto_elaborado=self, 
-                fecha_caducidad__gt=timezone.now().date(), 
-                estado=LotesStatus.DISPONIBLE
-            ).aggregate(total=Sum('stock_actual_lote'))
-    
-            stock_total = lote_total.get('total') or 0
-            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
-            return stock_total
 
     def checkAvailability(self, cantidad):
         return self.stock_actual >= cantidad
@@ -86,15 +79,18 @@ class ComponentesStockManagement(models.Model):
 
             return queryset.order_by('fecha_caducidad').first()
 
+
     def calculate_price(self, precio, cantidad):
         return precio * cantidad
+
 
     def consumeStock(self, cantidad):
         if not self.checkAvailability(cantidad):
             raise ValidationError(f"Stock insuficiente. Disponible: {self.stock_actual}, Requerido: {cantidad}")
 
         cantidad_restante = cantidad
-        precio_consumo = Decimal('0')
+        precio_consumo_divisa = Decimal('0')
+        precio_consumo_local = Decimal('0')
         detalle_lotes_consumidos = []
 
         while cantidad_restante > 0:
@@ -113,14 +109,18 @@ class ComponentesStockManagement(models.Model):
             lote_consume.save()
             
             # Calculate cost
-            precio_calculado = self.calculate_price(lote_consume.costo_unitario_usd, cantidad_del_lote)
-            precio_consumo += precio_calculado
+            precio_calculado_divisa = self.calculate_price(lote_consume.costo_unitario_divisa, cantidad_del_lote)
+            precio_calculado_local = self.calculate_price(lote_consume.costo_unitario_local, cantidad_del_lote)
+            
+            precio_consumo_divisa += precio_calculado_divisa
+            precio_consumo_local += precio_calculado_local
 
             # Return data instead of model instances
             detalle_lotes_consumidos.append({
                 'lote_id': lote_consume.id,
                 'cantidad_consumida': cantidad_del_lote,
-                'costo_parcial_usd': precio_calculado,
+                'costo_parcial_divisa': precio_calculado_divisa,
+                'costo_parcial_local': precio_calculado_local,
                 'es_materia_prima': isinstance(self, MateriasPrimas)
             })
             cantidad_restante -= cantidad_del_lote
@@ -131,7 +131,8 @@ class ComponentesStockManagement(models.Model):
 
         return {
             "detalle_lotes_consumidos": detalle_lotes_consumidos,
-            "costo_consumo_lote": precio_consumo,
+            "costo_consumo_divisa_lote": precio_consumo_divisa,
+            "costo_consumo_local_lote": precio_consumo_local,
         }
 
     @classmethod
@@ -148,17 +149,17 @@ class ComponentesStockManagement(models.Model):
         expired_mp_lots = LotesMateriasPrimas.objects.filter(
             fecha_caducidad__lte=hoy,
             estado=LotesStatus.DISPONIBLE,
-        ).select_related('materia_prima')
+        ).select_related('variante_materia_prima__materia_prima')
 
         expired_pe_lots = LotesProductosElaborados.objects.filter(
             fecha_caducidad__lte=hoy,
             estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_elaborado')
+        ).select_related('producto_elaborado_variante__producto_elaborado')
 
         expired_pr_lots = LotesProductosReventa.objects.filter(
             fecha_caducidad__lte=hoy,
             estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_reventa')
+        ).select_related('producto_reventa_variante__producto_reventa')
 
         # Build summary before updating
         resumen = []
@@ -197,9 +198,9 @@ class ComponentesStockManagement(models.Model):
                 })
 
         # Update stock for affected materials (get unique materials from expired lots)
-        affected_mp_ids = list(expired_mp_lots.values_list('materia_prima_id', flat=True).distinct())
-        affected_pe_ids = list(expired_pe_lots.values_list('producto_elaborado_id', flat=True).distinct())
-        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_id', flat=True).distinct())
+        affected_mp_ids = list(expired_mp_lots.values_list('variante_materia_prima__materia_prima_id', flat=True).distinct())
+        affected_pe_ids = list(expired_pe_lots.values_list('producto_elaborado_variante__producto_elaborado_id', flat=True).distinct())
+        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_variante__producto_reventa_id', flat=True).distinct())
 
         # Update lot statuses
         with transaction.atomic():
@@ -235,11 +236,13 @@ class ComponentesStockManagement(models.Model):
 class ProductosStockManagement(models.Model):
     class Meta:
         abstract = True
-    
+
     def actualizar_product_stock(self):
+        # Import here to avoid circular dependency
+        from apps.inventario.models import ProductosElaboradosVariantes
         if isinstance(self, ProductosReventa):
             lote_total = LotesProductosReventa.objects.filter(
-                producto_reventa=self, 
+                producto_reventa_variante__producto_reventa=self, 
                 fecha_caducidad__gt=timezone.now().date(), 
                 estado=LotesStatus.DISPONIBLE
             ).aggregate(total=Sum('stock_actual_lote'))
@@ -249,19 +252,25 @@ class ProductosStockManagement(models.Model):
             return stock_total
     
         elif isinstance(self, ProductosElaborados):
-            # For base products, aggregate stock from all lots (old behavior, may be deprecated)
-            lote_total = LotesProductosElaborados.objects.filter(
-                producto_elaborado_variante__producto_elaborado=self, 
-                fecha_caducidad__gt=timezone.now().date(), 
-                estado=LotesStatus.DISPONIBLE
-            ).aggregate(total=Sum('stock_actual_lote'))
-    
-            stock_total = lote_total.get('total') or 0
-            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
-            return stock_total
+            producto_variantes = ProductosElaboradosVariantes.objects.filter(producto_elaborado=self)
+            stock_total_productos = Decimal('0')
+
+            for producto_variante in producto_variantes:
+                stock_total_variante = LotesProductosElaborados.objects.filter(
+                    producto_elaborado_variante=producto_variante,
+                    fecha_caducidad__gt=timezone.now().date(),
+                    estado=LotesStatus.DISPONIBLE
+                ).aggregate(total=Sum('stock_actual_lote'))
+                
+                stock_v = stock_total_variante.get('total') or Decimal('0')
+                producto_variante.__class__.objects.filter(id=producto_variante.id).update(stock_actual=stock_v)
+                stock_total_productos += stock_v
+            
+            # Update the base product stock
+            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total_productos)
+            return stock_total_productos
+
         
-        # Import here to avoid circular dependency
-        from apps.inventario.models import ProductosElaboradosVariantes
         if isinstance(self, ProductosElaboradosVariantes):
             # For variants, sum stock from lots of this specific variant
             lote_total = LotesProductosElaborados.objects.filter(
@@ -274,6 +283,72 @@ class ProductosStockManagement(models.Model):
             self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
             return stock_total
 
+        if isinstance(self, ProductosReventaVariantes):
+            lote_total = LotesProductosReventa.objects.filter(
+                producto_reventa_variante=self, 
+                fecha_caducidad__gt=timezone.now().date(), 
+                estado=LotesStatus.DISPONIBLE
+            ).aggregate(total=Sum('stock_actual_lote'))
+    
+            stock_total = lote_total.get('total') or 0
+            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
+            return stock_total
+
+    def calculate_price(self, precio, cantidad):
+        return precio * cantidad
+
+    def consumeStock(self, cantidad):
+        """Consume stock from the nearest expiring lots with the same interface as ComponentesStockManagement"""
+        if not self.check_product_availability(cantidad):
+            raise ValidationError(f"Stock insuficiente. Disponible: {self.stock_actual}, Requerido: {cantidad}")
+
+        cantidad_restante = cantidad
+        precio_consumo_divisa = Decimal('0')
+        precio_consumo_local = Decimal('0')
+        detalle_lotes_consumidos = []
+
+        while cantidad_restante > 0:
+            lote_consume = self.get_closest_expire_lot_producto()
+
+            if not lote_consume:
+                raise ValidationError(f"No hay lotes disponibles para {self._get_display_name()}")
+
+            # Calculate consumption from this lot
+            cantidad_del_lote = min(cantidad_restante, lote_consume.stock_actual_lote)
+            
+            # Update lot stock
+            lote_consume.stock_actual_lote -= cantidad_del_lote
+            if lote_consume.stock_actual_lote <= 0:
+                lote_consume.estado = LotesStatus.AGOTADO
+            lote_consume.save()
+            
+            # Calculate cost
+            precio_calculado_divisa = self.calculate_price(lote_consume.costo_unitario_divisa, cantidad_del_lote)
+            precio_calculado_local = self.calculate_price(lote_consume.costo_unitario_local, cantidad_del_lote)
+            
+            precio_consumo_divisa += precio_calculado_divisa
+            precio_consumo_local += precio_calculado_local
+
+            # Return data in component-compatible format
+            detalle_lotes_consumidos.append({
+                'lote_id': lote_consume.id,
+                'cantidad_consumida': cantidad_del_lote,
+                'costo_parcial_divisa': precio_calculado_divisa,
+                'costo_parcial_local': precio_calculado_local,
+                'es_materia_prima': False # These are Elaborated Variantes or Reventa
+            })
+            cantidad_restante -= cantidad_del_lote
+
+        # Update main variant/product stock count
+        self.stock_actual -= cantidad
+        self.save(update_fields=['stock_actual'])
+
+        return {
+            "detalle_lotes_consumidos": detalle_lotes_consumidos,
+            "costo_consumo_divisa_lote": precio_consumo_divisa,
+            "costo_consumo_local_lote": precio_consumo_local,
+        }
+
     def check_product_availability(self, cantidad):
         return self.stock_actual >= cantidad
 
@@ -284,13 +359,15 @@ class ProductosStockManagement(models.Model):
         elif hasattr(self, 'nombre_producto'):
             return self.nombre_producto
         elif hasattr(self, 'nombre_variante'):
+            if isinstance(self, ProductosReventaVariantes):
+                return f"{self.producto_reventa.nombre_producto} - {self.nombre_variante}"
             return f"{self.producto_elaborado.nombre_producto} - {self.nombre_variante}"
         return str(self)
     
     def get_closest_expire_lot_producto(self, exclude_id=None): 
         if isinstance(self, ProductosReventa):
             queryset = LotesProductosReventa.objects.filter(
-                producto_reventa=self, 
+                producto_reventa_variante__producto_reventa=self, 
                 estado=LotesStatus.DISPONIBLE
             )
             if exclude_id:
@@ -313,6 +390,16 @@ class ProductosStockManagement(models.Model):
             # For variants, get earliest expiring lot of this specific variant
             queryset = LotesProductosElaborados.objects.filter(
                 producto_elaborado_variante=self, 
+                estado=LotesStatus.DISPONIBLE
+            )
+            if exclude_id:
+                queryset = queryset.exclude(id=exclude_id)
+            return queryset.order_by('fecha_caducidad').first()
+            
+        if isinstance(self, ProductosReventaVariantes):
+            # For variants, get earliest expiring lot of this specific variant
+            queryset = LotesProductosReventa.objects.filter(
+                producto_reventa_variante=self, 
                 estado=LotesStatus.DISPONIBLE
             )
             if exclude_id:
@@ -472,9 +559,12 @@ class ProductosElaborados(ComponentesStockManagement, ProductosStockManagement):
     )
     es_intermediario = models.BooleanField(default=False, null=False)
     usado_en_transformaciones = models.BooleanField(default=False, null=False)
+    stock_actual = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
     
     def checkAvailability(self, cantidad):
         return self.stock_actual >= cantidad
+    
 
     def clean(self):
         """
@@ -664,7 +754,8 @@ class LotesProductosElaborados(models.Model):
         choices=LotesStatus.choices,
         default=LotesStatus.DISPONIBLE
     )
-    coste_total_lote_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    coste_total_lote_divisa = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    coste_total_lote_local = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     peso_total_lote_gramos = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True,
@@ -689,10 +780,16 @@ class LotesProductosElaborados(models.Model):
         return None
 
     @property
-    def costo_unitario_usd(self):
+    def costo_unitario_divisa(self):
         if self.cantidad_inicial_lote == 0:
             return Decimal('0')
-        return self.coste_total_lote_usd / self.cantidad_inicial_lote
+        return self.coste_total_lote_divisa / self.cantidad_inicial_lote
+
+    @property
+    def costo_unitario_local(self):
+        if self.cantidad_inicial_lote == 0:
+            return Decimal('0')
+        return self.coste_total_lote_local / self.cantidad_inicial_lote
 
     def __str__(self):
         return f"Lote {self.id} - {self.producto_elaborado_variante} - Stock: {self.stock_actual_lote}"
@@ -802,7 +899,7 @@ class ProductosReventa(ProductosStockManagement):
 
         cache.set(cache_key, True, 86400)  # Cache for 24 hours
         lotes_expirados = LotesProductosReventa.objects.filter(
-            producto_reventa=self, 
+            producto_reventa_variante__producto_reventa=self, 
             fecha_caducidad__lte=ahora, 
             estado=LotesStatus.DISPONIBLE
         )
@@ -841,7 +938,7 @@ class ProductosReventa(ProductosStockManagement):
         expired_pr_lots = LotesProductosReventa.objects.filter(
             fecha_caducidad__lte=hoy,
             estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_reventa')
+        ).select_related('producto_reventa_variante__producto_reventa')
 
         # Build summary before updating
         resumen = []
@@ -856,7 +953,7 @@ class ProductosReventa(ProductosStockManagement):
                 })
 
         # Get unique product IDs
-        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_id', flat=True).distinct())
+        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_variante__producto_reventa_id', flat=True).distinct())
 
         # Update lot statuses
         count = expired_pr_lots.update(estado=LotesStatus.EXPIRADO)
@@ -884,7 +981,7 @@ class ProductosReventa(ProductosStockManagement):
         return f"Producto {self.id} - {self.nombre_producto}"
 
     
-class ProductosReventaVariantes(models.Model):
+class ProductosReventaVariantes(ProductosStockManagement):
     """
     Variants of resold products. Each variant represents a sellable SKU.
     Stock is managed at the variant level, not at the base product level.
@@ -989,6 +1086,15 @@ class LotesProductosReventa(models.Model):
     stock_actual_lote = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     coste_unitario_lote_divisa = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     coste_unitario_lote_local = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    @property
+    def costo_unitario_divisa(self):
+        return self.coste_unitario_lote_divisa
+
+    @property
+    def costo_unitario_local(self):
+        return self.coste_unitario_lote_local
+
     detalle_oc = models.ForeignKey('compras.DetalleOrdenesCompra', on_delete=models.CASCADE, null=True, blank=True)
     proveedor = models.ForeignKey('compras.Proveedores', on_delete=models.CASCADE, null=True, blank=True)
     estado = models.CharField(
@@ -998,7 +1104,7 @@ class LotesProductosReventa(models.Model):
     )
 
     def __str__(self):
-        return f"Lote {self.id} - {self.producto_reventa.nombre_producto} - {self.stock_actual_lote}"
+        return f"Lote {self.id} - {self.producto_reventa_variante.nombre_variante} - {self.stock_actual_lote}"
 
 
 @receiver([post_save, post_delete], sender=LotesMateriasPrimas)
@@ -1084,16 +1190,17 @@ def update_producto_elaborado_variante_stock(sender, instance, **kwargs):
     variante.__class__.objects.filter(id=variante.id).update(stock_actual=total_variant_stock)
 
     # Update base product stock (sum of all its variants)
-    total_product_stock = ProductosElaboradosVariantes.objects.filter(
+    total_product_stock = type(variante).objects.filter(
         producto_elaborado=producto_elaborado
     ).aggregate(total=Sum('stock_actual'))['total'] or 0
+    
+    type(producto_elaborado).objects.filter(id=producto_elaborado.id).update(stock_actual=total_product_stock)
 
-    producto_elaborado.__class__.objects.filter(id=producto_elaborado.id).update(stock_actual=total_product_stock)
 
-    try:
-        from apps.core.services.services import NotificationService
-        # Check notifications for the variant
-        NotificationService.check_low_stock(ProductosElaboradosVariantes)
-        NotificationService.check_sin_stock(ProductosElaboradosVariantes)
-    except ImportError:
-        pass
+    # try:
+    #     from apps.core.services.services import NotificationService
+    #     # Check notifications for the variant
+    #     NotificationService.check_low_stock(ProductosElaboradosVariantes)
+    #     NotificationService.check_sin_stock(ProductosElaboradosVariantes)
+    # except ImportError:
+    #     pass

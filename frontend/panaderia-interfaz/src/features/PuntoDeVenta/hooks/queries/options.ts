@@ -1,4 +1,4 @@
-import { checkIsActive, BCVRate, getClientes, getProductos, getCategorias } from "../../api/api"
+import { checkIsActive, BCVRate, getProductos, getCategorias } from "../../api/api"
 
 export const isActiveCajaOptions = {
     queryKey: ['is-active-caja'],
@@ -12,11 +12,6 @@ export const bcvRateOptions = {
   staleTime: Infinity,
 };
 
-export const clientesQueryOptions = {
-  queryKey: ["clientes"],
-  queryFn: getClientes,
-  staleTime: Infinity,
-};
 
 export const productosQueryOptions = {
   queryKey: ["productos"],

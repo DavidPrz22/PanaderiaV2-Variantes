@@ -3,7 +3,7 @@ import { useProductionContext } from "@/context/ProductionContext";
 import "@/styles/validationStyles.css";
 
 import { useComponentsProductionQuery } from "../hooks/queries/ProductionQueries";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export const ProductionCantidad = ({
   setValue,

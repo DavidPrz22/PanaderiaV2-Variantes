@@ -3,9 +3,18 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import transaction
-from apps.produccion.models import Produccion, DetalleProduccionCosumos
+from apps.produccion.models import Produccion, DetalleProduccionConsumos
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
-from apps.inventario.models import MateriasPrimas, ProductosElaborados, ProductosIntermedios, ProductosFinales, LotesProductosElaborados, LotesStatus, ComponentesStockManagement
+from apps.inventario.models import (
+    MateriasPrimas, 
+    ProductosElaborados, 
+    ProductosIntermedios, 
+    ProductosFinales, 
+    LotesProductosElaborados, 
+    LotesStatus, 
+    ComponentesStockManagement,
+    ProductosElaboradosVariantes
+)
 from apps.produccion.serializers import (RecetasSerializer, RecetasListSerializer, RecetasDetallesSerializer, RecetasSearchSerializer, ProduccionSerializer, ProduccionDetallesSerializer)
 from django.db.models import Q
 from django.core.exceptions import ValidationError
@@ -275,10 +284,11 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
         try:
             with transaction.atomic():
                 # Expire old lots before processing
-                ComponentesStockManagement.expirar_todos_lotes_viejos(True)
-                producto = ProductionValidationService.validate_production_data(serializer.validated_data)
+                # ComponentesStockManagement.expirar_todos_lotes_viejos(True)
+                
+                producto_variante = ProductionValidationService.validate_production_data(serializer.validated_data)
                 # Extract validated data
-                componentes = serializer.validated_data['componentes']
+                componentes = serializer.validated_data.get('componentes', [])
 
                 # Separate components by type
                 mp_componentes = [c for c in componentes if c['tipo'] == 'MateriaPrima']
@@ -289,10 +299,9 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
                     id__in=[c['componente_id'] for c in mp_componentes]
                 ).select_related('unidad_medida_base', 'categoria')
 
-                productos_intermedios_produccion = ProductosIntermedios.objects.filter(
+                productos_intermedios_produccion = ProductosElaboradosVariantes.objects.filter(
                     id__in=[c['componente_id'] for c in pi_componentes]
-                ).select_related('unidad_produccion', 'categoria')
-
+                ).select_related('producto_elaborado', 'producto_elaborado__unidad_produccion', 'producto_elaborado__categoria')
 
                 # Create quantity maps
                 map_mp_cantidad = {c['componente_id']: Decimal(str(c['cantidad']))for c in mp_componentes}
@@ -307,14 +316,13 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
 
                 # Create production record using service
                 produccion = ProductionService.create_production_record(
-                    producto=producto,
-                    cantidad_produccion=serializer.validated_data['cantidadProduction'],
-                    fecha_expiracion=serializer.validated_data['fechaExpiracion'],
+                    producto_variante=producto_variante,
+                    cantidad_produccion=serializer.validated_data.get('cantidadProduction'),
+                    fecha_expiracion=serializer.validated_data.get('fechaExpiracion'),
                     user=User.objects.get(id=1), # TODO: Change this to the current user
-                    unidad_medida=producto.unidad_produccion
                 )
 
-                costo_total = StockConsumptionService.consume_materials_and_intermediates(
+                costo_total_divisa, costo_total_local = StockConsumptionService.consume_materials_and_intermediates(
                     materias_primas_produccion, 
                     productos_intermedios_produccion, 
                     map_mp_cantidad, 
@@ -323,48 +331,47 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
                 )
 
                 # Update total cost
-                produccion.costo_total_componentes_usd = costo_total
-                produccion.save(update_fields=['costo_total_componentes_usd'])
+                produccion.costo_total_componentes_divisa = costo_total_divisa
+                produccion.costo_total_componentes_local = costo_total_local
+                produccion.save(update_fields=['costo_total_componentes_divisa', 'costo_total_componentes_local'])
 
                 # Create product lot using service
                 lote = ProductionService.create_product_lot(
                     produccion=produccion,
-                    producto=producto,
-                    cantidad=serializer.validated_data['cantidadProduction'],
-                    fecha_expiracion=serializer.validated_data['fechaExpiracion'],
-                    costo_total=costo_total,
+                    producto_variante=producto_variante,
+                    cantidad=serializer.validated_data.get('cantidadProduction'),
+                    fecha_expiracion=serializer.validated_data.get('fechaExpiracion'),
+                    costo_total_divisa=costo_total_divisa,
+                    costo_total_local=costo_total_local,
                     peso=serializer.validated_data.get('peso', None),
                     volumen=serializer.validated_data.get('volumen', None)
                 )
 
                 # update components stock
-                product_id = serializer.validated_data['productoId']
-                product_type = serializer.validated_data['tipoProducto']
-                
-                StockConsumptionService.update_components_stock(
-                    product_id, product_type
-                )
+                product_id = serializer.validated_data.get('producto_variante_id')
+                StockConsumptionService.update_components_stock(product_id)
 
                 # Check for stock and expiration notifications after production
                 
-                try:
-                    # Check stock levels for consumed materials
-                    NotificationService.check_low_stock(MateriasPrimas)
-                    NotificationService.check_sin_stock(MateriasPrimas)
-                    NotificationService.check_low_stock(ProductosIntermedios)
-                    NotificationService.check_sin_stock(ProductosIntermedios)
+                # try:
+                #     # Check stock levels for consumed materials
+                #     NotificationService.check_low_stock(MateriasPrimas)
+                #     NotificationService.check_sin_stock(MateriasPrimas)
+                #     NotificationService.check_low_stock(ProductosIntermedios)
+                #     NotificationService.check_sin_stock(ProductosIntermedios)
                     
-                    # Check expiration of new lot created
-                    NotificationService.check_expiration_date(ProductosElaborados, LotesProductosElaborados)
-                except Exception as notif_error:
-                    # Log but don't fail the request
-                    logger.error(f"Failed to create notifications: {str(notif_error)}")
+                #     # Check expiration of new lot created
+                #     NotificationService.check_expiration_date(ProductosElaborados, LotesProductosElaborados)
+                # except Exception as notif_error:
+                #     # Log but don't fail the request
+                #     logger.error(f"Failed to create notifications: {str(notif_error)}")
 
                 return Response({
                     "message": "Producción registrada exitosamente",
                     "produccion_id": produccion.id,
                     "lote_id": lote.id,
-                    "costo_total": costo_total
+                    "costo_total_divisa": costo_total_divisa,
+                    "costo_total_local": costo_total_local
                 }, status=status.HTTP_201_CREATED)
 
         except ValidationError as e:
@@ -372,11 +379,10 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": f"Error interno: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class ProduccionDetallesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Produccion.objects.all()
-    serializer_class = ProduccionDetallesSerializer
-    permission_classes = [IsStaffLevelOnly]
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProduccionDetallesSerializer
+        return self.serializer_class
 
     def list(self, request, *args, **kwargs):
         

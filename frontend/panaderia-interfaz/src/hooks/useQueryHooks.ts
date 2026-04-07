@@ -7,7 +7,8 @@ import {
   createAtributosProductoQueryOptions,
   createCategoriasProductoIntermedioQueryOptions,
   createCategoriasProductoFinalQueryOptions,
-  createCategoriasProductoReventaQueryOptions
+  createCategoriasProductoReventaQueryOptions,
+  createClientesPOSQueryOptions
 } from "../lib/queryOptions";
 import { recetasDetallesQueryOptions } from "@/features/Recetas/hooks/queries/RecetasQueryOptions";
 
@@ -45,4 +46,8 @@ export const useCategoriasProductoFinalQuery = () => {
 
 export const useCategoriasProductoReventaQuery = () => {
   return useQuery(createCategoriasProductoReventaQueryOptions());
+}
+
+export const useClientesPOSQuery = () => {
+  return useQuery(createClientesPOSQueryOptions());
 }

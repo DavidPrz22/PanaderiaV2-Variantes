@@ -52,7 +52,7 @@ export function ProductionRecord({ production }: { production: ProductionDetails
         </div>
 
         {/* ID Footer */}
-        <ProductionRecordFooter id={production.id.toString()} costo_total_componentes_usd={production.costo_total_componentes_usd} />
+        <ProductionRecordFooter id={production.id.toString()} costo_total_componentes_divisa={production.costo_total_componentes_divisa} costo_total_componentes_local={production.costo_total_componentes_local} />
       </div>
     </div>
   );

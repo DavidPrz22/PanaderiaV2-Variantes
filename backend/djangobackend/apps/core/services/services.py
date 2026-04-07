@@ -9,6 +9,9 @@ from apps.inventario.models import (
     ProductosIntermedios,
     ProductosReventa,
     ProductosElaborados,
+    ProductosElaboradosVariantes,
+    MateriasPrimasVariantes,
+    ProductosReventaVariantes,
     LotesMateriasPrimas,
     LotesProductosElaborados,
     LotesProductosReventa,
@@ -409,13 +412,13 @@ class NotificationService:
             
             # Check low stock for all product types
             results['low_stock']['materias_primas'] = cls.check_low_stock(MateriasPrimas)
-            results['low_stock']['productos_elaborados'] = cls.check_low_stock(ProductosElaborados)
-            results['low_stock']['productos_reventa'] = cls.check_low_stock(ProductosReventa)
+            results['low_stock']['productos_elaborados'] = cls.check_low_stock(ProductosElaboradosVariantes)
+            results['low_stock']['productos_reventa'] = cls.check_low_stock(ProductosReventaVariantes)
             
             # Check out of stock for all product types
             results['out_of_stock']['materias_primas'] = cls.check_sin_stock(MateriasPrimas)
-            results['out_of_stock']['productos_elaborados'] = cls.check_sin_stock(ProductosElaborados)
-            results['out_of_stock']['productos_reventa'] = cls.check_sin_stock(ProductosReventa)
+            results['out_of_stock']['productos_elaborados'] = cls.check_sin_stock(ProductosElaboradosVariantes)
+            results['out_of_stock']['productos_reventa'] = cls.check_sin_stock(ProductosReventaVariantes)
             
             # Calculate total notifications created
             for category in ['low_stock', 'out_of_stock']:

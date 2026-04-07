@@ -1,7 +1,7 @@
 import z from "zod";
 
 const componenteSchema = z.object({
-  id: z
+  componente_id: z
     .number()
     .min(0, { message: "El ID del componente debe ser un número positivo" }),
   cantidad: z.number().min(1, { message: "La cantidad debe ser al menos 1" }),

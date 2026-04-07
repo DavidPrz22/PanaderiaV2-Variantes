@@ -343,7 +343,7 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
             cantidad = detalle.cantidad
             unit = component.unidad_medida_base
             return {
-                "id": component.id,
+                "componente_id": component.id,
                 "nombre": component.nombre,
                 "unidad_medida": unit.abreviatura,
                 "stock": component.stock_actual,
@@ -355,7 +355,7 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
             cantidad = detalle.cantidad
             unit = component.producto_elaborado.unidad_produccion
             return {
-                "id": component.id,
+                "componente_id": component.id,
                 "nombre": component.producto_elaborado.nombre_producto,
                 "unidad_medida": unit.abreviatura,
                 "stock": component.stock_actual,
@@ -408,7 +408,7 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
                 'producto_elaborado_variante__producto_elaborado__unidad_produccion'
             ).get(producto_elaborado_variante_id=producto_id)
         except Recetas.DoesNotExist:
-            return Response({"error": "No se encontró la receta asociada"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "No se encontró la receta asociada"}, status=status.HTTP_404_NOT_FOUND)
 
         # Expire all old lots before getting recipe data
         # ComponentesStockManagement.expirar_todos_lotes_viejos()
@@ -504,7 +504,6 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
             return Response({"error": "Tipo de producto no válido"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'productos': serializer.data, 'tipo': tipo}, status=status.HTTP_200_OK)
-
 
 
 class LotesProductosElaboradosViewSet(viewsets.ModelViewSet):

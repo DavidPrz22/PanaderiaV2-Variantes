@@ -57,7 +57,7 @@ export const ProductionNewComponentModal = ({setValue, watch}: watchSetvalueType
     if (!newComponentSelected) return;
 
     const componente: RecetaComponenteProduccion = {
-      id: newComponentSelected.id,
+      componente_id: newComponentSelected.componente_id,
       nombre: newComponentSelected.nombre,
       unidad_medida: newComponentSelected.unidad_medida,
       stock: newComponentSelected.stock,
@@ -68,13 +68,13 @@ export const ProductionNewComponentModal = ({setValue, watch}: watchSetvalueType
     setComponentesBaseProduccion([...componentesBaseProduccion, componente]);
 
     const componenteForma = {
-      id: newComponentSelected.id,
+      componente_id: newComponentSelected.componente_id,
       cantidad: newComponentSelected.cantidad,
       tipo: newComponentSelected.tipo,
     };
 
     const currentComponentes = watch && watch("componentes") || [] ;
-    const registered = currentComponentes.findIndex(c => c.id === componenteForma.id)
+    const registered = currentComponentes.findIndex(c => c.componente_id === componenteForma.componente_id)
     if (registered !== -1) {
       currentComponentes[registered].cantidad += componenteForma.cantidad
     } else {

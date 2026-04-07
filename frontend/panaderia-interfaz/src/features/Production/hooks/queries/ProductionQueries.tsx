@@ -19,6 +19,7 @@ export const useComponentsProductionQuery = () => {
   return useQuery({
     ...componentsProductionOptions(productoId!),
     enabled: !!productoId,
+    
   });
 };
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Recetas, RecetasDetalles, RelacionesRecetas
-from apps.produccion.models import Produccion, DetalleProduccionCosumos
+from apps.produccion.models import Produccion, DetalleProduccionConsumos
 
 
 class componentsSerializer(serializers.Serializer):
@@ -80,6 +80,7 @@ class RecetasListSerializer(serializers.ModelSerializer):
         model = Recetas
         fields = ['id', 'nombre', 'fecha_creacion']
 
+
 class RecetaDetalleItemSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -94,7 +95,7 @@ class RecetaDetalleItemSerializer(serializers.ModelSerializer):
 
 
 class ProduccionSerializer(serializers.Serializer):
-    productoId = serializers.IntegerField()
+    producto_variante_id = serializers.IntegerField()
     cantidadProduction = serializers.IntegerField()
     peso = serializers.DecimalField(max_digits=10, decimal_places=3, required=False)
     volumen = serializers.DecimalField(max_digits=10, decimal_places=3, required=False)
@@ -109,7 +110,7 @@ class ComponentesProduccionSerializer(serializers.ModelSerializer):
     unidad_medida = serializers.SerializerMethodField()
 
     class Meta:
-        model = DetalleProduccionCosumos
+        model = DetalleProduccionConsumos
         fields = ['materia_prima_consumida', 'producto_intermedio_consumido', 'cantidad_consumida', 'unidad_medida']
 
     def get_unidad_medida(self, obj):
@@ -134,12 +135,13 @@ class ProduccionDetallesSerializer(serializers.ModelSerializer):
             'unidad_medida_produccion',
             'fecha_produccion',
             'fecha_expiracion',
-            'costo_total_componentes_usd',
+            'costo_total_componentes_divisa',
+            'costo_total_componentes_local',
             'usuario_produccion',
             'componentes_produccion',
         ]
 
     def get_componentes_produccion(self, obj):
 
-        componentes = DetalleProduccionCosumos.objects.filter(produccion=obj)
+        componentes = DetalleProduccionConsumos.objects.filter(produccion=obj)
         return ComponentesProduccionSerializer(componentes, many=True).data

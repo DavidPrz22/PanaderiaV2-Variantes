@@ -33,6 +33,11 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
         <h4 className="font-medium text-sm text-card-foreground truncate">
           {item.nombre}
         </h4>
+        {item.variante_nombre && (
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-tight">
+            Variante: {item.variante_nombre}
+          </p>
+        )}
         <p className="text-sm font-semibold text-card-foreground mt-0.5">
           Bs. {precioBs.toFixed(2)}
         </p>

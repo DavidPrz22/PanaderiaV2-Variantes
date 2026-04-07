@@ -1,12 +1,6 @@
 import type { UseFormWatch, UseFormSetValue } from "react-hook-form";
 
 
-
-export type Cliente = {
-  id: number;
-  nombre_cliente: string;
-};
-
 export type Carrito = {
     id: number;
     cliente_id: number;
@@ -17,7 +11,10 @@ export type Carrito = {
 };
 
 export type CarritoItem = {
-    id: number; // producto id
+    id: number;
+    producto_id: number; // producto id
+    variante_id?: number; // variante id if exists
+    variante_nombre?: string; // name of the variant
     tipo: 'final' | 'reventa';
     nombre?: string;
     cantidad: number;
@@ -32,8 +29,17 @@ export type Producto = {
   categoria: string;
   sku: string;
   tipo: "final" | "reventa";
-  precio: number;
   stock: number;
+  variantes: ProductoVariante[];
+}
+
+export type ProductoVariante = {
+  id: number;
+  nombre: string;
+  stock: number;
+  precio: number;
+  atributo: string;
+  sku: string;
 }
 
 export type TipoProducto = "final" | "reventa" | 'todos';

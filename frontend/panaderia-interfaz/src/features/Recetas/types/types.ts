@@ -44,14 +44,14 @@ export type ComponentesListaPorCategoria = {
 }
 
 export type componenteRecetaItem = {
-  id: number;
+  componente_id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   unidad_medida: string;
 };
 
 export type componenteRecetaItemConCantidad = {
-  id: number;
+  componente_id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   unidad_medida: string;
@@ -120,7 +120,7 @@ export type RecetaInfo = {
 };
 
 export type RecetaDetallesItemComponente = {
-  id: number;
+  componente_id: number;
   nombre: string;
   tipo: "MateriaPrima" | "ProductoIntermedio";
   cantidad: number;

@@ -10,6 +10,7 @@ import { useCreateVentaMutation } from "../hooks/mutations/mutations";
 import { ClosePOSButton } from "./ClosePOSButton";
 import { useAuth } from "@/context/AuthContext"
 import { userHasPermission } from "@/features/Authentication/lib/utils"
+
 export default function POSInterfazVenta() {
     const [isProcessing, setIsProcessing] = useState(false);
     const { user } = useAuth();
@@ -29,6 +30,7 @@ export default function POSInterfazVenta() {
         }
     });
 
+    console.log(watch());
     const { showCheckout, setShowCheckout, setCarrito, setSelectedPaymentMethod } = usePOSContext();
     const { mutateAsync: createVenta } = useCreateVentaMutation();
 
@@ -56,7 +58,6 @@ export default function POSInterfazVenta() {
 
     return (
         <div className="flex min-h-screen w-full bg-background">
-
 
             {hasPermission && !showCheckout && <ClosePOSButton />}
 

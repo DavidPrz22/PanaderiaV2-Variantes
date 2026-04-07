@@ -37,8 +37,8 @@ export const ProductionSubComponents = ({
         <div className="space-y-2 mt-4">
           {subreceta.componentes.map((componente) => (
             <ProductionComponentItem
-              key={componente.id}
-              id={componente.id}
+              key={componente.componente_id}
+              componente_id={componente.componente_id}
               titulo={componente.nombre}
               stock={componente.stock}
               unidad={componente.unidad_medida}

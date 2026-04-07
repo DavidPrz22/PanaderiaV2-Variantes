@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useClientesQuery } from "../hooks/queries/queries";
+import { useClientesPOSQuery } from "@/hooks/useQueryHooks";
 import { useState, useEffect } from "react";
 
 
@@ -14,9 +14,9 @@ type props = {
   onSetCliente: (clienteId: number) => void
 }
 export const POSCartPanelClientSelect = ({ onSetCliente }: props) => {
-  const { data: clientes } = useClientesQuery();
+  const { data: clientes } = useClientesPOSQuery();
   const [selectedClient, setSelectedClient] = useState<string>('13');
-
+  
   useEffect(() => {
     if (selectedClient) {
       onSetCliente(Number(selectedClient))

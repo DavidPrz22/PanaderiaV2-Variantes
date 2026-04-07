@@ -5,7 +5,7 @@ import type { WatchSetValue } from "../types/types";
 import { useEffect } from "react";
 import { EmptyState } from "./shared/components/EmptyState";
 import { SectionHeader } from "./shared/components/SectionHeader";
-
+import { RoundToTwo } from "@/utils/utils";
 
 export const POSCartPanelCartItems = ({ watch, setValue }: WatchSetValue) => {
 
@@ -15,7 +15,7 @@ export const POSCartPanelCartItems = ({ watch, setValue }: WatchSetValue) => {
 
   const updateQuantity = (id: number, quantity: number) => {
     const updatedCart = carrito.map((item) =>
-      item.id === id ? { ...item, cantidad: quantity, subtotal: item.precio * quantity } : item
+      item.id === id ? { ...item, cantidad: quantity, subtotal: RoundToTwo(item.precio * quantity) } : item
     );
     setCarrito(updatedCart);
   };
@@ -28,13 +28,13 @@ export const POSCartPanelCartItems = ({ watch, setValue }: WatchSetValue) => {
   const handleCarritoUpdate = () => {
     const venta_detalles = carrito.map((item) => {
       return {
-        producto_elaborado_id: item.tipo === 'final' ? item.id : null,
-        producto_reventa_id: item.tipo === 'reventa' ? item.id : null,
+        producto_elaborado_id: item.tipo === 'final' ? item.variante_id : null,
+        producto_reventa_id: item.tipo === 'reventa' ? item.variante_id : null,
         cantidad: item.cantidad,
         precio_unitario_usd: item.precio,
-        subtotal_linea_usd: item.subtotal,
-        precio_unitario_ves: Math.round((item.precio * watch!('tasa_cambio_aplicada')) * 100) / 100,
-        subtotal_linea_ves: Math.round((item.subtotal * watch!('tasa_cambio_aplicada')) * 100) / 100,
+        subtotal_linea_usd: RoundToTwo(item.subtotal),
+        precio_unitario_ves: RoundToTwo(item.precio * watch!('tasa_cambio_aplicada')),
+        subtotal_linea_ves: RoundToTwo(item.subtotal * watch!('tasa_cambio_aplicada')),
       }
     })
 

@@ -16,7 +16,7 @@ from apps.core.serializers import UnidadMedidaSerializer, CategoriaMateriaPrimaS
 
 
 class ComponentesSearchSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    componente_id = serializers.IntegerField()
     nombre = serializers.CharField()
     tipo = serializers.CharField()
     stock = serializers.DecimalField(required=False, max_digits=10, decimal_places=2)
@@ -256,7 +256,6 @@ class ProductosIntermediosListSerializer(serializers.ModelSerializer):
     """Lighter serializer for table/list views."""
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
     unidad_produccion_nombre = serializers.SerializerMethodField()
-    stock_actual = serializers.SerializerMethodField()
     
     class Meta:
         model = ProductosIntermedios
@@ -269,8 +268,6 @@ class ProductosIntermediosListSerializer(serializers.ModelSerializer):
             'fecha_creacion_registro'
         ]
 
-    def get_stock_actual(self, obj):
-        return 0
 
     def get_unidad_produccion_nombre(self, obj):
         return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
@@ -314,7 +311,6 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
     categoria_producto = serializers.SerializerMethodField()
     receta_relacionada = serializers.SerializerMethodField()
     unidad_produccion_producto = serializers.SerializerMethodField()
-    stock_actual = serializers.SerializerMethodField()
     punto_reorden = serializers.SerializerMethodField()
     variantes = ProductosIntermediosVariantesSerializer(many=True, required=False)
     class Meta:
@@ -349,8 +345,6 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
             'nombre_completo': obj.unidad_produccion.nombre_completo,
         }
 
-    def get_stock_actual(self, obj):
-        return 0
 
     def get_punto_reorden(self, obj):
         return 0
@@ -390,7 +384,6 @@ class ProductosFinalesListSerializer(serializers.ModelSerializer):
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
     unidad_venta_nombre = serializers.CharField(source='unidad_venta.nombre_completo', read_only=True)
     unidad_produccion_nombre = serializers.SerializerMethodField()
-    stock_actual = serializers.SerializerMethodField()
     
     class Meta:
         model = ProductosFinales
@@ -404,8 +397,6 @@ class ProductosFinalesListSerializer(serializers.ModelSerializer):
             'stock_actual',
         ]
 
-    def get_stock_actual(self, obj):
-        return sum(v.stock_actual for v in obj.variantes.all())
 
     def get_unidad_produccion_nombre(self, obj):
         return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
@@ -435,7 +426,6 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
     unidad_produccion_producto = serializers.SerializerMethodField()
     unidad_venta_producto = serializers.SerializerMethodField()
     variantes = ProductosFinalesVariantesSerializer(many=True, required=False)
-    stock_actual = serializers.SerializerMethodField()
     punto_reorden = serializers.SerializerMethodField()
     
     class Meta:
@@ -481,8 +471,6 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
             'nombre_completo': obj.unidad_venta.nombre_completo,
         }
 
-    def get_stock_actual(self, obj):
-        return sum(v.stock_actual for v in obj.variantes.all())
 
     def get_punto_reorden(self, obj):
         # Can return 0 here, it's mostly handled per variant
@@ -510,7 +498,7 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
     fecha_caducidad = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d", "iso-8601"])
     peso_promedio_por_unidad = serializers.SerializerMethodField()
     volumen_promedio_por_unidad = serializers.SerializerMethodField()
-    costo_unitario_usd = serializers.SerializerMethodField()
+    costo_unitario_divisa = serializers.SerializerMethodField()
     producto_elaborado_variante = serializers.SerializerMethodField()
 
     class Meta: 
@@ -523,13 +511,14 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
             "fecha_produccion",
             "fecha_caducidad",
             "estado",
-            "coste_total_lote_usd",
+            "coste_total_lote_divisa",
+            'coste_total_lote_local',
             "peso_total_lote_gramos",
             "volumen_total_lote_ml",
             "produccion_origen",
             "peso_promedio_por_unidad",
             "volumen_promedio_por_unidad",
-            "costo_unitario_usd",
+            "costo_unitario_divisa",
         ]
 
     def get_producto_elaborado_variante(self, obj):
@@ -573,8 +562,8 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
     def get_volumen_promedio_por_unidad(self, obj):
         return obj.volumen_promedio_por_unidad
 
-    def get_costo_unitario_usd(self, obj):
-        return obj.costo_unitario_usd
+    def get_costo_unitario_divisa(self, obj):
+        return obj.costo_unitario_divisa
 
 
 class ProductosElaboradosSerializer(serializers.ModelSerializer):
@@ -744,6 +733,16 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             'abreviatura': obj.unidad_venta.abreviatura,
         }
 
+class CajaProductosVariantesSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'nombre': instance.nombre_variante,
+            'stock': instance.stock_actual,
+            'precio': instance.precio_venta_divisa,
+            'atributo': instance.atributo if instance.atributo else None,
+            'sku': instance.SKU,
+        }
 
 class CajaProductosSerializer(serializers.Serializer):
     def to_representation(self, instance):
@@ -755,9 +754,8 @@ class CajaProductosSerializer(serializers.Serializer):
             'categoria': instance.categoria.nombre_categoria if instance.categoria else None,
             'unidadVenta': instance.unidad_venta.abreviatura if instance.unidad_venta else None,
             'stock': instance.stock_actual,
-            'sku': instance.SKU,
-            'precio': instance.precio_venta_usd,
-            'tipo': tipo_producto
+            'tipo': tipo_producto,
+            'variantes': CajaProductosVariantesSerializer(instance.variantes, many=True).data if instance.variantes else []
         }
 
 class RegisterCSVSerializer(serializers.Serializer):

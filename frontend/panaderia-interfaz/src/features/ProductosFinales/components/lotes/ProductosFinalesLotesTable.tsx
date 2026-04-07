@@ -93,7 +93,7 @@ const {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      ${Number(lote.coste_total_lote_usd).toFixed(2)}
+                      ${Number(lote.coste_total_lote_divisa).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Badge variant={getStatusBadgeVariant(lote.estado)}>

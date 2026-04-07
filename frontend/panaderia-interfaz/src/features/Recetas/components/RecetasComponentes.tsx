@@ -35,7 +35,7 @@ export function IngredientsModule({ componentesFieldArray, watch, setValue, erro
   const handleAddIngredient = (component: componenteRecetaItem) => {
 
     addIngredient({
-      componente_id: component.id,
+      componente_id: component.componente_id,
       tipo: component.tipo,
       cantidad: 0,
     });
@@ -43,7 +43,7 @@ export function IngredientsModule({ componentesFieldArray, watch, setValue, erro
     setDisplayIngredientes((prev) => [...prev, {
       ...component,
       unidad_medida: component.unidad_medida,
-      id: component.id,
+      componente_id: component.componente_id,
       cantidad: 0,
     }]);
 
@@ -108,7 +108,7 @@ export function IngredientsModule({ componentesFieldArray, watch, setValue, erro
                       </div>
                       {items.map((component: componenteRecetaItem) => (
                         <button
-                          key={component.id}
+                          key={component.componente_id}
                           type="button"
                           onClick={() => handleAddIngredient(component)}
                           className="w-full flex items-center gap-3 p-3 rounded-md text-left hover:bg-muted/50 transition-colors"
@@ -179,7 +179,7 @@ export function IngredientsModule({ componentesFieldArray, watch, setValue, erro
               const weight = totalCantidad > 0 ? (ingredient.cantidad / totalCantidad) * 100 : 0;
               return (
                 <div
-                  key={`${ingredient.id}-${index}`}
+                  key={`${ingredient.componente_id}-${index}`}
                   className="overflow-hidden"
                 >
                   <div className="flex items-center gap-4 p-4 relative">

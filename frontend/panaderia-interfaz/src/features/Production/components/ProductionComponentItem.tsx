@@ -4,7 +4,7 @@ import { useProductionContext } from "@/context/ProductionContext";
 import { Xmark } from "@/assets/GeneralIcons/Xmark";
 
 type itemProps = {
-  id: number;
+  componente_id: number;
   titulo: string;
   stock: number;
   unidad: string;
@@ -14,7 +14,7 @@ type itemProps = {
 };
 
 export const ProductionComponentItem = ({
-  id,
+  componente_id,
   titulo,
   stock,
   unidad,
@@ -28,12 +28,12 @@ export const ProductionComponentItem = ({
 
   const handleRemoveComponent = () => {
     // Remove from base components
-    const updatedComponents = componentesBaseProduccion.filter(comp => comp.id !== id);
+    const updatedComponents = componentesBaseProduccion.filter(comp => comp.componente_id !== componente_id);
     setComponentesBaseProduccion(updatedComponents);
 
     // Remove from form components
     const currentComponentes = watch && watch("componentes") || [];
-    const filteredComponents = currentComponentes.filter(comp => comp.id !== id);
+    const filteredComponents = currentComponentes.filter(comp => comp.componente_id !== componente_id);
     setValue?.("componentes", filteredComponents, { shouldValidate: true });
   };
 
@@ -78,7 +78,7 @@ export const ProductionComponentItem = ({
       </div>
 
       <ProductionComponentItemCantidad
-        id={id}
+        componente_id={componente_id}
         stock={stock}
         unidad={unidad}
         cantidad={cantidad}

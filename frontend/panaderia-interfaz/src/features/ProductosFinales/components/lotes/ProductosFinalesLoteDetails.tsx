@@ -68,7 +68,7 @@ export const ProductosFinalesLoteDetails = ({
 
           <Separator />
 
-          <LoteCosts costoTotalUsd={lote.coste_total_lote_usd} />
+          <LoteCosts costoTotalUsd={lote.coste_total_lote_divisa} />
 
           <Separator />
 
