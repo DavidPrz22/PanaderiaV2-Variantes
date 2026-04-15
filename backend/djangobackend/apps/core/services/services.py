@@ -10,7 +10,6 @@ from apps.inventario.models import (
     ProductosReventa,
     ProductosElaborados,
     ProductosElaboradosVariantes,
-    MateriasPrimasVariantes,
     ProductosReventaVariantes,
     LotesMateriasPrimas,
     LotesProductosElaborados,
@@ -89,20 +88,24 @@ class NotificationService:
         Safely get product name from different product types.
         Handles both 'nombre' and 'nombre_producto' attributes.
         """
-        return getattr(producto, 'nombre', None) or getattr(producto, 'nombre_producto', 'Producto')
+        return getattr(producto, 'nombre', None) or getattr(producto, 'nombre_variante', None)
+
+    @staticmethod
+    def get_product_attr(producto):
+        """Get the product attribute for different product types, None for MateriasPrimas"""
+        return 'producto_elaborado' if isinstance(producto, ProductosElaboradosVariantes) else \
+            'producto_reventa' if isinstance(producto, ProductosReventaVariantes) else \
+            None
 
     @staticmethod
     def get_tipo_producto(producto):
         """Get the product type as a string for notifications"""
         if isinstance(producto, MateriasPrimas):
             return TiposProductosNotificaciones.MATERIA_PRIMA
-        elif isinstance(producto, ProductosElaborados):
-            return TiposProductosNotificaciones.PRODUCTOS_INTERMEDIOS if producto.es_intermediario else TiposProductosNotificaciones.PRODUCTOS_FINALES
-        elif isinstance(producto, ProductosIntermedios):
-            return TiposProductosNotificaciones.PRODUCTOS_INTERMEDIOS
-        elif isinstance(producto, ProductosFinales):
-            return TiposProductosNotificaciones.PRODUCTOS_FINALES
-        elif isinstance(producto, ProductosReventa):
+        elif isinstance(producto, ProductosElaboradosVariantes):
+            producto_elaborado = producto.producto_elaborado
+            return TiposProductosNotificaciones.PRODUCTOS_INTERMEDIOS if producto_elaborado.es_intermediario else TiposProductosNotificaciones.PRODUCTOS_FINALES
+        elif isinstance(producto, ProductosReventaVariantes):
             return TiposProductosNotificaciones.PRODUCTOS_REVENTA
         else:
             logger.warning(f"Unknown product type: {type(producto)}")
@@ -122,28 +125,36 @@ class NotificationService:
         # Validate input is a class, not an instance
         if not isinstance(producto_class, type) or not issubclass(
             producto_class, 
-            (MateriasPrimas, ProductosElaborados, ProductosFinales, ProductosIntermedios, ProductosReventa)
+            (MateriasPrimas, ProductosElaboradosVariantes, ProductosReventaVariantes)
         ):
             raise ValueError(
                 'El parámetro debe ser una clase de producto válida '
-                '(MateriasPrimas, ProductosElaborados, ProductosFinales, ProductosIntermedios, ProductosReventa)'
+                '(MateriasPrimas, ProductosElaboradosVariantes, ProductosReventaVariantes)'
             )
 
         try:
-            products_data = producto_class.objects.filter(stock_actual__lte=F('punto_reorden'), stock_actual__gt=0)
+            productos_bajo_punto_reorden = producto_class.objects.filter(stock_actual__lte=F('punto_reorden'), stock_actual__gt=0)
             productos_low_stock = []
+            for producto in productos_bajo_punto_reorden:
+                
+                attr = cls.get_product_attr(producto)
+                if attr:
+                    producto_bajo_stock = getattr(producto, attr)
+                else:
+                    producto_bajo_stock = producto
 
-            for producto in products_data:
-                    productos_low_stock.append({
-                        'producto_id': producto.id,
-                        'tipo_producto': cls.get_tipo_producto(producto),
-                        'prioridad': TiposPrioridades.ALTO,
-                        'descripcion': (
-                            f'¡El producto {cls.get_product_name(producto)} se encuentra por debajo '
-                            f'del punto de reorden (Stock: {producto.stock_actual}, '
-                            f'Punto de reorden: {producto.punto_reorden}) ⚠️!'
-                        ),
-                    })
+                variante_id = producto.id if attr else None
+                productos_low_stock.append({
+                    'producto_id': producto_bajo_stock.id,
+                    'variante_id': variante_id,
+                    'tipo_producto': cls.get_tipo_producto(producto),
+                    'prioridad': TiposPrioridades.ALTO,
+                    'descripcion': (
+                        f'¡El producto {cls.get_product_name(producto)} se encuentra por debajo '
+                        f'del punto de reorden (Stock: {producto.stock_actual}, '
+                        f'Punto de reorden: {producto.punto_reorden}) ⚠️!'
+                    ),
+                })
 
             count = cls.create_notification(productos_low_stock, TiposNotificaciones.BAJO_STOCK)
             logger.info(f"Created {count} low stock notifications for {producto_class.__name__}")
@@ -171,11 +182,11 @@ class NotificationService:
         # Validate input is a class, not an instance
         if not isinstance(producto_class, type) or not issubclass(
             producto_class, 
-            (MateriasPrimas, ProductosElaborados, ProductosFinales, ProductosIntermedios, ProductosReventa)
+            (MateriasPrimas, ProductosElaboradosVariantes, ProductosReventaVariantes)
         ):
             raise ValueError(
                 'El parámetro debe ser una clase de producto válida '
-                '(MateriasPrimas, ProductosElaborados, ProductosFinales, ProductosIntermedios, ProductosReventa)'
+                '(MateriasPrimas, ProductosElaboradosVariantes, ProductosReventaVariantes)'
             )
 
         try:
@@ -183,8 +194,16 @@ class NotificationService:
             productos_sin_stock = []
 
             for producto in products_data:
+                attr = cls.get_product_attr(producto)
+                if attr:
+                    producto_sin_stock = getattr(producto, attr)
+                else:
+                    producto_sin_stock = producto
+
+                variante_id = producto.id if attr else None
                 productos_sin_stock.append({
-                        'producto_id': producto.id,
+                        'producto_id': producto_sin_stock.id,
+                        'variante_id': variante_id,
                         'tipo_producto': cls.get_tipo_producto(producto),
                         'prioridad': TiposPrioridades.CRITICO,
                         'descripcion': f'¡El producto {cls.get_product_name(producto)} se encuentra sin stock 🚨!',
@@ -203,26 +222,16 @@ class NotificationService:
             raise
 
     @classmethod
-    def check_expiration_date(cls, producto_class, lote_class):
+    def check_expiration_date(cls, lote_class):
         """
         Check for lots nearing expiration date.
         
         Args:
-            producto_class: The product model class (MateriasPrimas, ProductosElaborados, ProductosReventa)
             lote_class: The lot model class (LotesMateriasPrimas, LotesProductosElaborados, LotesProductosReventa)
         
         Returns:
             dict: Summary of notifications created
         """
-        # Validate product class
-        if not isinstance(producto_class, type) or not issubclass(
-            producto_class, 
-            (MateriasPrimas, ProductosElaborados, ProductosReventa)
-        ):
-            raise ValueError(
-                'El parámetro producto debe ser una clase válida '
-                '(MateriasPrimas, ProductosElaborados, ProductosReventa)'
-            )
 
         # Validate lot class
         if not isinstance(lote_class, type) or not issubclass(
@@ -251,21 +260,33 @@ class NotificationService:
                     if days_until_expiry == days:
                         # Determine alert tier based on lot type
                         if isinstance(lot, (LotesMateriasPrimas, LotesProductosReventa)):
-                            alert_tier = cls.ALERT_TIER_LONG.get(days, TiposPrioridades.MEDIO)
+                            alert_tier = cls.ALERT_TIER_LONG.get(days)
                         else:  # LotesProductosElaborados
-                            alert_tier = cls.ALERT_TIER_SHORT.get(days, TiposPrioridades.MEDIO)
+                            alert_tier = cls.ALERT_TIER_SHORT.get(days)
                         
                         # Get the product from the lot
                         if isinstance(lot, LotesMateriasPrimas):
-                            producto = lot.materia_prima
+                            producto = lot.variante_materia_prima.materia_prima
                         elif isinstance(lot, LotesProductosReventa):
-                            producto = lot.producto_reventa
+                            producto = lot.producto_reventa_variante
                         else:  # LotesProductosElaborados
-                            producto = lot.producto_elaborado
+                            producto = lot.producto_elaborado_variante
+                    
+                        tipo_producto = cls.get_tipo_producto(producto)
+                        
+                        attr = cls.get_product_attr(producto)
+                        producto_expirado = None
+                        if attr:
+                            producto_expirado = getattr(producto, attr)
+                        else:
+                            producto_expirado = producto
+                        
+                        variante_id = producto.id if attr else None
                         
                         lots_expiration_date.append({
-                            'tipo_producto': cls.get_tipo_producto(producto),
-                            'producto_id': producto.id,
+                            'producto_id': producto_expirado.id,
+                            'variante_id': variante_id,
+                            'tipo_producto': tipo_producto,
                             'descripcion': (
                                 f'¡Lote #{lot.id} de {cls.get_product_name(producto)} '
                                 f'EXPIRA en {days} día(s) (Stock: {lot.stock_actual_lote}) ⚠️!'
@@ -355,6 +376,7 @@ class NotificationService:
         
         for elemento in elementos:
             producto_id = elemento.get('producto_id')
+            variante_id = elemento.get('variante_id')
             tipo_producto = elemento.get('tipo_producto')
             prioridad = elemento.get('prioridad')
             descripcion = elemento.get('descripcion')
@@ -363,6 +385,7 @@ class NotificationService:
                 tipo_notificacion=tipo_notificacion,
                 tipo_producto=tipo_producto,
                 producto_id=producto_id,
+                variante_id=variante_id,
                 prioridad=prioridad,
                 descripcion=descripcion,
                 leida=False
@@ -385,6 +408,7 @@ class NotificationService:
                     tipo_notificacion=tipo_notificacion,
                     tipo_producto=tipo_producto,
                     producto_id=producto_id,
+                    variante_id=variante_id,
                     descripcion=descripcion,
                     prioridad=prioridad,
                 )
@@ -448,13 +472,13 @@ class NotificationService:
             
             # Check expiration dates for all lot types
             results['expirations']['materias_primas'] = cls.check_expiration_date(
-                MateriasPrimas, LotesMateriasPrimas
+                LotesMateriasPrimas
             )
             results['expirations']['productos_elaborados'] = cls.check_expiration_date(
-                ProductosElaborados, LotesProductosElaborados
+                LotesProductosElaborados
             )
             results['expirations']['productos_reventa'] = cls.check_expiration_date(
-                ProductosReventa, LotesProductosReventa
+                LotesProductosReventa
             )
             
             # Calculate total notifications created

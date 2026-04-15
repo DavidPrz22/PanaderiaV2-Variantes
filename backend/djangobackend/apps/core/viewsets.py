@@ -126,17 +126,17 @@ class NotificacionesViewSet(viewsets.ModelViewSet):
         ).order_by('-fecha_notificacion')[:limit]
         
         notificaciones_sin_leer = list(notificaciones_qs)
-        notificaciones_count = len(notificaciones_sin_leer)
+        unread_notifications_count = len(notificaciones_sin_leer)
         unread_ids = [n.id for n in notificaciones_sin_leer]
 
-        if notificaciones_count == 0:
+        if unread_notifications_count == 0:
             data_to_serialize = list(Notificaciones.objects.filter(
                 leida=True
             ).order_by('-fecha_notificacion')[:min_notifications_to_show])
-        elif notificaciones_count < min_notifications_to_show:
+        elif unread_notifications_count < min_notifications_to_show:
             notificaciones_leidas = Notificaciones.objects.filter(
                 leida=True
-            ).order_by('-fecha_notificacion')[:(min_notifications_to_show - notificaciones_count)]
+            ).order_by('-fecha_notificacion')[:(min_notifications_to_show - unread_notifications_count)]
             
             data_to_serialize = notificaciones_sin_leer + list(notificaciones_leidas)
             data_to_serialize.sort(key=lambda x: x.fecha_notificacion, reverse=True)

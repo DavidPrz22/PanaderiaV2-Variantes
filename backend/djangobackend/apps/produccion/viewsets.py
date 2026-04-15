@@ -12,9 +12,9 @@ from apps.inventario.models import (
     ProductosFinales, 
     LotesProductosElaborados, 
     LotesStatus, 
-    ComponentesStockManagement,
     ProductosElaboradosVariantes
 )
+from apps.inventario.services import ExpirarLotesService
 from apps.produccion.serializers import (RecetasSerializer, RecetasListSerializer, RecetasDetallesSerializer, RecetasSearchSerializer, ProduccionSerializer, ProduccionDetallesSerializer)
 from django.db.models import Q
 from django.core.exceptions import ValidationError
@@ -284,7 +284,7 @@ class ProduccionesViewSet(viewsets.ModelViewSet):
         try:
             with transaction.atomic():
                 # Expire old lots before processing
-                # ComponentesStockManagement.expirar_todos_lotes_viejos(True)
+                ExpirarLotesService.expirar_todos_lotes_viejos(True)
                 
                 producto_variante = ProductionValidationService.validate_production_data(serializer.validated_data)
                 # Extract validated data

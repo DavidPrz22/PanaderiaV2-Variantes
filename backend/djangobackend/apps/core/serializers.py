@@ -11,6 +11,14 @@ from .models import (
     ConversionesUnidades
     )
 
+from .models import TiposProductosNotificaciones
+
+from apps.inventario.models import (
+    ProductosReventaVariantes,
+    ProductosElaboradosVariantes,
+    MateriasPrimasVariantes,
+)
+
 class UnidadMedidaSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnidadesDeMedida
@@ -55,14 +63,50 @@ class EstadosOrdenCompraSerializer(serializers.ModelSerializer):
         model = EstadosOrdenCompra
         fields = ['id', 'nombre_estado']
 
+class VarianteNotificacionesSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        # Handle variations in field names across models
+        sku = getattr(instance, 'SKU', getattr(instance, 'SKU_variante', None))
+        return {
+            'id': instance.id,
+            'nombre': instance.nombre_variante,
+            'sku': sku,
+        }
 
 class NotificacionesSerializer(serializers.ModelSerializer):
     tiempo = serializers.SerializerMethodField()
+    variante = serializers.SerializerMethodField()
     
     class Meta:
         model = Notificaciones
-        fields = ['id', 'tipo_notificacion', 'tipo_producto', 'producto_id', 'descripcion', 'tiempo', 'leida', 'prioridad', 'tiempo']
+        fields = [
+            'id', 
+            'tipo_notificacion', 
+            'tipo_producto', 
+            'producto_id', 
+            'variante', 
+            'descripcion', 
+            'tiempo', 
+            'leida', 
+            'prioridad'
+        ]
     
+    def get_variante(self, obj):
+        if not obj.variante_id:
+            return None
+            
+        variante = None
+        if obj.tipo_producto == TiposProductosNotificaciones.PRODUCTOS_REVENTA:
+            variante = ProductosReventaVariantes.objects.filter(id=obj.variante_id).first()
+        elif obj.tipo_producto == TiposProductosNotificaciones.PRODUCTOS_INTERMEDIOS or obj.tipo_producto == TiposProductosNotificaciones.PRODUCTOS_FINALES:
+            variante = ProductosElaboradosVariantes.objects.filter(id=obj.variante_id).first()
+        elif obj.tipo_producto == TiposProductosNotificaciones.MATERIA_PRIMA:
+            variante = MateriasPrimasVariantes.objects.filter(id=obj.variante_id).first()
+            
+        if variante:
+            return VarianteNotificacionesSerializer(variante).data
+        return None
+
     def get_tiempo(self, obj):
         from django.utils import timezone
         if obj.fecha_notificacion:

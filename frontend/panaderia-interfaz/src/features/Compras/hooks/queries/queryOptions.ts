@@ -7,6 +7,7 @@ import {
   getMetodosDePago,
   getEstadosOrdenCompraRegistro,
   getUnidadesMedida,
+  searchProductosOC,
 } from "../../api/api";
 
 import type { OrdenesCompraPagination } from "../../types/types";
@@ -64,3 +65,9 @@ export const unidadesMedidaQueryOptions = {
   queryFn: getUnidadesMedida,
   staleTime: Infinity,
 };
+
+export const searchProductosOCQueryOptions = (search: string) => ({
+  queryKey: ["productos-compras-search", search],
+  queryFn: () => searchProductosOC(search),
+  staleTime: Infinity,
+});

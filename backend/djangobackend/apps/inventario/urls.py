@@ -44,7 +44,7 @@ router.register('productosfinales-lista-transformacion', ProductosFinalesListaTr
 
 urlpatterns = [
     path('productos-pedidos-search/', ProductosPedidoSearchView.as_view(), name="productos-pedidos-search"),
-    path('productos-compras-search/', ProductosComprasSearchView.as_view(), name="productos-compras-search"),
+    path('productos-compras/', ProductosComprasSearchView.as_view(), name="productos-compras"),
     path('caja-categorias/', CategoriasProductosView.as_view(), name="categorias"),
     path('caja-productos-lista/', ProductosVentasListaView.as_view(), name="caja-productos-lista"),
     path('componentes-recetas/', ComponenteRecetasView.as_view(), name="componentes-recetas"),

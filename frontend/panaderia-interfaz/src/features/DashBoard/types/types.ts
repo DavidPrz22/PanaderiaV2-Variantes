@@ -25,6 +25,12 @@ export type TipoNotificacion =
   | "TODOS";
 export type Prioridad = "Alto" | "Crítico" | "Medio" | "Bajo";
 
+export type Variante = {
+  id: number;
+  nombre: string;
+  sku: string;
+}
+
 export type Notificacion = {
   id: number;
   tipo_notificacion: TipoNotificacion;
@@ -33,4 +39,5 @@ export type Notificacion = {
   tiempo: string;
   descripcion: string;
   prioridad: Prioridad;
+  variante: Variante;
 };

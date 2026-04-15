@@ -5,6 +5,7 @@ from apps.inventario.models import MateriasPrimas, ProductosElaborados, Producto
 from django.db.models import Value, CharField
 from apps.core.models import CategoriasProductosReventa, CategoriasProductosElaborados
 from apps.inventario.serializers import CajaProductosSerializer
+from apps.core.serializers import UnidadMedidaSerializer
 from collections import defaultdict
 
 class ProductosPedidoSearchView(APIView):
@@ -76,51 +77,62 @@ class ProductosComprasSearchView(APIView):
                 data={"error": "El parámetro 'search' es requerido"}
             )
         
-        # Get MateriasPrimas objects
-        productos = MateriasPrimas.objects.filter(
+        # Optimized search for Materias Primas - Search by base product name
+        materias_primas = MateriasPrimas.objects.filter(
             nombre__icontains=param
-        ).select_related('unidad_medida_base')
-
-        # Get ProductosReventa using .values()
+        ).select_related('unidad_medida_base').prefetch_related(
+            'variantes__unidad_compra'
+        )
+        
+        # Optimized search for Productos Reventa - Search by base product name
         productos_reventa = ProductosReventa.objects.filter(
             nombre_producto__icontains=param
-        ).select_related('unidad_base_inventario')
+        ).select_related('unidad_venta', 'unidad_medida_base').prefetch_related(
+            'variantes'
+        )
 
-        # Convert to list and add 'tipo' field
-        materias_primas_list = [
+        materia_prima_list = [
             {
-                'id': p.id,
-                'nombre': p.nombre,
-                'unidad_medida_compra': {
-                    'id': p.unidad_medida_base.id,
-                    'abreviatura': p.unidad_medida_base.abreviatura,
-                    'tipo_medida': p.unidad_medida_base.tipo_medida
-                } if p.unidad_medida_base else None,
-                'SKU': p.SKU,
-                'precio_compra_usd': p.precio_compra_usd,
-                'tipo': 'materia-prima'
+                'id': mp.id,
+                'nombre': mp.nombre,
+                'unidad_medida_base': UnidadMedidaSerializer(mp.unidad_medida_base).data,
+                'variantes': [
+                    {
+                        'id': v.id,
+                        'nombre': v.nombre_variante,
+                        'SKU': v.SKU_variante,
+                        'precio_compra_divisa': v.precio_compra_divisa,
+                        'unidad_compra': UnidadMedidaSerializer(v.unidad_compra).data if v.unidad_compra else UnidadMedidaSerializer(mp.unidad_medida_base).data,
+                    }
+                    for v in mp.variantes.all()
+                ],
+                'tipo': 'MateriaPrima'
             }
-            for p in productos
+            for mp in materias_primas
         ]
 
-        reventa_list = [
+        productos_reventa_list = [
             {
-                'id': p.id,
-                'nombre': p.nombre_producto,
-                'unidad_medida_compra': {
-                    'id': p.unidad_base_inventario.id,
-                    'abreviatura': p.unidad_base_inventario.abreviatura,
-                    'tipo_medida': p.unidad_base_inventario.tipo_medida
-                } if p.unidad_base_inventario else None,
-                'SKU': p.SKU,
-                'precio_compra_usd': p.precio_venta_usd,
-                'tipo': 'producto-reventa'
+                'id': pr.id,
+                'nombre': pr.nombre_producto,
+                'unidad_medida_base': UnidadMedidaSerializer(pr.unidad_medida_base if pr.unidad_medida_base else pr.unidad_venta).data,
+                'variantes': [
+                    {
+                        'id': v.id,
+                        'nombre': v.nombre_variante,
+                        'SKU': v.SKU,
+                        'precio_compra_divisa': v.costo_divisa,  # Use cost instead of selling price
+                        'unidad_compra': UnidadMedidaSerializer(pr.unidad_venta).data if pr.unidad_venta else None,
+                    }
+                    for v in pr.variantes.all()
+                ],
+                'tipo': 'ProductoReventa'
             }
-            for p in productos_reventa
+            for pr in productos_reventa
         ]
-        
+
         # Combine and sort
-        combined = materias_primas_list + reventa_list
+        combined = materia_prima_list + productos_reventa_list
         combined.sort(key=lambda x: x['nombre'].lower())
         
         return Response({"productos": combined}, status=status.HTTP_200_OK)

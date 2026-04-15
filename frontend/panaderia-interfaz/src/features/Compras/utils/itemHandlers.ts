@@ -1,6 +1,7 @@
 import type { DetalleOC, Producto } from "../types/types";
 import type { TOrdenCompraSchema } from "../schemas/schemas";
 import type { UseFormWatch } from "react-hook-form";
+import { MODO_COMPRA } from "./contants";
 
 export const resetProductoItem = (item: DetalleOC) => {
   item.materia_prima = undefined;
@@ -47,6 +48,7 @@ export const createNewDetalleOC = (id: number): DetalleOC => ({
   tipo_medida: undefined,
   costo_unitario_usd: 0,
   subtotal_linea_usd: 0,
+  modo_compra: MODO_COMPRA.UNIDAD,
 });
 
 export const formatCurrency = (amount: number) => {

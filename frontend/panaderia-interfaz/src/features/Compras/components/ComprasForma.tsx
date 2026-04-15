@@ -1,30 +1,14 @@
 import { useEffect, useState } from "react";
 
-import type { OrdenCompra, DetalleOC, Producto } from "../types/types";
+import type { OrdenCompra, DetalleOC } from "../types/types";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import { SelectItem } from "@/components/ui/select";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { X, Plus, Trash2 } from "lucide-react";
-import { PendingTubeSpinner } from "@/components/PendingTubeSpinner";
+import { Button } from "@/components/ui/button";
 
 import { ComprasFormSelect } from "./ComprasFormSelect";
-import { ComprasFormSearch } from "./ComprasFormSearch";
-import { ComprasFormTotals } from "./ComprasFormTotals";
 import {
   useGetParametros,
   useGetEstadosOrdenCompraRegistro,
@@ -43,12 +27,14 @@ import {
 } from "../hooks/mutations/mutations";
 import { useComprasFormLogic } from "../hooks/useComprasFormLogic";
 import {
-  updateItemFromProducto,
-  findProductoIndex,
   createNewDetalleOC,
   formatCurrency,
 } from "../utils/itemHandlers";
 import { useComprasContext } from "@/context/ComprasContext";
+import { MODO_COMPRA, type ModoCompra } from "../utils/contants";
+import { ComprasProductsTable } from "./ComprasProductsTable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 interface ComprasFormProps {
   orden?: OrdenCompra;
@@ -56,9 +42,30 @@ interface ComprasFormProps {
 }
 
 export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
-  const { setOrdenCompra, setShowForm } = useComprasContext();
 
-  const { handleSubmit, watch, setValue } = useForm<TOrdenCompraSchema>({
+  const { setOrdenCompra, setShowForm } = useComprasContext();
+  
+  const [modoCompra, setModoCompra] = useState<ModoCompra>(MODO_COMPRA.UNIDAD);
+  const [moneda, setMoneda] = useState<"USD" | "Bs">("USD");
+
+  const [items, setItems] = useState<DetalleOC[]>(
+    orden?.detalles.map((p, idx) => ({
+      id: idx,
+      materia_prima: p.materia_prima,
+      materia_prima_nombre: p.materia_prima_nombre,
+      producto_reventa: p.producto_reventa,
+      producto_reventa_nombre: p.producto_reventa_nombre,
+      cantidad_solicitada: Number(p.cantidad_solicitada),
+      cantidad_recibida: Number(p.cantidad_recibida),
+      unidad_medida_compra: p.unidad_medida_compra,
+      tipo_medida: p.tipo_medida,
+      costo_unitario_usd: Number(p.costo_unitario_usd),
+      subtotal_linea_usd: Number(p.subtotal_linea_usd),
+      cantidad_pendiente: p.cantidad_pendiente || 0,
+    })) || [],
+  );
+  const isEdit = !!orden;
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<TOrdenCompraSchema>({
     resolver: zodResolver(OrdenCompraSchema),
     defaultValues: orden
       ? {
@@ -116,23 +123,7 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
     useCreateOCMutation();
   const { mutateAsync: updateOCMutation, isPending: isUpdatingOCMutation } =
     useUpdateOCMutation();
-  const [items, setItems] = useState<DetalleOC[]>(
-    orden?.detalles.map((p, idx) => ({
-      id: idx,
-      materia_prima: p.materia_prima,
-      materia_prima_nombre: p.materia_prima_nombre,
-      producto_reventa: p.producto_reventa,
-      producto_reventa_nombre: p.producto_reventa_nombre,
-      cantidad_solicitada: Number(p.cantidad_solicitada),
-      cantidad_recibida: Number(p.cantidad_recibida),
-      unidad_medida_compra: p.unidad_medida_compra,
-      unidad_medida_abrev: p.unidad_medida_abrev,
-      tipo_medida: p.tipo_medida,
-      costo_unitario_usd: Number(p.costo_unitario_usd),
-      subtotal_linea_usd: Number(p.subtotal_linea_usd),
-      cantidad_pendiente: p.cantidad_pendiente || 0,
-    })) || [],
-  );
+// Items state moved up
 
   const formLogic = useComprasFormLogic({
     setValue,
@@ -166,16 +157,24 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
     setItems([...items, newItem]);
   };
 
+  const updateLinea = (index: number, linea: DetalleOC) => {
+    const newItems = [...items];
+    newItems[index] = linea;
+    setItems(newItems);
+    updateFormDetalles(newItems, index, linea.subtotal_linea_usd);
+    calculateTotalFromItems(newItems);
+  };
+
   const removeItem = (id: number) => {
     const newItems = items.filter((i) => i.id !== id);
-    const newProductos = watch("detalles")?.filter((p) => p.id !== id) || [];
-
     setItems(newItems);
-    setValue("detalles", newProductos);
-
-    if (newProductos.length === 0) {
+    
+    if (newItems.length === 0) {
       resetAmounts();
+      setValue("detalles", []);
     } else {
+      const schemaValue = convertItemsToSchemaValue(newItems);
+      setValue("detalles", schemaValue);
       calculateTotalFromItems(newItems);
     }
   };
@@ -347,242 +346,38 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
               </div>
             </div>
 
-            {/* Order Lines */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-lg font-semibold">
-                  Líneas de Productos
-                </Label>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold">Productos de la Orden</h3>
+              <div className="flex bg-muted p-1 rounded-md">
                 <Button
                   type="button"
-                  onClick={addItem}
+                  variant={moneda === "USD" ? "default" : "ghost"}
                   size="sm"
-                  className="gap-2 bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                  className="h-8 text-xs"
+                  onClick={() => setMoneda("USD")}
                 >
-                  <Plus className="h-4 w-4" />
-                  Agregar Producto
+                  USD ($)
+                </Button>
+                <Button
+                  type="button"
+                  variant={moneda === "Bs" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={() => setMoneda("Bs")}
+                >
+                  VES (Bs)
                 </Button>
               </div>
-
-              <div className="border rounded-lg overflow-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-table-header hover:bg-table-header bg-(--table-header-bg)">
-                      <TableHead className="font-semibold">
-                        Producto *
-                      </TableHead>
-                      <TableHead className="font-semibold w-24">
-                        Cantidad *
-                      </TableHead>
-                      <TableHead className="font-semibold w-20">UdM</TableHead>
-                      <TableHead className="font-semibold w-28">
-                        Costo UdM
-                      </TableHead>
-                      <TableHead className="font-semibold w-28">
-                        Subtotal
-                      </TableHead>
-                      <TableHead className="font-semibold w-16"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {items.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>
-                          <ComprasFormSearch
-                            value={
-                              item.materia_prima_nombre ||
-                              item.producto_reventa_nombre
-                            }
-                            onChange={(producto: Producto) => {
-                              const productoId = item.id;
-
-                              const isDuplicate = items.some((existingItem) => {
-                                if (existingItem.id === productoId)
-                                  return false;
-
-                                if (producto.tipo === "materia-prima") {
-                                  return (
-                                    existingItem.materia_prima === producto.id
-                                  );
-                                } else {
-                                  return (
-                                    existingItem.producto_reventa ===
-                                    producto.id
-                                  );
-                                }
-                              });
-
-                              if (isDuplicate) {
-                                toast.error(
-                                  "El Producto Ya Existe en la Orden",
-                                );
-                                return;
-                              }
-
-                              const productoIndex = findProductoIndex(
-                                watch,
-                                productoId,
-                              );
-
-                              updateItemFromProducto(item, producto);
-                              setItems([...items]);
-
-                              const calculations = updateItemCalculations(item);
-
-                              updateFormDetalles(
-                                items,
-                                productoIndex,
-                                calculations,
-                              );
-                              calculateTotalFromItems(items);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="number"
-                            min="0"
-                            step="1"
-                            className="focus-visible:ring-blue-200"
-                            defaultValue={item.cantidad_solicitada}
-                            onChange={(e) => {
-                              const productoId = item.id;
-                              const value = Number(e.target.value);
-
-                              if (value < 0) {
-                                e.target.value = "0";
-                                toast.error(
-                                  "La Cantidad No Puede Ser Menor a 0",
-                                );
-                                return;
-                              }
-
-                              const productoIndex = findProductoIndex(
-                                watch,
-                                productoId,
-                              );
-                              if (productoIndex !== -1) {
-                                item.cantidad_solicitada = value;
-                                const subtotal = updateItemCalculations(item);
-
-                                updateFormDetalles(
-                                  items,
-                                  productoIndex,
-                                  subtotal,
-                                  {
-                                    cantidad_solicitada: value,
-                                  },
-                                );
-                                calculateTotalFromItems(items);
-                              }
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          <ComprasFormSelect
-                            id="unidad_medida_compra"
-                            value={
-                              watch(
-                                `detalles.${item.id}.unidad_medida_compra`,
-                              )?.toString() || ""
-                            }
-                            onChange={(v: string) => {
-                              setValue(
-                                `detalles.${item.id}.unidad_medida_compra`,
-                                Number(v),
-                              );
-                              const rowToUpdate = items.find(
-                                (i) => i.id === item.id,
-                              );
-                              if (rowToUpdate) {
-                                rowToUpdate.unidad_medida_compra = Number(v);
-                                setItems([...items]);
-                              }
-                            }}
-                          >
-                            {unidadesMedida
-                              ?.filter((unidad) => {
-                                // Filter units to show only compatible ones based on product's base unit tipo_medida
-                                const productTipoMedida = item.tipo_medida;
-                                if (!productTipoMedida) return true; // Show all if no tipo_medida
-                                return unidad.tipo_medida === productTipoMedida;
-                              })
-                              .map((unidad) => (
-                                <SelectItem
-                                  key={unidad.id}
-                                  value={unidad.id.toString()}
-                                >
-                                  {unidad.abreviatura}
-                                </SelectItem>
-                              ))}
-                          </ComprasFormSelect>
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          <Input
-                            type="number"
-                            min="0"
-                            step="0.001"
-                            className="focus-visible:ring-blue-200"
-                            value={item.costo_unitario_usd || 0}
-                            onChange={(e) => {
-                              const productoId = item.id;
-                              const value = Number(e.target.value);
-
-                              if (value < 0) {
-                                e.target.value = "0";
-                                toast.error("El Costo No Puede Ser Menor a 0");
-                                return;
-                              }
-
-                              const productoIndex = findProductoIndex(
-                                watch,
-                                productoId,
-                              );
-                              if (productoIndex !== -1) {
-                                item.costo_unitario_usd = value;
-                                setItems([...items]);
-                                const subtotal = updateItemCalculations(item);
-
-                                updateFormDetalles(
-                                  items,
-                                  productoIndex,
-                                  subtotal,
-                                  {
-                                    costo_unitario_usd: value,
-                                  },
-                                );
-                                calculateTotalFromItems(items);
-                              }
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {formatCurrency(item.subtotal_linea_usd)}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            type="button"
-                            className="cursor-pointer"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeItem(item.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {items.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={10} className="text-center">
-                          No hay productos
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
             </div>
+
+            <ComprasProductsTable
+              items={items}
+              moneda={moneda}
+              tasaCambio={watch("tasa_cambio_aplicada") || 1}
+              onUpdateLinea={updateLinea}
+              onRemoveLinea={removeItem}
+              onAddLinea={addItem}
+            />
 
             {/* Notes */}
             <div className="space-y-2">

@@ -18,7 +18,8 @@ type NotificacionesResponse = {
 export const getNotificationData =
   async (): Promise<NotificacionesResponse | null> => {
     try {
-      const response = await apiClient.get("/api/notificaciones/");
+      const response = await apiClient.get("/api/core/notificaciones/");
+      console.log(response.data)
       return response.data;
     } catch (error) {
       console.error("Error fetching notificationData:", error);

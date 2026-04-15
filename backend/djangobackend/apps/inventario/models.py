@@ -1,6 +1,5 @@
 from django.db import models
 from apps.core.models import UnidadesDeMedida, CategoriasMateriaPrima, CategoriasProductosReventa, CategoriasProductosElaborados, AtributosProductos, Grupos
-from django.core.cache import cache
 from django.db.models import Q, Sum
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -47,7 +46,6 @@ class ComponentesStockManagement(models.Model):
         if hasattr(self, 'actualizar_product_stock'):
             return self.actualizar_product_stock()
 
-
     def checkAvailability(self, cantidad):
         return self.stock_actual >= cantidad
 
@@ -79,10 +77,8 @@ class ComponentesStockManagement(models.Model):
 
             return queryset.order_by('fecha_caducidad').first()
 
-
     def calculate_price(self, precio, cantidad):
         return precio * cantidad
-
 
     def consumeStock(self, cantidad):
         if not self.checkAvailability(cantidad):
@@ -135,144 +131,16 @@ class ComponentesStockManagement(models.Model):
             "costo_consumo_local_lote": precio_consumo_local,
         }
 
-    @classmethod
-    def expirar_todos_lotes_viejos(cls, force=False):
-        hoy = timezone.now().date()
-        cache_key = f"expirar_todos_lotes_viejos_{hoy}"
-
-        if not force and cache.get(cache_key):
-            return {"resumen": [], "count": 0, "cached": True}
-
-        cache.set(cache_key, True, 86400)  # Cache for 24 hours
-
-        # Get expired lots for all types
-        expired_mp_lots = LotesMateriasPrimas.objects.filter(
-            fecha_caducidad__lte=hoy,
-            estado=LotesStatus.DISPONIBLE,
-        ).select_related('variante_materia_prima__materia_prima')
-
-        expired_pe_lots = LotesProductosElaborados.objects.filter(
-            fecha_caducidad__lte=hoy,
-            estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_elaborado_variante__producto_elaborado')
-
-        expired_pr_lots = LotesProductosReventa.objects.filter(
-            fecha_caducidad__lte=hoy,
-            estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_reventa_variante__producto_reventa')
-
-        # Build summary before updating
-        resumen = []
-        
-        # Process raw materials lots
-        for lote in expired_mp_lots:
-            if lote.stock_actual_lote > 0:
-                resumen.append({
-                    'lote_id': lote.id,
-                    'tipo': 'Materia Prima',
-                    'componente': lote.materia_prima.nombre,
-                    'fecha_caducidad': lote.fecha_caducidad,
-                    'stock_expirado': lote.stock_actual_lote
-                })
-
-        # Process elaborated products lots
-        for lote in expired_pe_lots:
-            if lote.stock_actual_lote > 0:
-                resumen.append({
-                    'lote_id': lote.id,
-                    'tipo': 'Producto Elaborado',
-                    'componente': lote.producto_elaborado.nombre_producto,
-                    'fecha_caducidad': lote.fecha_caducidad,
-                    'stock_expirado': lote.stock_actual_lote
-                })
-
-        # Process productos reventa lots
-        for lote in expired_pr_lots:
-            if lote.stock_actual_lote > 0:
-                resumen.append({
-                    'lote_id': lote.id,
-                    'tipo': 'Producto Reventa',
-                    'componente': lote.producto_reventa.nombre_producto,
-                    'fecha_caducidad': lote.fecha_caducidad,
-                    'stock_expirado': lote.stock_actual_lote
-                })
-
-        # Update stock for affected materials (get unique materials from expired lots)
-        affected_mp_ids = list(expired_mp_lots.values_list('variante_materia_prima__materia_prima_id', flat=True).distinct())
-        affected_pe_ids = list(expired_pe_lots.values_list('producto_elaborado_variante__producto_elaborado_id', flat=True).distinct())
-        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_variante__producto_reventa_id', flat=True).distinct())
-
-        # Update lot statuses
-        with transaction.atomic():
-            mp_count = expired_mp_lots.update(estado=LotesStatus.EXPIRADO)
-            pe_count = expired_pe_lots.update(estado=LotesStatus.EXPIRADO)
-            pr_count = expired_pr_lots.update(estado=LotesStatus.EXPIRADO)
-            total_count = mp_count + pe_count + pr_count
-
-            # Update stock for affected raw materials
-            for mp_id in affected_mp_ids:
-                mp = MateriasPrimas.objects.get(id=mp_id)
-                mp.actualizar_stock()
-
-            # Update stock for affected elaborated products
-            for pe_id in affected_pe_ids:
-                pe = ProductosElaborados.objects.get(id=pe_id)
-                pe.actualizar_product_stock()
-
-            # Update stock for affected productos reventa
-            for pr_id in affected_pr_ids:
-                pr = ProductosReventa.objects.get(id=pr_id)
-                pr.actualizar_product_stock()
-
-        return {
-            "resumen": resumen, 
-            "count": total_count,
-            "materias_primas_afectadas": len(affected_mp_ids),
-            "productos_elaborados_afectados": len(affected_pe_ids),
-            "productos_reventa_afectados": len(affected_pr_ids)
-        }
-
 
 class ProductosStockManagement(models.Model):
     class Meta:
         abstract = True
 
     def actualizar_product_stock(self):
-        # Import here to avoid circular dependency
-        from apps.inventario.models import ProductosElaboradosVariantes
-        if isinstance(self, ProductosReventa):
-            lote_total = LotesProductosReventa.objects.filter(
-                producto_reventa_variante__producto_reventa=self, 
-                fecha_caducidad__gt=timezone.now().date(), 
-                estado=LotesStatus.DISPONIBLE
-            ).aggregate(total=Sum('stock_actual_lote'))
-            stock_total = lote_total.get('total') or 0
 
-            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
-            return stock_total
-    
-        elif isinstance(self, ProductosElaborados):
-            producto_variantes = ProductosElaboradosVariantes.objects.filter(producto_elaborado=self)
-            stock_total_productos = Decimal('0')
-
-            for producto_variante in producto_variantes:
-                stock_total_variante = LotesProductosElaborados.objects.filter(
-                    producto_elaborado_variante=producto_variante,
-                    fecha_caducidad__gt=timezone.now().date(),
-                    estado=LotesStatus.DISPONIBLE
-                ).aggregate(total=Sum('stock_actual_lote'))
-                
-                stock_v = stock_total_variante.get('total') or Decimal('0')
-                producto_variante.__class__.objects.filter(id=producto_variante.id).update(stock_actual=stock_v)
-                stock_total_productos += stock_v
-            
-            # Update the base product stock
-            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total_productos)
-            return stock_total_productos
-
+        from apps.inventario.models import ProductosElaboradosVariantes, ProductosReventaVariantes
         
         if isinstance(self, ProductosElaboradosVariantes):
-            # For variants, sum stock from lots of this specific variant
             lote_total = LotesProductosElaborados.objects.filter(
                 producto_elaborado_variante=self, 
                 fecha_caducidad__gt=timezone.now().date(), 
@@ -293,6 +161,30 @@ class ProductosStockManagement(models.Model):
             stock_total = lote_total.get('total') or 0
             self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
             return stock_total
+
+        if isinstance(self, ProductosElaborados):
+            total = LotesProductosElaborados.objects.filter(
+                producto_elaborado_variante__producto_elaborado=self,
+                stock_actual_lote__gt=0,
+                fecha_caducidad__gt=timezone.now().date(),
+                estado=LotesStatus.DISPONIBLE,
+            ).aggregate(total=Sum('stock_actual_lote'))
+            
+            stock_total = total.get('total') or 0
+            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
+            return stock_total
+
+        if isinstance(self, ProductosReventa):
+            total = LotesProductosReventa.objects.filter(
+                producto_reventa_variante__producto_reventa=self,
+                stock_actual_lote__gt=0,
+                fecha_caducidad__gt=timezone.now().date(),
+                estado=LotesStatus.DISPONIBLE,
+            ).aggregate(total=Sum('stock_actual_lote'))
+            
+            stock_total = total.get('total') or 0
+            self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
+            return stock_total    
 
     def calculate_price(self, precio, cantidad):
         return precio * cantidad
@@ -406,7 +298,6 @@ class ProductosStockManagement(models.Model):
                 queryset = queryset.exclude(id=exclude_id)
             return queryset.order_by('fecha_caducidad').first()
 
-
     def consume_product_stock(self, cantidad, price = 0):
         if not self.check_product_availability(cantidad):
             raise ValidationError(f"Stock insuficiente. Disponible: {self.stock_actual}, Requerido: {cantidad}")
@@ -447,7 +338,6 @@ class MateriasPrimas(ComponentesStockManagement):
     stock_actual = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     SKU = models.CharField(max_length=100, null=True, blank=True, unique=True)
     punto_reorden = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=False, blank=False)
-
     categoria = models.ForeignKey(CategoriasMateriaPrima, on_delete=models.CASCADE)
     descripcion = models.TextField(max_length=255, null=True, blank=True)
     fecha_creacion_registro = models.DateField(auto_now_add=True)
@@ -495,7 +385,7 @@ class LotesMateriasPrimas(models.Model):
         return None
 
     def __str__(self):
-        return f"Lote {self.id} - {self.materia_prima.nombre} - {self.stock_actual_lote}"
+        return f"Lote {self.id} - {self.variante_materia_prima.nombre_variante} - {self.stock_actual_lote}"
 
     def determinar_estado(self):
         """Determine lot status based on expiration and FEFO rules"""
@@ -856,7 +746,7 @@ class ProductosReventa(ProductosStockManagement):
     proveedor_preferido = models.ForeignKey('compras.Proveedores', on_delete=models.CASCADE, null=True, blank=True)
     stock_actual = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     # Replace tipo_manejo_venta with separate units
-    unidad_base_inventario = models.ForeignKey(
+    unidad_medida_base = models.ForeignKey(
         UnidadesDeMedida, 
         on_delete=models.CASCADE, 
         null=True, 
@@ -922,52 +812,6 @@ class ProductosReventa(ProductosStockManagement):
             self.actualizar_product_stock()
 
         return {"resumen": resumen, "count": count}
-
-    @classmethod
-    def expirar_todos_lotes_viejos(cls, force=False):
-        """Expire all old lots for all ProductosReventa"""
-        hoy = timezone.now().date()
-        cache_key = f"expirar_todos_lotes_productos_reventa_{hoy}"
-
-        if not force and cache.get(cache_key):
-            return {"resumen": [], "count": 0, "cached": True}
-
-        cache.set(cache_key, True, 86400)  # Cache for 24 hours
-
-        # Get expired lots
-        expired_pr_lots = LotesProductosReventa.objects.filter(
-            fecha_caducidad__lte=hoy,
-            estado=LotesStatus.DISPONIBLE,
-        ).select_related('producto_reventa_variante__producto_reventa')
-
-        # Build summary before updating
-        resumen = []
-        for lote in expired_pr_lots:
-            if lote.stock_actual_lote > 0:
-                resumen.append({
-                    'lote_id': lote.id,
-                    'tipo': 'Producto Reventa',
-                    'producto': lote.producto_reventa.nombre_producto,
-                    'fecha_caducidad': lote.fecha_caducidad,
-                    'stock_expirado': lote.stock_actual_lote
-                })
-
-        # Get unique product IDs
-        affected_pr_ids = list(expired_pr_lots.values_list('producto_reventa_variante__producto_reventa_id', flat=True).distinct())
-
-        # Update lot statuses
-        count = expired_pr_lots.update(estado=LotesStatus.EXPIRADO)
-
-        # Update stock for affected products
-        for pr_id in affected_pr_ids:
-            pr = cls.objects.get(id=pr_id)
-            pr.actualizar_product_stock()
-
-        return {
-            "resumen": resumen, 
-            "count": count,
-            "productos_reventa_afectados": len(affected_pr_ids)
-        }
 
     def convert_inventory_to_sale_units(self, cantidad_inventario):
         """Convert inventory units to sale units"""
@@ -1109,6 +953,9 @@ class LotesProductosReventa(models.Model):
 
 @receiver([post_save, post_delete], sender=LotesMateriasPrimas)
 def update_materia_prima_stock(sender, instance, **kwargs):
+    if not instance.variante_materia_prima:
+        return
+        
     materia_prima = instance.variante_materia_prima.materia_prima
     variantes = MateriasPrimasVariantes.objects.filter(materia_prima=materia_prima).values_list('id', flat=True)
     

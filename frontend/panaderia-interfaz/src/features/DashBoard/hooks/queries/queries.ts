@@ -69,6 +69,7 @@ export const useTopProducts = () => {
     queryKey: dashboardKeys.topProducts(),
     queryFn: getTopProducts,
     staleTime: Infinity,
+    retry: false,
   });
 };
 

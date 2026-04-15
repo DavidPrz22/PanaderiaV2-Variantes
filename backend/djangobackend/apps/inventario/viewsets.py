@@ -410,9 +410,6 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
         except Recetas.DoesNotExist:
             return Response({"message": "No se encontró la receta asociada"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Expire all old lots before getting recipe data
-        # ComponentesStockManagement.expirar_todos_lotes_viejos()
-
         detalles_receta_principal = RecetasDetalles.objects.filter(
             receta_id=receta_principal.id
         ).select_related(

@@ -1,3 +1,5 @@
+import type { ModoCompra } from "../utils/contants";
+
 export type Proveedor = {
   id: number;
   nombre_proveedor: string;
@@ -30,17 +32,35 @@ export type MetodoDePago = {
   requiere_referencia: boolean;
 };
 
+export type UnidadMedida = {
+  id: number;
+  abreviatura: string;
+  tipo_medida: string;
+};
+
+export type VarianteProducto = {
+  id: number;
+  nombre: string;
+  SKU: string;
+  precio_compra_divisa: number;
+  unidad_compra: UnidadMedida;
+};
+
 export type Producto = {
   id: number;
-  SKU: string;
   nombre: string;
-  precio_compra_usd: number;
-  unidad_medida_compra: {
-    id: number;
-    abreviatura: string;
-    tipo_medida: string;
-  };
-  tipo: "materia-prima" | "producto-reventa";
+  unidad_medida_base: UnidadMedida;
+  variantes: VarianteProducto[];
+  tipo: "MateriaPrima" | "ProductoReventa";
+};
+
+
+export type Empaquetado = {
+  id: number;
+  empaque_nombre: string;
+  cantidad_por_contenedor: number;
+  unidad_medida: UnidadMedida;
+  cantiad_unidad_medida: number;
 };
 
 export type OrdenCompraTable = {
@@ -73,13 +93,14 @@ export type DetalleOC = {
   producto_reventa?: number;
   producto_reventa_nombre?: string;
   cantidad_solicitada: number;
+  modo_compra: ModoCompra;
+  empaquetado?: Empaquetado;
+  unidad_medida_compra?: UnidadMedida;
   cantidad_recibida?: number;
   cantidad_pendiente: number;
-  unidad_medida_compra?: number;
-  unidad_medida_abrev?: string;
   tipo_medida?: string; // Base unit tipo_medida for filtering compatible purchase units
   costo_unitario_usd: number;
-  subtotal_linea_usd: number;
+  subtotal_linea_usd: number; 
 };
 
 export type OrdenCompra = {

@@ -121,7 +121,7 @@ export const searchProductosOC = async (
 ): Promise<ProductosOCSearchType> => {
   try {
     const response = await apiClient.get(
-      `/api/productos-compras-search/?search=${search}`,
+      `/api/compras/productos-compras/?search=${search}`,
     );
     return response.data;
   } catch (error) {
@@ -234,3 +234,4 @@ export const deleteOrdenCompra = async (
   const response = await apiClient.delete(`/api/compras/ordenes-compra/${id}/`);
   return response.data;
 };
+

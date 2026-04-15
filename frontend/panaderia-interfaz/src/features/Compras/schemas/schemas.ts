@@ -1,13 +1,18 @@
 import { z } from "zod";
+import { MODO_COMPRA } from "../utils/contants";
 
 const detalleOC = z.object({
   id: z.number(),
   materia_prima: z.number().optional().nullable(),
   producto_reventa: z.number().optional().nullable(),
   cantidad_solicitada: z.number(),
-  unidad_medida_compra: z.number(),
+  modo_compra: z.enum([MODO_COMPRA.UNIDAD, MODO_COMPRA.CONTENEDOR]),
+  unidad_empaquetado: z.number().optional().nullable(), // Solo aplica si el modo de compra es CONTENEDOR
+  unidad_medida_compra: z.number(), // Guarda la unidad base de compra del producto
   costo_unitario_usd: z.number(),
+  costo_unitario_ves: z.number(),
   subtotal_linea_usd: z.number(),
+  subtotal_linea_ves: z.number(),
 });
 
 export const OrdenCompraSchema = z.object({

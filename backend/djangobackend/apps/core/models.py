@@ -164,6 +164,35 @@ class ConversionesUnidades(models.Model):
         return f"1 {self.unidad_origen.abreviatura} = {self.factor_conversion} {self.unidad_destino.abreviatura}"
 
 
+class Empaques(models.Model):
+    nombre_empaque = models.CharField(max_length=100, null=False, blank=False)
+    es_contenedor = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nombre_empaque
+
+
+class EmpaquetadoProductos(models.Model):
+    empaque = models.ForeignKey(Empaques, on_delete=models.CASCADE, null=False, blank=False)
+    cantidad_por_contenedor = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+    unidad_medida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
+    cantidad_unidad_medida = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+
+    def __str__(self):
+        return f"{self.empaque.nombre_empaque} - {self.cantidad_unidad_medida} {self.unidad_medida.abreviatura}"
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(cantidad_por_contenedor__gt=0),
+                name='check_cantidad_por_contenedor_gt_0'
+            ),
+            models.CheckConstraint(
+                check=models.Q(cantidad_unidad_medida__gt=0),
+                name='check_cantidad_unidad_medida_gt_0'
+            ),
+        ]
+
 class AtributosProductos(models.TextChoices):
     CANTIDAD = 'Cantidad', 'Cantidad'
     TAMAÑO = 'Tamaño', 'Tamaño'
@@ -204,6 +233,7 @@ class Notificaciones(models.Model):
     tipo_notificacion = models.CharField(max_length=50, choices=TiposNotificaciones.choices, null=False, blank=False)
     tipo_producto = models.CharField(max_length=50, choices=TiposProductosNotificaciones.choices, null=False, blank=False)
     producto_id = models.IntegerField(null=True, blank=True)
+    variante_id = models.IntegerField(null=True, blank=True)
     descripcion = models.TextField(max_length=255, null=True, blank=True)
     fecha_notificacion = models.DateTimeField(auto_now_add=True)
     leida = models.BooleanField(default=False)

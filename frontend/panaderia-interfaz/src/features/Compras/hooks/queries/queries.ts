@@ -10,6 +10,7 @@ import {
   estadosOrdenCompraRegistroQueryOptions,
   ordenesCompraDetallesQueryOptions,
   unidadesMedidaQueryOptions,
+  searchProductosOCQueryOptions,
 } from "./queryOptions";
 
 export const useGetOrdenesCompraTable = () => {
@@ -40,4 +41,8 @@ export const useGetBCVRate = () => {
 
 export const useGetOrdenesCompraDetalles = (id: number) => {
   return useQuery({ ...ordenesCompraDetallesQueryOptions(id), enabled: !!id });
+};
+
+export const useSearchProductosOC = (search: string) => {
+  return useQuery(searchProductosOCQueryOptions(search));
 };

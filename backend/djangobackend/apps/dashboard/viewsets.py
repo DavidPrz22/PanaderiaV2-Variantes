@@ -265,7 +265,7 @@ class DashboardViewSet(viewsets.ViewSet):
         top_resale = DetalleVenta.objects.filter(
             producto_reventa__isnull=False
         ).values(
-            'producto_reventa__nombre_producto'
+            'producto_reventa__producto_reventa__nombre_producto'
         ).annotate(
             quantity_sold=Sum('cantidad_vendida')
         ).order_by('-quantity_sold')[:10]
@@ -274,7 +274,7 @@ class DashboardViewSet(viewsets.ViewSet):
         top_final = DetalleVenta.objects.filter(
             producto_elaborado__isnull=False
         ).values(
-            'producto_elaborado__nombre_producto'
+            'producto_elaborado__producto_elaborado__nombre_producto'
         ).annotate(
             quantity_sold=Sum('cantidad_vendida')
         ).order_by('-quantity_sold')[:10]
@@ -284,14 +284,14 @@ class DashboardViewSet(viewsets.ViewSet):
         
         for item in top_resale:
             products.append({
-                'product_name': item['producto_reventa__nombre_producto'],
+                'product_name': item['producto_reventa__producto_reventa__nombre_producto'],
                 'quantity_sold': int(item['quantity_sold']),
                 'product_type': 'resale'
             })
         
         for item in top_final:
             products.append({
-                'product_name': item['producto_elaborado__nombre_producto'],
+                'product_name': item['producto_elaborado__producto_elaborado__nombre_producto'],
                 'quantity_sold': int(item['quantity_sold']),
                 'product_type': 'final'
             })

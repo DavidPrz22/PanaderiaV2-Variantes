@@ -39,24 +39,28 @@ export const useComprasFormLogic = ({
   );
 
   const convertItemsToSchemaValue = useCallback(
-    (items: DetalleOC[]): TOrdenCompraSchema["detalles"] => {
-      return items
+    (itemsArray: DetalleOC[]): TOrdenCompraSchema["detalles"] => {
+      const tasaCambio = Number(watch("tasa_cambio_aplicada")) || 1;
+      return itemsArray
         .filter(
           (item) =>
-            item.unidad_medida_compra !== undefined &&
-            item.unidad_medida_compra !== 0,
+            (item.materia_prima || item.producto_reventa) &&
+            item.unidad_medida_compra !== undefined,
         )
         .map((item) => ({
           id: item.id,
-          materia_prima: item.materia_prima,
-          producto_reventa: item.producto_reventa,
+          materia_prima: item.materia_prima || null,
+          producto_reventa: item.producto_reventa || null,
           cantidad_solicitada: item.cantidad_solicitada,
-          unidad_medida_compra: item.unidad_medida_compra!,
+          modo_compra: item.modo_compra,
+          unidad_medida_compra: typeof item.unidad_medida_compra === "object" ? item.unidad_medida_compra.id! : Number(item.unidad_medida_compra),
           costo_unitario_usd: item.costo_unitario_usd,
+          costo_unitario_ves: roundTo3(item.costo_unitario_usd * tasaCambio),
           subtotal_linea_usd: item.subtotal_linea_usd,
+          subtotal_linea_ves: roundTo3(item.subtotal_linea_usd * tasaCambio),
         }));
     },
-    [],
+    [watch, roundTo3],
   );
 
   const updateItemCalculations = useCallback(

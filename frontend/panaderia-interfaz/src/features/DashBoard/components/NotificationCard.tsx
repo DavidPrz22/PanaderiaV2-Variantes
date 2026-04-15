@@ -35,23 +35,24 @@ export const NotificationCard = ({
   descripcion,
   tiempo,
   leida,
+  variante,
 }: Notificacion) => {
   const Icon = iconMap[tipo_notificacion];
 
   return (
     <div
       key={id}
-      className={`flex gap-3 p-4 rounded-lg border hover:bg-secondary ${leida ? "" : "bg-gray-50"} transition-colors`}
+      className={`font-[Roboto] flex gap-3 p-4 rounded-lg border hover:bg-secondary ${leida ? "" : "bg-gray-50"} transition-colors`}
     >
       <div className={`p-2 rounded-lg h-fit ${priorityIconColor[prioridad]}`}>
         <Icon
           className={`h-4 w-4 ${prioridad === PRIORIDAD_TIPOS.ALTO || prioridad === PRIORIDAD_TIPOS.CRITICO ? "text-destructive" : "text-primary"} `}
         />
       </div>
-      <div className="flex-1 space-y-2">
+      <div className="flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-foreground">{`Notificación de ${tipo_producto.toLocaleLowerCase()} de ${tipo_notificacion.toLocaleLowerCase()}`}</p>
+            <p className="text-md font-semibold text-foreground">{`Notificación de ${tipo_producto.toLocaleLowerCase()} de ${tipo_notificacion.toLocaleLowerCase()}`}</p>
             <Badge className={priorityColors[prioridad]} variant="secondary">
               {prioridad}
             </Badge>
@@ -60,8 +61,13 @@ export const NotificationCard = ({
             <div className="text-xs text-muted-foreground">sin leer</div>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">{descripcion}</p>
-        <p className="text-xs text-muted-foreground">{tiempo}</p>
+        {variante && (
+          <p className="text-sm font-semibold text-gray-800 ">Variante: {variante.nombre}</p>
+        )}
+        <div className="space-y-2 mt-2">
+          <p className="text-sm text-muted-foreground">{descripcion}</p>
+          <p className="text-xs text-muted-foreground">{tiempo}</p>
+        </div>
       </div>
     </div>
   );
