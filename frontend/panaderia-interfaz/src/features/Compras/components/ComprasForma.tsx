@@ -10,12 +10,10 @@ import { Button } from "@/components/ui/button";
 
 import { ComprasFormSelect } from "./ComprasFormSelect";
 import {
-  useGetParametros,
   useGetEstadosOrdenCompraRegistro,
-  useGetBCVRate,
 } from "../hooks/queries/queries";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { OrdenCompraSchema, type TOrdenCompraSchema } from "../schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ComprasFormDatePicker } from "./ComprasFormDatePicker";
@@ -31,10 +29,13 @@ import {
   formatCurrency,
 } from "../utils/itemHandlers";
 import { useComprasContext } from "@/context/ComprasContext";
-import { MODO_COMPRA, type ModoCompra } from "../utils/contants";
 import { ComprasProductsTable } from "./ComprasProductsTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useProveedoresQuery, useBCVRateQuery, useMetodosDePagoQuery } from "@/hooks/useQueryHooks";
+import { X } from "lucide-react";
+import { PendingTubeSpinner } from "@/components/PendingTubeSpinner";
+import { ComprasFormTotals } from "./ComprasFormTotals";
 
 interface ComprasFormProps {
   orden?: OrdenCompra;
@@ -44,28 +45,12 @@ interface ComprasFormProps {
 export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
 
   const { setOrdenCompra, setShowForm } = useComprasContext();
-  
-  const [modoCompra, setModoCompra] = useState<ModoCompra>(MODO_COMPRA.UNIDAD);
+
+  const { data: proveedores } = useProveedoresQuery();
+  const { data: metodosDePago } = useMetodosDePagoQuery();
   const [moneda, setMoneda] = useState<"USD" | "Bs">("USD");
 
-  const [items, setItems] = useState<DetalleOC[]>(
-    orden?.detalles.map((p, idx) => ({
-      id: idx,
-      materia_prima: p.materia_prima,
-      materia_prima_nombre: p.materia_prima_nombre,
-      producto_reventa: p.producto_reventa,
-      producto_reventa_nombre: p.producto_reventa_nombre,
-      cantidad_solicitada: Number(p.cantidad_solicitada),
-      cantidad_recibida: Number(p.cantidad_recibida),
-      unidad_medida_compra: p.unidad_medida_compra,
-      tipo_medida: p.tipo_medida,
-      costo_unitario_usd: Number(p.costo_unitario_usd),
-      subtotal_linea_usd: Number(p.subtotal_linea_usd),
-      cantidad_pendiente: p.cantidad_pendiente || 0,
-    })) || [],
-  );
-  const isEdit = !!orden;
-  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<TOrdenCompraSchema>({
+  const { handleSubmit, setValue, watch, control } = useForm<TOrdenCompraSchema>({
     resolver: zodResolver(OrdenCompraSchema),
     defaultValues: orden
       ? {
@@ -87,11 +72,17 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
           detalles: orden.detalles.map((p, index) => ({
             id: index,
             materia_prima: p.materia_prima,
+            materia_prima_nombre: p.materia_prima_nombre,
             producto_reventa: p.producto_reventa,
+            producto_reventa_nombre: p.producto_reventa_nombre,
             cantidad_solicitada: Number(p.cantidad_solicitada),
-            unidad_medida_compra: p.unidad_medida_compra,
+            modo_compra: p.modo_compra,
+            unidad_empaquetado: p.empaquetado?.id || null,
+            unidad_medida_compra: p.unidad_medida_compra?.id ,
             costo_unitario_usd: Number(p.costo_unitario_usd),
+            costo_unitario_ves: Number(p.costo_unitario_ves || 0),
             subtotal_linea_usd: Number(p.subtotal_linea_usd),
+            subtotal_linea_ves: Number(p.subtotal_linea_ves || 0),
           })),
           notas: orden.notas ? orden.notas : undefined,
         }
@@ -107,17 +98,20 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
           terminos_pago: undefined,
           notas: undefined,
           fecha_entrega_real: undefined,
+          detalles: [],
         },
   });
 
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: "detalles",
+  });
+
   const isEdit = !!orden;
-  const [
-    { data: proveedores },
-    { data: metodosDePago },
-    { data: unidadesMedida },
-  ] = useGetParametros();
+
+
   const { data: estadosOrden } = useGetEstadosOrdenCompraRegistro();
-  const { data: bcvRate } = useGetBCVRate();
+  const { data: bcvRate } = useBCVRateQuery();
 
   const { mutateAsync: createOCMutation, isPending: isCreatingOCMutation } =
     useCreateOCMutation();
@@ -128,14 +122,12 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
   const formLogic = useComprasFormLogic({
     setValue,
     watch,
-    items,
   });
 
   const {
     roundTo3,
     calculateTotalFromItems,
-    updateItemCalculations,
-    updateFormDetalles,
+    prepareDataForSubmit,
     resetAmounts,
   } = formLogic;
 
@@ -147,50 +139,55 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
 
   useEffect(() => {
     if (orden) {
-      calculateTotalFromItems(items);
+      calculateTotalFromItems(fields as DetalleOC[]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addItem = () => {
-    const newItem = createNewDetalleOC(items.length);
-    setItems([...items, newItem]);
+    // Use a negative unique timestamp for temporary frontend IDs to avoid collisions when deleting
+    const newId = -Date.now();
+    const newItem = createNewDetalleOC(newId);
+    append(newItem as any);
   };
 
   const updateLinea = (index: number, linea: DetalleOC) => {
-    const newItems = [...items];
-    newItems[index] = linea;
-    setItems(newItems);
-    updateFormDetalles(newItems, index, linea.subtotal_linea_usd);
-    calculateTotalFromItems(newItems);
+    update(index, linea);
+    
+    // We get the updated array to calculate totals
+    const currentDetalles = watch("detalles");
+    const updatedDetalles = [...currentDetalles];
+    updatedDetalles[index] = linea;
+    
+    calculateTotalFromItems(updatedDetalles as DetalleOC[]);
   };
 
-  const removeItem = (id: number) => {
-    const newItems = items.filter((i) => i.id !== id);
-    setItems(newItems);
+  const removeItem = (index: number) => {
+    remove(index);
     
-    if (newItems.length === 0) {
+    const currentDetalles = watch("detalles");
+    const updatedDetalles = currentDetalles.filter((_, i) => i !== index);
+    
+    if (updatedDetalles.length === 0) {
       resetAmounts();
-      setValue("detalles", []);
     } else {
-      const schemaValue = convertItemsToSchemaValue(newItems);
-      setValue("detalles", schemaValue);
-      calculateTotalFromItems(newItems);
+      calculateTotalFromItems(updatedDetalles as DetalleOC[]);
     }
   };
 
   const handleSubmitForm = async (data: TOrdenCompraSchema) => {
     try {
+      const preparedData = prepareDataForSubmit(data);
       if (isEdit && orden) {
         const { orden: updatedOrden } = await updateOCMutation({
           id: orden!.id,
-          data,
+          data: preparedData,
         });
         setOrdenCompra(updatedOrden);
         setShowForm(false);
         toast.success("Orden actualizada exitosamente");
       } else {
-        const { orden } = await createOCMutation(data);
+        const { orden } = await createOCMutation(preparedData);
         setOrdenCompra(orden);
         setShowForm(false);
         toast.success("Orden creada exitosamente");
@@ -202,7 +199,6 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
       );
     }
   };
-  console.log(watch())
   return (
     <div className="mx-8 py-5 relative">
       {(isCreatingOCMutation || isUpdatingOCMutation) && (
@@ -371,7 +367,7 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
             </div>
 
             <ComprasProductsTable
-              items={items}
+              items={fields as unknown as DetalleOC[]}
               moneda={moneda}
               tasaCambio={watch("tasa_cambio_aplicada") || 1}
               onUpdateLinea={updateLinea}

@@ -59,6 +59,21 @@ export const ClienteSchema = z.object({
     notas: z.string().nullable(),
 });
 
+export const MetodoDePagoSchema = z.object({
+    id: z.number(),
+    nombre_metodo: z.string(),
+    requiere_referencia: z.boolean(),
+});
+
+export const EmpaquetadoProductosSchema = z.object({
+    id: z.number(),
+    empaque: z.number(),
+    empaque_nombre: z.string(),
+    cantidad_por_contenedor: z.coerce.number(),
+    unidad_medida: z.number(),
+    unidad_medida_abreviatura: z.string(),
+    cantidad_unidad_medida: z.coerce.number(),
+});
 
 export type TUnidadMedida = z.infer<typeof UnidadMedidaSchema>;
 export type TCategoriaMateriaPrima = z.infer<typeof CategoriaMateriaPrimaSchema>;
@@ -68,3 +83,5 @@ export type TCategoriaProductoReventa = z.infer<typeof CategoriaProductoReventaS
 export type TProveedor = z.infer<typeof ProveedorSchema>;
 export type TAtributosProductos = z.infer<typeof AtributosProductosSchema>;
 export type TCliente = z.infer<typeof ClienteSchema>;
+export type TMetodoDePago = z.infer<typeof MetodoDePagoSchema>;
+export type TEmpaquetadoProducto = z.infer<typeof EmpaquetadoProductosSchema>;

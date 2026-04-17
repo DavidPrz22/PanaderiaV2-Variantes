@@ -8,7 +8,10 @@ import {
   createCategoriasProductoIntermedioQueryOptions,
   createCategoriasProductoFinalQueryOptions,
   createCategoriasProductoReventaQueryOptions,
-  createClientesPOSQueryOptions
+  createClientesPOSQueryOptions,
+  createBCVRateQueryOptions,
+  createMetodosDePagoQueryOptions,
+  createEmpaquetadoProductosQueryOptions
 } from "../lib/queryOptions";
 import { recetasDetallesQueryOptions } from "@/features/Recetas/hooks/queries/RecetasQueryOptions";
 
@@ -50,4 +53,16 @@ export const useCategoriasProductoReventaQuery = () => {
 
 export const useClientesPOSQuery = () => {
   return useQuery(createClientesPOSQueryOptions());
+}
+
+export const useBCVRateQuery = () => {
+  return useQuery(createBCVRateQueryOptions());
+} 
+
+export const useMetodosDePagoQuery = () => {
+  return useQuery(createMetodosDePagoQueryOptions());
+}
+
+export const useEmpaquetadoProductosQuery = () => {
+  return useQuery(createEmpaquetadoProductosQueryOptions());
 }

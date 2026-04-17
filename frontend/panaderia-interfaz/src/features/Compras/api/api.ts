@@ -1,14 +1,11 @@
 import apiClient from "@/api/client";
-import axios from "axios";
+
 import type {
-  ProveedorRegistro,
   OrdenCompra,
   EstadoOC,
-  MetodoDePago,
   Producto,
   OrdenesCompraPagination,
 } from "../types/types";
-import type { UnidadesDeMedida } from "@/features/ProductosIntermedios/types/types";
 import type {
   TEmailSchema,
   TOrdenCompraSchema,
@@ -20,17 +17,6 @@ export type OrdenCompraDetallesResponse = {
   orden: OrdenCompra;
 };
 
-export const getProveedores = async (): Promise<ProveedorRegistro[]> => {
-  try {
-    const response = await apiClient.get(
-      "/api/compras/proveedores/compra_registro/",
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching proveedores:", error);
-    return [];
-  }
-};
 
 export const getOrdenesComprasTable = async ({
   pageParam,
@@ -49,7 +35,7 @@ export const getOrdenesComprasTable = async ({
 export const getEstadosOrdenCompraRegistro = async (): Promise<EstadoOC[]> => {
   try {
     const response = await apiClient.get(
-      "/api/estados-orden-compra/get-estados-registro/",
+      "/api/core/estados-orden-compra/get-estados-registro/",
     );
     return response.data;
   } catch (error) {
@@ -72,40 +58,9 @@ export const getOrdenesComprasDetalles = async (
   }
 };
 
-export const getMetodosDePago = async (): Promise<MetodoDePago[]> => {
-  try {
-    const response = await apiClient.get("/api/metodos-de-pago/");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching metodos de pago:", error);
-    return [];
-  }
-};
-
-export type BCVRateType = {
-  fuente: string;
-  nombre: string;
-  compra: number;
-  venta: number;
-  promedio: number;
-  fechaActualizacion: string;
-};
-
-export const getBCVRate = async (): Promise<BCVRateType> => {
-  try {
-    const response = await axios.get(
-      `https://ve.dolarapi.com/v1/dolares/oficial`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching BCV rate:", error);
-    throw error;
-  }
-};
-
 export const getAllEstadosOrdenCompra = async (): Promise<EstadoOC[]> => {
   try {
-    const response = await apiClient.get("/api/estados-orden-compra/");
+    const response = await apiClient.get("/api/core/estados-orden-compra/");
     return response.data;
   } catch (error) {
     console.error("Error fetching estados orden compra:", error);
@@ -121,7 +76,7 @@ export const searchProductosOC = async (
 ): Promise<ProductosOCSearchType> => {
   try {
     const response = await apiClient.get(
-      `/api/compras/productos-compras/?search=${search}`,
+      `/api/inventario/productos-compras/?search=${search}`,
     );
     return response.data;
   } catch (error) {
@@ -130,15 +85,6 @@ export const searchProductosOC = async (
   }
 };
 
-export const getUnidadesMedida = async (): Promise<UnidadesDeMedida[]> => {
-  try {
-    const response = await apiClient.get("/api/unidades-medida/");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching unidades de medida:", error);
-    return [];
-  }
-};
 
 export const createOrdenCompra = async (
   params: TOrdenCompraSchema,

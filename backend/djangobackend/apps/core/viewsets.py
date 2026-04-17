@@ -8,7 +8,8 @@ from .models import (
     EstadosOrdenVenta, 
     EstadosOrdenCompra, 
     ConversionesUnidades, 
-    Notificaciones 
+    Notificaciones,
+    EmpaquetadoProductos
     )
 
 from .serializers import (
@@ -20,7 +21,8 @@ from .serializers import (
     EstadosOrdenVentaSerializer, 
     EstadosOrdenCompraSerializer, 
     ConversionUnidadSerializer, 
-    NotificacionesSerializer
+    NotificacionesSerializer,
+    EmpaquetadoProductosSerializer
     )
 
 from rest_framework.response import Response
@@ -38,6 +40,10 @@ class UnidadMedidaViewSet(viewsets.ModelViewSet):
 class ConversionUnidadViewSet(viewsets.ModelViewSet):
     queryset = ConversionesUnidades.objects.all()
     serializer_class = ConversionUnidadSerializer
+
+class EmpaquetadoProductosViewSet(viewsets.ModelViewSet):
+    queryset = EmpaquetadoProductos.objects.all()
+    serializer_class = EmpaquetadoProductosSerializer
 
 class CategoriaMateriaPrimaViewSet(viewsets.ModelViewSet):
     queryset = CategoriasMateriaPrima.objects.all()

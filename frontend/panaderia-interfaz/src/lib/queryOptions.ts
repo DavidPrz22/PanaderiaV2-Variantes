@@ -1,4 +1,15 @@
-import { fetchCategoriasMateriaPrima, fetchUnidadesMedida, fetchProveedores, fetchAtributosProducto, fetchCategoriasProductoIntermedio, fetchCategoriasProductoFinal, fetchCategoriasProductoReventa, fetchClientes } from "@/api/api";
+import { fetchCategoriasMateriaPrima, 
+  fetchUnidadesMedida, 
+  fetchProveedores, 
+  fetchAtributosProducto, 
+  fetchCategoriasProductoIntermedio, 
+  fetchCategoriasProductoFinal, 
+  fetchCategoriasProductoReventa, 
+  fetchClientes, 
+  getMetodosDePago, 
+  getBCVRate,
+  fetchEmpaquetadoProductos
+} from "@/api/api";
 
 export const createUnidadesQueryOptions = () => ({
   queryKey: ["unidadesMedida"],
@@ -30,8 +41,6 @@ export const createCategoriasProductoIntermedioQueryOptions = () => ({
   staleTime: Infinity,
 });
 
-
-
 export const createCategoriasProductoFinalQueryOptions = () => ({
   queryKey: ["categoriasProductoFinal"],
   queryFn: fetchCategoriasProductoFinal,
@@ -47,5 +56,23 @@ export const createCategoriasProductoReventaQueryOptions = () => ({
 export const createClientesPOSQueryOptions = () => ({
   queryKey: ["clientesPOS"],
   queryFn: fetchClientes,
+  staleTime: Infinity,
+});
+
+export const createMetodosDePagoQueryOptions = () => ({
+  queryKey: ["metodos-de-pago"],
+  queryFn: getMetodosDePago,
+  staleTime: Infinity,
+});
+
+export const createEmpaquetadoProductosQueryOptions = () => ({
+  queryKey: ["empaquetadoProductos"],
+  queryFn: fetchEmpaquetadoProductos,
+  staleTime: Infinity,
+});
+
+export const createBCVRateQueryOptions = () => ({
+  queryKey: ["bcv-rate"],
+  queryFn: getBCVRate,
   staleTime: Infinity,
 });

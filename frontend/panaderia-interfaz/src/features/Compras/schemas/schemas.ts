@@ -15,6 +15,7 @@ const detalleOC = z.object({
   subtotal_linea_ves: z.number(),
 });
 
+
 export const OrdenCompraSchema = z.object({
   proveedor: z.number(),
   fecha_emision_oc: z.string(),
@@ -113,5 +114,6 @@ export const EmailSchema = z.object({
 
 export type TEmailSchema = z.infer<typeof EmailSchema>;
 export type TOrdenCompraSchema = z.infer<typeof OrdenCompraSchema>;
+export type TDetalleOCSchema = z.infer<typeof detalleOC>;
 export type TRecepcionFormSchema = z.infer<typeof RecepcionFormSchema>;
 export type TPagoSchema = z.infer<typeof PagoSchema>;

@@ -24,7 +24,7 @@ import type { MetodoDePago, RecepcionOC } from "../types/types";
 import { PagoSchema, type TPagoSchema } from "../schemas/schemas";
 import { ComprasFormDatePicker } from "./ComprasFormDatePicker";
 import { ComprasFormSelect } from "./ComprasFormSelect";
-import { useGetParametros } from "../hooks/queries/queries";
+import { useMetodosDePagoQuery } from "@/hooks/useQueryHooks";
 import { cn } from "@/lib/utils";
 import { useGetOrdenesCompraDetalles } from "../hooks/queries/queries";
 import { useRegistrarPagoMutation } from "../hooks/mutations/mutations";
@@ -61,8 +61,7 @@ export const ComprasRegistrarPagoDialog = ({
           Number(ordenCompra?.tasa_cambio_aplicada || 0),
   );
 
-  const parametros = useGetParametros();
-  const metodosDePago = parametros[1].data ?? [];
+  const { data: metodosDePago = [] } = useMetodosDePagoQuery();
 
   const { mutateAsync: registrarPago, isPending: isSubmitting } =
     useRegistrarPagoMutation();

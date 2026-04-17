@@ -9,6 +9,7 @@ import {
   CategoriaProductoFinalSchema,
   CategoriaProductoReventaSchema,
   ClienteSchema,
+  MetodoDePagoSchema,
   type TUnidadMedida,
   type TCategoriaMateriaPrima,
   type TProveedor,
@@ -17,9 +18,14 @@ import {
   type TCategoriaProductoFinal,
   type TCategoriaProductoReventa,
   type TCliente,
+  type TMetodoDePago,
+  EmpaquetadoProductosSchema,
+  type TEmpaquetadoProducto,
 } from "@/types/zod-types";
 
 import type { AxiosError } from "axios";
+import type { BCVRateType } from "@/types/types";
+import axios from "axios";
 
 // UNIDADES DE MEDIDA API CALL
 export const fetchUnidadesMedida = async (): Promise<TUnidadMedida[]> => {
@@ -184,3 +190,48 @@ export const fetchClientes = async (): Promise<TCliente[]> => {
   }
 };
 
+export const getMetodosDePago = async (): Promise<TMetodoDePago[]> => {
+  try {
+    const response = await apiClient.get("/api/core/metodos-de-pago/");
+    const valid = z.array(MetodoDePagoSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error)
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch metodos de pago",
+    );
+  }
+}
+
+export const fetchEmpaquetadoProductos = async (): Promise<TEmpaquetadoProducto[]> => {
+  try {
+    const response = await apiClient.get("/api/core/empaquetado-productos/");
+    const valid = z.array(EmpaquetadoProductosSchema).safeParse(response.data);
+    if (valid.success) {
+      return valid.data;
+    }
+    console.log(valid.error);
+    return [];
+  } catch (error) {
+    const axiosError = error as AxiosError<{ detail?: string }>;
+    throw new Error(
+      axiosError.response?.data?.detail || "Failed to fetch empaquetado productos",
+    );
+  }
+};
+
+export const getBCVRate = async (): Promise<BCVRateType> => {
+  try {
+    const response = await axios.get(
+      `https://ve.dolarapi.com/v1/dolares/oficial`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching BCV rate:", error);
+    throw error;
+  }
+};

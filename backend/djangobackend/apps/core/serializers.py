@@ -8,7 +8,8 @@ from .models import (
     EstadosOrdenVenta, 
     EstadosOrdenCompra, 
     Notificaciones, 
-    ConversionesUnidades
+    ConversionesUnidades,
+    EmpaquetadoProductos
     )
 
 from .models import TiposProductosNotificaciones
@@ -32,6 +33,14 @@ class ConversionUnidadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConversionesUnidades
         fields = ['id', 'unidad_origen', 'unidad_origen_nombre', 'unidad_destino', 'unidad_destino_nombre', 'factor_conversion']
+
+class EmpaquetadoProductosSerializer(serializers.ModelSerializer):
+    empaque_nombre = serializers.CharField(source='empaque.nombre_empaque', read_only=True)
+    unidad_medida_abreviatura = serializers.CharField(source='unidad_medida.abreviatura', read_only=True)
+
+    class Meta:
+        model = EmpaquetadoProductos
+        fields = ['id', 'empaque', 'empaque_nombre', 'cantidad_por_contenedor', 'unidad_medida', 'unidad_medida_abreviatura', 'cantidad_unidad_medida']
 
 class CategoriaMateriaPrimaSerializer(serializers.ModelSerializer):
     class Meta:

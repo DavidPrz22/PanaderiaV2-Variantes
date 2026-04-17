@@ -60,7 +60,7 @@ export type Empaquetado = {
   empaque_nombre: string;
   cantidad_por_contenedor: number;
   unidad_medida: UnidadMedida;
-  cantiad_unidad_medida: number;
+  cantidad_unidad_medida: number;
 };
 
 export type OrdenCompraTable = {
@@ -100,7 +100,9 @@ export type DetalleOC = {
   cantidad_pendiente: number;
   tipo_medida?: string; // Base unit tipo_medida for filtering compatible purchase units
   costo_unitario_usd: number;
+  costo_unitario_ves?: number;
   subtotal_linea_usd: number; 
+  subtotal_linea_ves?: number;
 };
 
 export type OrdenCompra = {

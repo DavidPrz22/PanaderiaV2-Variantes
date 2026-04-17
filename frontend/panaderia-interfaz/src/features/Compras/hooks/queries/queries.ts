@@ -1,15 +1,11 @@
-import { useQueries, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
-  bcvRateQueryOptions,
   ordenesCompraTableQueryOptions,
 } from "./queryOptions";
 import {
   estadosOrdenCompraQueryOptions,
-  proveedoresQueryOptions,
-  metodosDePagoQueryOptions,
   estadosOrdenCompraRegistroQueryOptions,
   ordenesCompraDetallesQueryOptions,
-  unidadesMedidaQueryOptions,
   searchProductosOCQueryOptions,
 } from "./queryOptions";
 
@@ -21,22 +17,8 @@ export const useGetAllEstadosOrdenCompra = () => {
   return useQuery(estadosOrdenCompraQueryOptions);
 };
 
-export const useGetParametros = () => {
-  return useQueries({
-    queries: [
-      proveedoresQueryOptions,
-      metodosDePagoQueryOptions,
-      unidadesMedidaQueryOptions,
-    ],
-  });
-};
-
 export const useGetEstadosOrdenCompraRegistro = () => {
   return useQuery(estadosOrdenCompraRegistroQueryOptions);
-};
-
-export const useGetBCVRate = () => {
-  return useQuery(bcvRateQueryOptions);
 };
 
 export const useGetOrdenesCompraDetalles = (id: number) => {

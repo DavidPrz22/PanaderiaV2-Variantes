@@ -8,7 +8,7 @@ interface ComprasProductsTableProps {
   moneda: "USD" | "Bs";
   tasaCambio: number;
   onUpdateLinea: (index: number, linea: DetalleOC) => void;
-  onRemoveLinea: (id: number) => void;
+  onRemoveLinea: (index: number) => void;
   onAddLinea: () => void;
 }
 
@@ -47,7 +47,7 @@ export const ComprasProductsTable = ({
                 moneda={moneda}
                 tasaCambio={tasaCambio}
                 onChange={(data) => onUpdateLinea(index, data)}
-                onRemove={() => onRemoveLinea(linea.id)}
+                onRemove={() => onRemoveLinea(index)}
                 autoFocus={index === items.length - 1 && items.length > 1}
               />
             ))

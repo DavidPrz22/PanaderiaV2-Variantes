@@ -6,7 +6,6 @@ import type { TOrdenCompraSchema } from "../schemas/schemas";
 interface UseComprasFormLogicProps {
   setValue: UseFormSetValue<TOrdenCompraSchema>;
   watch: UseFormWatch<TOrdenCompraSchema>;
-  items: DetalleOC[];
 }
 
 export const useComprasFormLogic = ({
@@ -38,63 +37,30 @@ export const useComprasFormLogic = ({
     [setValue, watch, roundTo3],
   );
 
-  const convertItemsToSchemaValue = useCallback(
-    (itemsArray: DetalleOC[]): TOrdenCompraSchema["detalles"] => {
+  const prepareDataForSubmit = useCallback(
+    (data: TOrdenCompraSchema): TOrdenCompraSchema => {
       const tasaCambio = Number(watch("tasa_cambio_aplicada")) || 1;
-      return itemsArray
-        .filter(
-          (item) =>
-            (item.materia_prima || item.producto_reventa) &&
-            item.unidad_medida_compra !== undefined,
-        )
-        .map((item) => ({
-          id: item.id,
-          materia_prima: item.materia_prima || null,
-          producto_reventa: item.producto_reventa || null,
-          cantidad_solicitada: item.cantidad_solicitada,
-          modo_compra: item.modo_compra,
-          unidad_medida_compra: typeof item.unidad_medida_compra === "object" ? item.unidad_medida_compra.id! : Number(item.unidad_medida_compra),
-          costo_unitario_usd: item.costo_unitario_usd,
-          costo_unitario_ves: roundTo3(item.costo_unitario_usd * tasaCambio),
-          subtotal_linea_usd: item.subtotal_linea_usd,
-          subtotal_linea_ves: roundTo3(item.subtotal_linea_usd * tasaCambio),
-        }));
+      
+      const details = data.detalles.map((item: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { materia_prima_nombre, producto_reventa_nombre, ...rest } = item;
+        return {
+          ...rest,
+          materia_prima: rest.materia_prima || null,
+          producto_reventa: rest.producto_reventa || null,
+          unidad_medida_compra: typeof rest.unidad_medida_compra === "object" ? rest.unidad_medida_compra.id : rest.unidad_medida_compra,
+          costo_unitario_ves: roundTo3(rest.costo_unitario_usd * tasaCambio),
+          subtotal_linea_usd: rest.subtotal_linea_usd,
+          subtotal_linea_ves: roundTo3(rest.subtotal_linea_usd * tasaCambio),
+        };
+      });
+
+      return {
+        ...data,
+        detalles: details,
+      };
     },
     [watch, roundTo3],
-  );
-
-  const updateItemCalculations = useCallback(
-    (item: DetalleOC) => {
-      const subtotal = calculateSubtotal(item);
-      item.subtotal_linea_usd = subtotal;
-      return subtotal;
-    },
-    [calculateSubtotal],
-  );
-
-  const updateFormDetalles = useCallback(
-    (
-      items: DetalleOC[],
-      productoIndex: number,
-      subtotal: number,
-      additionalUpdates?: Record<string, number | string>,
-    ) => {
-      const schemaValue = convertItemsToSchemaValue(items);
-      setValue("detalles", schemaValue);
-
-      if (productoIndex !== -1) {
-        setValue(`detalles.${productoIndex}.subtotal_linea_usd`, subtotal);
-
-        if (additionalUpdates) {
-          Object.entries(additionalUpdates).forEach(([key, value]) => {
-            const fieldPath =
-              `detalles.${productoIndex}.${key}` as keyof TOrdenCompraSchema;
-            setValue(fieldPath, value as never, { shouldValidate: true });
-          });
-        }
-      }
-    },
-    [convertItemsToSchemaValue, setValue],
   );
 
   const resetAmounts = useCallback(() => {
@@ -104,11 +70,8 @@ export const useComprasFormLogic = ({
 
   return {
     roundTo3,
-    calculateSubtotal,
     calculateTotalFromItems,
-    convertItemsToSchemaValue,
-    updateItemCalculations,
-    updateFormDetalles,
+    prepareDataForSubmit,
     resetAmounts,
   };
 };

@@ -5,6 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { DetalleOC, Producto, VarianteProducto } from "../types/types";
 import ComprasProductoSelector from "./ComprasProductoSelector";
 import { MODO_COMPRA, type ModoCompra } from "../utils/contants";
+import { handleProductSelection, updateItemField } from "../utils/itemHandlers";
+import { RoundToTwo } from "@/utils/utils";
+import { useUnidadesMedidaQuery, useEmpaquetadoProductosQuery } from "@/hooks/useQueryHooks";
 
 interface Props {
   linea: DetalleOC;
@@ -16,54 +19,39 @@ interface Props {
 }
 
 export function CompraLineaRow({ linea, moneda, tasaCambio, onChange, onRemove, autoFocus }: Props) {
+
+  const { data: unidadesMedida } = useUnidadesMedidaQuery();
+  const { data: empaquetadoProductos } = useEmpaquetadoProductosQuery();
+
   const handleSelectProduct = (producto: Producto, variante: VarianteProducto) => {
-    const isMP = producto.tipo === "MateriaPrima";
-    
-    onChange({
-      ...linea,
-      materia_prima: isMP ? variante.id : undefined,
-      materia_prima_nombre: isMP ? `${producto.nombre} - ${variante.nombre}` : undefined,
-      producto_reventa: !isMP ? variante.id : undefined,
-      producto_reventa_nombre: !isMP ? `${producto.nombre} - ${variante.nombre}` : undefined,
-      unidad_medida_compra: variante.unidad_compra,
-      costo_unitario_usd: variante.precio_compra_divisa,
-      modo_compra: MODO_COMPRA.UNIDAD,
-      cantidad_solicitada: linea.cantidad_solicitada || 1,
-      subtotal_linea_usd: variante.precio_compra_divisa * (linea.cantidad_solicitada || 1),
-    });
+    const newLinea = handleProductSelection(linea, producto, variante);
+    onChange(newLinea);
   };
 
   const currentProductName = linea.materia_prima_nombre || linea.producto_reventa_nombre;
   const currentProductId = linea.materia_prima || linea.producto_reventa;
-  
-  const displaySubtotal = (linea.costo_unitario_usd || 0) * (linea.cantidad_solicitada || 0);
-  const displaySubtotalLocal = displaySubtotal * (tasaCambio || 1);
 
+  const displaySubtotal = (linea.costo_unitario_usd || 0) * (linea.cantidad_solicitada || 0);
+  const displaySubtotalLocal = RoundToTwo(displaySubtotal * (tasaCambio || 1));
+  
   const handleCantidadChange = (val: string) => {
     const cantidad = parseFloat(val) || 0;
-    onChange({
-      ...linea,
-      cantidad_solicitada: cantidad,
-      subtotal_linea_usd: cantidad * (linea.costo_unitario_usd || 0),
-    });
+    const newLinea = updateItemField(linea, "cantidad_solicitada", cantidad);
+    onChange(newLinea);
   };
-
   const handleCostoChange = (val: string) => {
     const costo = parseFloat(val) || 0;
     let costoUsd = costo;
-    
+
     if (moneda === "Bs") {
       costoUsd = tasaCambio > 0 ? costo / tasaCambio : 0;
     }
 
-    onChange({
-      ...linea,
-      costo_unitario_usd: costoUsd,
-      subtotal_linea_usd: (linea.cantidad_solicitada || 0) * costoUsd,
-    });
+    const newLinea = updateItemField(linea, "costo_unitario_usd", costoUsd);
+    onChange(newLinea);
   };
 
-  const displayCosto = moneda === "USD" 
+  const displayCosto = moneda === "USD"
     ? (linea.costo_unitario_usd || 0)
     : (linea.costo_unitario_usd || 0) * (tasaCambio || 1);
 
@@ -78,13 +66,15 @@ export function CompraLineaRow({ linea, moneda, tasaCambio, onChange, onRemove, 
           autoFocus={autoFocus}
         />
       </div>
-
       {/* Purchase mode - 2 cols */}
       <div className="col-span-2">
         {currentProductId ? (
-          <Select 
-            value={linea.modo_compra} 
-            onValueChange={(v) => onChange({ ...linea, modo_compra: v as ModoCompra })}
+          <Select
+            value={linea.modo_compra || MODO_COMPRA.UNIDAD}
+            onValueChange={(v) => { 
+              const newModo = v as ModoCompra;
+              onChange({ ...linea, modo_compra: newModo });
+            }}
           >
             <SelectTrigger className="h-10">
               <SelectValue placeholder="Modo..." />
@@ -101,17 +91,71 @@ export function CompraLineaRow({ linea, moneda, tasaCambio, onChange, onRemove, 
         )}
       </div>
 
-      {/* Unit - 2 cols */}
+      {/* Unit - 2 cols*/}
       <div className="col-span-2">
-        {currentProductId ? (
-          <div className="h-10 flex items-center px-3 border rounded-md bg-muted/20 text-sm">
-            {linea.unidad_medida_compra?.abreviatura || "—"}
-          </div>
-        ) : (
-          <div className="h-10 flex items-center text-sm text-muted-foreground px-3 border rounded-md border-dashed">
-            Selecciona producto
-          </div>
-        )}
+        {currentProductId && linea.modo_compra === MODO_COMPRA.UNIDAD ? (
+          <Select
+            value={linea.unidad_medida_compra?.id?.toString() || ""}
+            onValueChange={(v) => {
+              const unit = unidadesMedida?.find(u => u.id.toString() === v);
+              onChange({ ...linea, unidad_medida_compra: unit });
+            }}
+          >
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="unidad..." />
+            </SelectTrigger>
+            <SelectContent>
+              {unidadesMedida?.map(
+                (unidad) => (
+                  <SelectItem key={unidad.id} value={unidad.id.toString()}>
+                    {unidad.abreviatura}
+                  </SelectItem>
+                )
+              )}
+            </SelectContent>
+          </Select>
+        )
+
+          : currentProductId && linea.modo_compra === MODO_COMPRA.CONTENEDOR ? (
+            <Select
+              value={linea.empaquetado?.id?.toString() || ""}
+              onValueChange={(v) => {
+                const empaq = empaquetadoProductos?.find(e => e.id.toString() === v);
+                if (empaq) {
+                  const unidad = unidadesMedida?.find(u => u.id === empaq.unidad_medida);
+                  onChange({ 
+                    ...linea, 
+                    empaquetado: {
+                      id: empaq.id,
+                      empaque_nombre: empaq.empaque_nombre,
+                      cantidad_por_contenedor: empaq.cantidad_por_contenedor,
+                      unidad_medida: unidad!,
+                      cantidad_unidad_medida: empaq.cantidad_unidad_medida
+                    } 
+                  });
+                } else {
+                  onChange({ ...linea, empaquetado: undefined });
+                }
+              }}
+            >
+              <SelectTrigger className="h-10">
+                <SelectValue placeholder="Empaque..." />
+              </SelectTrigger>
+              <SelectContent>
+                {empaquetadoProductos?.map(
+                  (empaquetado) => (
+                    <SelectItem key={empaquetado.id} value={empaquetado.id.toString()}>
+                      {empaquetado.empaque_nombre}
+                    </SelectItem>
+                  )
+                )}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="h-10 flex items-center text-sm text-muted-foreground px-3 border rounded-md border-dashed">
+              Selecciona producto
+            </div>
+          )}
       </div>
 
       {/* Cantidad - 1 col */}
@@ -149,7 +193,7 @@ export function CompraLineaRow({ linea, moneda, tasaCambio, onChange, onRemove, 
       <div className="col-span-2 flex items-center justify-between">
         <div className="flex flex-col items-end gap-0.5 flex-1">
           <span className="text-sm font-semibold text-foreground">
-            {moneda === "USD" ? "$" : "Bs "}{ (moneda === "USD" ? displaySubtotal : displaySubtotalLocal).toFixed(2) }
+            {moneda === "USD" ? "$" : "Bs "}{(moneda === "USD" ? displaySubtotal : displaySubtotalLocal).toFixed(2)}
           </span>
         </div>
         <Button
