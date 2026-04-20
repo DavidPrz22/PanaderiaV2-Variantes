@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 interface FormItemProps {
-    label: string;
+    label?: string;
     error?: string;
     required?: boolean;
     children: React.ReactNode;
@@ -21,9 +21,11 @@ export const FormItem = ({
 }: FormItemProps) => {
     return (
         <div className={cn("space-y-2", className)}>
-            <Label htmlFor={id} className={cn(error && "text-destructive")}>
-                {label} {required && <span className="text-destructive">*</span>}
-            </Label>
+            {label && (
+                <Label htmlFor={id} className={cn(error && "text-destructive")}>
+                    {label} {required && <span className="text-destructive">*</span>}
+                </Label>
+            )}
             {children}
             {error && (
                 <p className="text-xs text-destructive font-medium animate-in fade-in slide-in-from-top-1 duration-200">

@@ -5,7 +5,6 @@ import type { DetalleOC } from "../types/types";
 
 interface ComprasProductsTableProps {
   items: DetalleOC[];
-  moneda: "USD" | "Bs";
   tasaCambio: number;
   onUpdateLinea: (index: number, linea: DetalleOC) => void;
   onRemoveLinea: (index: number) => void;
@@ -14,7 +13,6 @@ interface ComprasProductsTableProps {
 
 export const ComprasProductsTable = ({
   items,
-  moneda,
   tasaCambio,
   onUpdateLinea,
   onRemoveLinea,
@@ -24,11 +22,11 @@ export const ComprasProductsTable = ({
     <div>
       <div className="border border-border rounded-lg overflow-hidden bg-white dark:bg-card shadow-sm">
         {/* Column headers */}
-        <div className="grid grid-cols-12 gap-3 px-3 py-2 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/30 border-b border-border">
+        <div className="grid grid-cols-13 gap-3 px-3 py-2 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/30 border-b border-border">
           <div className="col-span-3">Producto</div>
           <div className="col-span-2">Modo compra</div>
           <div className="col-span-2">Unidad</div>
-          <div className="col-span-1 text-center">Cant.</div>
+          <div className="col-span-2 text-center">Cantidad</div>
           <div className="col-span-2">Precio Unit.</div>
           <div className="col-span-2 text-right">Subtotal</div>
         </div>
@@ -44,7 +42,6 @@ export const ComprasProductsTable = ({
               <CompraLineaRow
                 key={linea.id || index}
                 linea={linea}
-                moneda={moneda}
                 tasaCambio={tasaCambio}
                 onChange={(data) => onUpdateLinea(index, data)}
                 onRemove={() => onRemoveLinea(index)}

@@ -1,8 +1,15 @@
 from rest_framework import serializers
 from apps.compras.models import Proveedores
 from apps.compras.models import OrdenesCompra, PagosProveedores, DetalleOrdenesCompra, Compras
-from apps.core.serializers import EstadosOrdenCompraSerializer, MetodosDePagoSerializer
+from apps.core.serializers import (
+    EstadosOrdenCompraSerializer, 
+    MetodosDePagoSerializer,
+    UnidadMedidaSerializer,
+    EmpaquetadoProductosSerializer
+)
+from apps.inventario.models import MateriasPrimasVariantes, ProductosReventaVariantes
 from django.db.models import Sum
+from apps.core.models import UnidadesDeMedida, EmpaquetadoProductos
 
 
 class ProveedoresSerializer(serializers.ModelSerializer):
@@ -31,6 +38,30 @@ class CompraRegistroProveedoresSerializer(serializers.ModelSerializer):
 
 
 class DetallesSerializer(serializers.ModelSerializer):
+    # Map frontend generic names to variant models
+    materia_prima = serializers.PrimaryKeyRelatedField(
+        queryset=MateriasPrimasVariantes.objects.all(), 
+        required=False, 
+        allow_null=True
+    )
+    producto_reventa = serializers.PrimaryKeyRelatedField(
+        queryset=ProductosReventaVariantes.objects.all(), 
+        required=False, 
+        allow_null=True
+    )
+    
+    cantidad_solicitada = serializers.DecimalField(max_digits=15, decimal_places=3, allow_null=True, required=False)
+    unidad_medida_compra = serializers.PrimaryKeyRelatedField(
+        queryset=UnidadesDeMedida.objects.all(), 
+        allow_null=True, 
+        required=False
+    )
+    unidad_empaquetado = serializers.PrimaryKeyRelatedField(
+        queryset=EmpaquetadoProductos.objects.all(), 
+        allow_null=True, 
+        required=False
+    )
+
     class Meta:
         model = DetalleOrdenesCompra
         fields = [
@@ -39,8 +70,12 @@ class DetallesSerializer(serializers.ModelSerializer):
             'producto_reventa',
             'cantidad_solicitada',
             'unidad_medida_compra',
+            'unidad_empaquetado',
+            'modo_compra',
             'costo_unitario_usd',
+            'costo_unitario_ves',
             'subtotal_linea_usd',
+            'subtotal_linea_ves',
         ]
     
     def validate(self, data):
@@ -49,14 +84,21 @@ class DetallesSerializer(serializers.ModelSerializer):
         This ensures unit conversions are valid.
         """
         from apps.core.models import UnidadesDeMedida
-        from apps.inventario.models import MateriasPrimas, ProductosReventa
+        from apps.inventario.models import MateriasPrimasVariantes, ProductosReventaVariantes
         
         unidad_compra_id = data.get('unidad_medida_compra')
-        materia_prima = data.get('materia_prima')
-        producto_reventa = data.get('producto_reventa')
-        
+        unidad_empaquetado = data.get('unidad_empaquetado')
+
+        if not unidad_compra_id and not unidad_empaquetado:
+            raise serializers.ValidationError(
+                "Debe proporcionar sea la unidad de medida o la unidad de empaquetado."
+            )
+
         if not unidad_compra_id:
             return data
+        
+        materia_prima = data.get('materia_prima')
+        producto_reventa = data.get('producto_reventa')
         
         if isinstance(unidad_compra_id, UnidadesDeMedida):
             unidad_compra = unidad_compra_id
@@ -65,10 +107,10 @@ class DetallesSerializer(serializers.ModelSerializer):
         
         # Check materia prima
         if materia_prima:
-            if isinstance(materia_prima, MateriasPrimas):
+            if isinstance(materia_prima, MateriasPrimasVariantes):
                 base_unit = materia_prima.unidad_medida_base
             else:
-                mp = MateriasPrimas.objects.get(id=materia_prima)
+                mp = MateriasPrimasVariantes.objects.get(id=materia_prima)
                 base_unit = mp.unidad_medida_base
             
             if unidad_compra.tipo_medida != base_unit.tipo_medida:
@@ -80,11 +122,11 @@ class DetallesSerializer(serializers.ModelSerializer):
         
         # Check producto reventa
         if producto_reventa:
-            if isinstance(producto_reventa, ProductosReventa):
-                base_unit = producto_reventa.unidad_base_inventario
+            if isinstance(producto_reventa, ProductosReventaVariantes):
+                base_unit = producto_reventa.unidad_medida_base
             else:
-                pr = ProductosReventa.objects.get(id=producto_reventa)
-                base_unit = pr.unidad_base_inventario
+                pr = ProductosReventaVariantes.objects.get(id=producto_reventa)
+                base_unit = pr.unidad_medida_base
             
             if base_unit and unidad_compra.tipo_medida != base_unit.tipo_medida:
                 raise serializers.ValidationError(
@@ -96,32 +138,7 @@ class DetallesSerializer(serializers.ModelSerializer):
         return data
 
 
-class DetallesResponseSerializer(serializers.ModelSerializer):
-    materia_prima_nombre = serializers.CharField(source='materia_prima.nombre', read_only=True)
-    producto_reventa_nombre = serializers.CharField(source='producto_reventa.nombre_producto', read_only=True)
-    unidad_medida_abrev = serializers.CharField(source='unidad_medida_compra.abreviatura', read_only=True)
-    tipo_medida = serializers.CharField(source='unidad_medida_compra.tipo_medida', read_only=True)
 
-    class Meta:
-        model = DetalleOrdenesCompra
-        fields = [
-            'id',
-            'materia_prima',
-            'materia_prima_nombre',
-            'producto_reventa',
-            'producto_reventa_nombre',
-            'cantidad_solicitada',
-            'cantidad_recibida',
-            'cantidad_pendiente',
-            'unidad_medida_compra',
-            'unidad_medida_abrev',
-            'tipo_medida',
-            'costo_unitario_usd',
-            'subtotal_linea_usd'
-        ]
-
-    def get_cantidad_pendiente(self, obj):
-        return obj.cantidad_solicitada - obj.cantidad_recibida
 
 
 class ComprasSerializer(serializers.ModelSerializer):
@@ -202,11 +219,19 @@ class RecepcionCompraSerializer(serializers.Serializer):
 
 # serializers.py additions
 class DetallesResponseSerializer(serializers.ModelSerializer):
-    materia_prima_nombre = serializers.CharField(source='materia_prima.nombre', read_only=True)
-    producto_reventa_nombre = serializers.CharField(source='producto_reventa.nombre_producto', read_only=True)
-    unidad_medida_abrev = serializers.CharField(source='unidad_medida_compra.abreviatura', read_only=True)
-    cantidad_pendiente = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    tipo_medida = serializers.CharField(source='unidad_medida_compra.tipo_medida', read_only=True)
+    # IDs of variants mapped to generic names for frontend compatibility
+    materia_prima = serializers.IntegerField(source='variante_materia_prima.id', read_only=True, allow_null=True)
+    materia_prima_nombre = serializers.CharField(source='variante_materia_prima.materia_prima.nombre', read_only=True, allow_null=True)
+    
+    producto_reventa = serializers.IntegerField(source='variante_producto_reventa.id', read_only=True, allow_null=True)
+    producto_reventa_nombre = serializers.CharField(source='variante_producto_reventa.producto_reventa.nombre_producto', read_only=True, allow_null=True)
+    
+    # Nested objects
+    unidad_medida_compra = UnidadMedidaSerializer(read_only=True)
+    empaquetado = EmpaquetadoProductosSerializer(source='unidad_empaquetado', read_only=True)
+    
+    # Computed fields from model properties
+    cantidad_pendiente = serializers.ReadOnlyField()
     
     class Meta:
         model = DetalleOrdenesCompra
@@ -217,15 +242,17 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
             'producto_reventa',
             'producto_reventa_nombre',
             'cantidad_solicitada',
+            'modo_compra',
+            'empaquetado',
+            'unidad_medida_compra',
             'cantidad_recibida',
             'cantidad_pendiente',
-            'unidad_medida_compra',
-            'unidad_medida_abrev',
-            'tipo_medida',
             'costo_unitario_usd',
-            'subtotal_linea_usd'
+            'costo_unitario_ves',
+            'subtotal_linea_usd',
+            'subtotal_linea_ves'
         ]
-    
+
 
 class RecepcionCompraSerializer(serializers.Serializer):
     orden_compra_id = serializers.IntegerField()

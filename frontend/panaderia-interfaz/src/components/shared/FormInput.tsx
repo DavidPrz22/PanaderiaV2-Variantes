@@ -4,7 +4,7 @@ import { FormItem } from "./FormItem";
 import { cn } from "@/lib/utils";
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label: string;
+    label?: string;
     error?: string;
     required?: boolean;
     containerClassName?: string;
@@ -104,7 +104,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         }
 
         return (
-            <FormItem label={label} error={error} required={required} className={containerClassName || className}>
+            <FormItem label={label || ""} error={error} required={required} className={containerClassName || className}>
                 {children}
                 <Input
                     ref={ref}

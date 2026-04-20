@@ -1,4 +1,4 @@
-import type { ModoCompra } from "../utils/contants";
+import type { ModoCompra, TipoMedida } from "../utils/contants";
 
 export type Proveedor = {
   id: number;
@@ -34,8 +34,9 @@ export type MetodoDePago = {
 
 export type UnidadMedida = {
   id: number;
+  nombre_completo: string;
   abreviatura: string;
-  tipo_medida: string;
+  tipo_medida: TipoMedida;
 };
 
 export type VarianteProducto = {
@@ -50,6 +51,7 @@ export type Producto = {
   id: number;
   nombre: string;
   unidad_medida_base: UnidadMedida;
+  unidad_venta: UnidadMedida;
   variantes: VarianteProducto[];
   tipo: "MateriaPrima" | "ProductoReventa";
 };
@@ -98,7 +100,6 @@ export type DetalleOC = {
   unidad_medida_compra?: UnidadMedida;
   cantidad_recibida?: number;
   cantidad_pendiente: number;
-  tipo_medida?: string; // Base unit tipo_medida for filtering compatible purchase units
   costo_unitario_usd: number;
   costo_unitario_ves?: number;
   subtotal_linea_usd: number; 

@@ -1,11 +1,12 @@
 import { z } from 'zod';
+import { TIPO_MEDIDA } from '@/features/Compras/utils/contants';
 
 export const UnidadMedidaSchema = z.object({
     id: z.number(),
     nombre_completo: z.string(),
     abreviatura: z.string(),
     descripcion: z.string().optional().nullable(),
-    tipo_medida: z.enum(['Peso', 'Volumen', 'Unidad', 'Longitud', 'Otro']),
+    tipo_medida: z.enum([TIPO_MEDIDA.PESO, TIPO_MEDIDA.VOLUMEN, TIPO_MEDIDA.UNIDAD, TIPO_MEDIDA.LONGITUD, TIPO_MEDIDA.OTRO]),
 });
 
 export const CategoriaMateriaPrimaSchema = z.object({
@@ -67,11 +68,9 @@ export const MetodoDePagoSchema = z.object({
 
 export const EmpaquetadoProductosSchema = z.object({
     id: z.number(),
-    empaque: z.number(),
     empaque_nombre: z.string(),
     cantidad_por_contenedor: z.coerce.number(),
-    unidad_medida: z.number(),
-    unidad_medida_abreviatura: z.string(),
+    unidad_medida: UnidadMedidaSchema,
     cantidad_unidad_medida: z.coerce.number(),
 });
 

@@ -14,7 +14,7 @@ import {
 } from "../hooks/queries/queries";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { OrdenCompraSchema, type TOrdenCompraSchema } from "../schemas/schemas";
+import { OrdenCompraSchema, type TDetalleOCSchema, type TOrdenCompraSchema } from "../schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ComprasFormDatePicker } from "./ComprasFormDatePicker";
 import { toast } from "sonner";
@@ -48,58 +48,58 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
 
   const { data: proveedores } = useProveedoresQuery();
   const { data: metodosDePago } = useMetodosDePagoQuery();
-  const [moneda, setMoneda] = useState<"USD" | "Bs">("USD");
+  const [items, setItems] = useState<DetalleOC[]>([]);
 
   const { handleSubmit, setValue, watch, control } = useForm<TOrdenCompraSchema>({
     resolver: zodResolver(OrdenCompraSchema),
     defaultValues: orden
       ? {
-          fecha_emision_oc: orden.fecha_emision_oc,
-          fecha_entrega_esperada: orden.fecha_entrega_esperada,
-          fecha_entrega_real: orden.fecha_entrega_real
-            ? orden.fecha_entrega_real
-            : undefined,
-          estado_oc: orden.estado_oc.id,
-          proveedor: orden.proveedor.id,
-          metodo_pago: orden.metodo_pago.id,
-          monto_total_oc_usd: orden.monto_total_oc_usd,
-          monto_total_oc_ves: orden.monto_total_oc_ves,
-          tasa_cambio_aplicada: orden.tasa_cambio_aplicada,
-          direccion_envio: orden.direccion_envio
-            ? orden.direccion_envio
-            : undefined,
-          terminos_pago: orden.terminos_pago ? orden.terminos_pago : undefined,
-          detalles: orden.detalles.map((p, index) => ({
-            id: index,
-            materia_prima: p.materia_prima,
-            materia_prima_nombre: p.materia_prima_nombre,
-            producto_reventa: p.producto_reventa,
-            producto_reventa_nombre: p.producto_reventa_nombre,
-            cantidad_solicitada: Number(p.cantidad_solicitada),
-            modo_compra: p.modo_compra,
-            unidad_empaquetado: p.empaquetado?.id || null,
-            unidad_medida_compra: p.unidad_medida_compra?.id ,
-            costo_unitario_usd: Number(p.costo_unitario_usd),
-            costo_unitario_ves: Number(p.costo_unitario_ves || 0),
-            subtotal_linea_usd: Number(p.subtotal_linea_usd),
-            subtotal_linea_ves: Number(p.subtotal_linea_ves || 0),
-          })),
-          notas: orden.notas ? orden.notas : undefined,
-        }
+        fecha_emision_oc: orden.fecha_emision_oc,
+        fecha_entrega_esperada: orden.fecha_entrega_esperada,
+        fecha_entrega_real: orden.fecha_entrega_real
+          ? orden.fecha_entrega_real
+          : undefined,
+        estado_oc: orden.estado_oc.id,
+        proveedor: orden.proveedor.id,
+        metodo_pago: orden.metodo_pago.id,
+        monto_total_oc_usd: orden.monto_total_oc_usd,
+        monto_total_oc_ves: orden.monto_total_oc_ves,
+        tasa_cambio_aplicada: orden.tasa_cambio_aplicada,
+        direccion_envio: orden.direccion_envio
+          ? orden.direccion_envio
+          : undefined,
+        terminos_pago: orden.terminos_pago ? orden.terminos_pago : undefined,
+        detalles: orden.detalles.map((p, index) => ({
+          id: index,
+          materia_prima: p.materia_prima,
+          materia_prima_nombre: p.materia_prima_nombre,
+          producto_reventa: p.producto_reventa,
+          producto_reventa_nombre: p.producto_reventa_nombre,
+          cantidad_solicitada: Number(p.cantidad_solicitada),
+          modo_compra: p.modo_compra,
+          unidad_empaquetado: p.empaquetado?.id || null,
+          unidad_medida_compra: p.unidad_medida_compra?.id,
+          costo_unitario_usd: Number(p.costo_unitario_usd),
+          costo_unitario_ves: Number(p.costo_unitario_ves || 0),
+          subtotal_linea_usd: Number(p.subtotal_linea_usd),
+          subtotal_linea_ves: Number(p.subtotal_linea_ves || 0),
+        })),
+        notas: orden.notas ? orden.notas : undefined,
+      }
       : {
-          fecha_emision_oc: new Date().toISOString().split("T")[0],
-          fecha_entrega_esperada: new Date().toISOString().split("T")[0],
-          estado_oc: 1,
-          metodo_pago: 1,
-          monto_total_oc_usd: 0,
-          monto_total_oc_ves: 0,
-          tasa_cambio_aplicada: 0,
-          direccion_envio: undefined,
-          terminos_pago: undefined,
-          notas: undefined,
-          fecha_entrega_real: undefined,
-          detalles: [],
-        },
+        fecha_emision_oc: new Date().toISOString().split("T")[0],
+        fecha_entrega_esperada: new Date().toISOString().split("T")[0],
+        estado_oc: 1,
+        metodo_pago: 1,
+        monto_total_oc_usd: 0,
+        monto_total_oc_ves: 0,
+        tasa_cambio_aplicada: 0,
+        direccion_envio: undefined,
+        terminos_pago: undefined,
+        notas: undefined,
+        fecha_entrega_real: undefined,
+        detalles: [],
+      },
   });
 
   const { fields, append, remove, update } = useFieldArray({
@@ -109,7 +109,6 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
 
   const isEdit = !!orden;
 
-
   const { data: estadosOrden } = useGetEstadosOrdenCompraRegistro();
   const { data: bcvRate } = useBCVRateQuery();
 
@@ -117,7 +116,7 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
     useCreateOCMutation();
   const { mutateAsync: updateOCMutation, isPending: isUpdatingOCMutation } =
     useUpdateOCMutation();
-// Items state moved up
+  // Items state moved up
 
   const formLogic = useComprasFormLogic({
     setValue,
@@ -128,7 +127,6 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
     roundTo3,
     calculateTotalFromItems,
     prepareDataForSubmit,
-    resetAmounts,
   } = formLogic;
 
   useEffect(() => {
@@ -137,42 +135,59 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
     }
   }, [bcvRate, setValue, roundTo3]);
 
+  const convertToSchemaValue = (linea: DetalleOC) => {
+    const { 
+      materia_prima_nombre, 
+      producto_reventa_nombre, 
+      unidad_medida_compra, 
+      empaquetado, 
+      ...rest 
+    } = linea;
+
+    return {
+      ...rest,
+      materia_prima: rest.materia_prima || null,
+      producto_reventa: rest.producto_reventa || null,
+      unidad_medida_compra: unidad_medida_compra?.id || null,
+      unidad_empaquetado: empaquetado?.id || null,
+    } as TDetalleOCSchema;
+  };
+
   useEffect(() => {
     if (orden) {
-      calculateTotalFromItems(fields as DetalleOC[]);
+      calculateTotalFromItems(orden.detalles);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addItem = () => {
-    // Use a negative unique timestamp for temporary frontend IDs to avoid collisions when deleting
-    const newId = -Date.now();
-    const newItem = createNewDetalleOC(newId);
-    append(newItem as any);
+    const newItem = createNewDetalleOC(fields.length);
+    setItems((prev) => [...prev, newItem]);
+
+    const convertedItem = convertToSchemaValue(newItem);
+    append(convertedItem);
   };
 
   const updateLinea = (index: number, linea: DetalleOC) => {
-    update(index, linea);
-    
-    // We get the updated array to calculate totals
-    const currentDetalles = watch("detalles");
-    const updatedDetalles = [...currentDetalles];
-    updatedDetalles[index] = linea;
-    
-    calculateTotalFromItems(updatedDetalles as DetalleOC[]);
+
+    setItems((prev) => {
+      const newItems = [...prev];
+      newItems[index] = linea;
+      calculateTotalFromItems(newItems);
+      return newItems;
+    });
+
+    const convertedItem = convertToSchemaValue(linea);
+
+    update(index, convertedItem);
   };
+
 
   const removeItem = (index: number) => {
     remove(index);
-    
-    const currentDetalles = watch("detalles");
-    const updatedDetalles = currentDetalles.filter((_, i) => i !== index);
-    
-    if (updatedDetalles.length === 0) {
-      resetAmounts();
-    } else {
-      calculateTotalFromItems(updatedDetalles as DetalleOC[]);
-    }
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+    calculateTotalFromItems(newItems);
   };
 
   const handleSubmitForm = async (data: TOrdenCompraSchema) => {
@@ -344,31 +359,10 @@ export const ComprasForm = ({ orden, onClose }: ComprasFormProps) => {
 
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold">Productos de la Orden</h3>
-              <div className="flex bg-muted p-1 rounded-md">
-                <Button
-                  type="button"
-                  variant={moneda === "USD" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-8 text-xs"
-                  onClick={() => setMoneda("USD")}
-                >
-                  USD ($)
-                </Button>
-                <Button
-                  type="button"
-                  variant={moneda === "Bs" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-8 text-xs"
-                  onClick={() => setMoneda("Bs")}
-                >
-                  VES (Bs)
-                </Button>
-              </div>
             </div>
 
             <ComprasProductsTable
-              items={fields as unknown as DetalleOC[]}
-              moneda={moneda}
+              items={items}
               tasaCambio={watch("tasa_cambio_aplicada") || 1}
               onUpdateLinea={updateLinea}
               onRemoveLinea={removeItem}

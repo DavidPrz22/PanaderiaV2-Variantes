@@ -1,7 +1,7 @@
 from django.db import models
 from apps.users.models import User
 from apps.core.models import EstadosOrdenCompra, MetodosDePago
-from apps.core.models import UnidadesDeMedida
+from apps.core.models import UnidadesDeMedida, EmpaquetadoProductos
 from django.db.models import Q
 
 # Create your models here.
@@ -49,8 +49,11 @@ class DetalleOrdenesCompra(models.Model):
     cantidad_solicitada = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     cantidad_recibida = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     unidad_medida_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
+    unidad_empaquetado = models.ForeignKey(EmpaquetadoProductos, on_delete=models.CASCADE, null=True)
     costo_unitario_usd = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    costo_unitario_ves = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     subtotal_linea_usd = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    subtotal_linea_ves = models.DecimalField(max_digits=15, decimal_places=3, default=0)
     
     @property
     def cantidad_pendiente(self):

@@ -14,7 +14,7 @@ export interface SelectOption {
 }
 
 interface FormSelectProps {
-    label: string;
+    label?: string;
     error?: string;
     required?: boolean;
     value?: string | number;
@@ -39,7 +39,7 @@ export const FormSelect = ({
     containerClassName,
 }: FormSelectProps) => {
     return (
-        <FormItem label={label} error={error} required={required} className={className}>
+        <FormItem label={label || ""} error={error} required={required} className={className}>
             <Select
                 value={value && value !== 0 ? value.toString() : undefined}
                 onValueChange={onValueChange}

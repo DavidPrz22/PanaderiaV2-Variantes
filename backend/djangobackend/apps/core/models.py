@@ -167,7 +167,8 @@ class ConversionesUnidades(models.Model):
 class Empaques(models.Model):
     nombre_empaque = models.CharField(max_length=100, null=False, blank=False)
     es_contenedor = models.BooleanField(default=False)
-
+    tipo_medida = models.CharField(max_length=10, choices=[('peso', 'Peso'), ('volumen', 'Volumen'), ('unidad', 'Unidad'), ('longitud', 'Longitud'), ('otro', 'Otro')])
+    
     def __str__(self):
         return self.nombre_empaque
 

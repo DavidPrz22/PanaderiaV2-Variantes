@@ -69,7 +69,7 @@ export const createNewDetalleOC = (id: number): DetalleOC => ({
   cantidad_recibida: 0,
   cantidad_pendiente: 0,
   unidad_medida_compra: undefined,
-  tipo_medida: undefined,
+  empaquetado: undefined,
   costo_unitario_usd: 0,
   costo_unitario_ves: 0,
   subtotal_linea_usd: 0,

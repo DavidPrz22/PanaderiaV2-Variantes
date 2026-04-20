@@ -51,32 +51,37 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)  # Call is_valid FIRST
             
-            # NOW we can access validated_data
             detalles_data = serializer.validated_data.pop('detalles')
             
             # Save the orden and get the instance
-            orden = OrdenesCompra.objects.create(**serializer.validated_data, usuario_creador=request.user) # or override perform_create to return the instance
+            orden = OrdenesCompra.objects.create(**serializer.validated_data, usuario_creador=request.user) 
             
-            # Create detalles
+
             bulk_create_detalles = []
-            # Change this part in your viewset:
             for detalle_data in detalles_data:
+                modo_compra = detalle_data.pop('modo_compra', None)
+                
                 materia_prima_obj = detalle_data.pop('materia_prima', None)
                 producto_reventa_obj = detalle_data.pop('producto_reventa', None)
-                unidad_medida_compra_obj = detalle_data.pop('unidad_medida_compra', None)
                 
+                unidad_medida_compra_obj = detalle_data.pop('unidad_medida_compra', None)
+                unidad_empaquetado_obj = detalle_data.pop('unidad_empaquetado', None)
+    
+
                 if materia_prima_obj:
                     bulk_create_detalles.append(DetalleOrdenesCompra(
                         orden_compra=orden,
-                        materia_prima=materia_prima_obj,  # Pass the object directly
-                        unidad_medida_compra=unidad_medida_compra_obj,  # Pass the object directly
+                        variante_materia_prima=materia_prima_obj,
+                        unidad_medida_compra=unidad_medida_compra_obj if modo_compra == 'unidad' else None,
+                        unidad_empaquetado=unidad_empaquetado_obj if modo_compra == 'contenedor' else None,  
                         **detalle_data
                     ))
                 elif producto_reventa_obj:
                     bulk_create_detalles.append(DetalleOrdenesCompra(
                         orden_compra=orden,
-                        producto_reventa=producto_reventa_obj,  # Pass the object directly
-                        unidad_medida_compra=unidad_medida_compra_obj,  # Pass the object directly
+                        variante_producto_reventa=producto_reventa_obj,
+                        unidad_medida_compra=unidad_medida_compra_obj if modo_compra == 'unidad' else None,
+                        unidad_empaquetado=unidad_empaquetado_obj if modo_compra == 'contenedor' else None,  
                         **detalle_data
                     ))
                 else:
@@ -133,10 +138,11 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                     # CREATE NEW DETALLE
                     detalle_to_create = DetalleOrdenesCompra(
                         orden_compra=instance,
-                        materia_prima=mp_map.get(detalle_data['materia_prima'].id) if detalle_data.get('materia_prima') else None,
-                        producto_reventa=pr_map.get(detalle_data['producto_reventa'].id) if detalle_data.get('producto_reventa') else None,
+                        variante_materia_prima=detalle_data.get('materia_prima'),
+                        variante_producto_reventa=detalle_data.get('producto_reventa'),
                         cantidad_solicitada=detalle_data.get('cantidad_solicitada', 0),
                         unidad_medida_compra=detalle_data.get('unidad_medida_compra'),
+                        unidad_empaquetado=detalle_data.get('unidad_empaquetado') if detalle_data.get('modo_compra') == 'contenedor' else None,
                         cantidad_recibida=detalle_data.get('cantidad_recibida', 0),
                         costo_unitario_usd=detalle_data.get('costo_unitario_usd', 0),
                         subtotal_linea_usd=detalle_data.get('subtotal_linea_usd', 0),
@@ -150,15 +156,16 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
 
                 # Update product references
                 if detalle_data.get('materia_prima'):
-                    detalle_obj.materia_prima = mp_map.get(detalle_data['materia_prima'].id)
-                    detalle_obj.producto_reventa = None
+                    detalle_obj.variante_materia_prima = detalle_data.get('materia_prima')
+                    detalle_obj.variante_producto_reventa = None
                 elif detalle_data.get('producto_reventa'):
-                    detalle_obj.producto_reventa = pr_map.get(detalle_data['producto_reventa'].id)
-                    detalle_obj.materia_prima = None
+                    detalle_obj.variante_producto_reventa = detalle_data.get('producto_reventa')
+                    detalle_obj.variante_materia_prima = None
 
                 # Update other fields
                 detalle_obj.cantidad_solicitada = detalle_data.get('cantidad_solicitada', detalle_obj.cantidad_solicitada)
                 detalle_obj.unidad_medida_compra = detalle_data.get('unidad_medida_compra', detalle_obj.unidad_medida_compra)
+                detalle_obj.unidad_empaquetado = detalle_data.get('unidad_empaquetado', detalle_obj.unidad_empaquetado) if detalle_data.get('modo_compra') == 'contenedor' else None
                 detalle_obj.cantidad_recibida = detalle_data.get('cantidad_recibida', detalle_obj.cantidad_recibida)
                 detalle_obj.costo_unitario_usd = detalle_data.get('costo_unitario_usd', detalle_obj.costo_unitario_usd)
                 detalle_obj.subtotal_linea_usd = detalle_data.get('subtotal_linea_usd', detalle_obj.subtotal_linea_usd)
@@ -169,8 +176,8 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
             if detalles_to_update:
                 DetalleOrdenesCompra.objects.bulk_update(
                     detalles_to_update,
-                    ['materia_prima', 'producto_reventa', 'cantidad_solicitada', 
-                    'unidad_medida_compra', 'cantidad_recibida', 'costo_unitario_usd', 
+                    ['variante_materia_prima', 'variante_producto_reventa', 'cantidad_solicitada', 
+                    'unidad_medida_compra', 'unidad_empaquetado', 'cantidad_recibida', 'costo_unitario_usd', 
                     'subtotal_linea_usd']
                 )
             
