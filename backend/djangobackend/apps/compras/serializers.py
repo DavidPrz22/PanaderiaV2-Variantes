@@ -61,6 +61,11 @@ class DetallesSerializer(serializers.ModelSerializer):
         allow_null=True, 
         required=False
     )
+    modo_compra = serializers.ChoiceField(
+        choices=[('unidad', 'Unidad'), ('contenedor', 'Contenedor')], 
+        required=False, 
+        write_only=True
+    )
 
     class Meta:
         model = DetalleOrdenesCompra
@@ -97,8 +102,8 @@ class DetallesSerializer(serializers.ModelSerializer):
         if not unidad_compra_id:
             return data
         
-        materia_prima = data.get('materia_prima')
-        producto_reventa = data.get('producto_reventa')
+        materia_prima_variante = data.get('materia_prima')
+        producto_reventa_variante = data.get('producto_reventa')
         
         if isinstance(unidad_compra_id, UnidadesDeMedida):
             unidad_compra = unidad_compra_id
@@ -106,12 +111,12 @@ class DetallesSerializer(serializers.ModelSerializer):
             unidad_compra = UnidadesDeMedida.objects.get(id=unidad_compra_id)
         
         # Check materia prima
-        if materia_prima:
-            if isinstance(materia_prima, MateriasPrimasVariantes):
-                base_unit = materia_prima.unidad_medida_base
+        if materia_prima_variante:
+            if isinstance(materia_prima_variante, MateriasPrimasVariantes):
+                base_unit = materia_prima_variante.materia_prima.unidad_medida_base
             else:
-                mp = MateriasPrimasVariantes.objects.get(id=materia_prima)
-                base_unit = mp.unidad_medida_base
+                mp_var = MateriasPrimasVariantes.objects.get(id=materia_prima_variante)
+                base_unit = mp_var.materia_prima.unidad_medida_base
             
             if unidad_compra.tipo_medida != base_unit.tipo_medida:
                 raise serializers.ValidationError(
@@ -121,12 +126,12 @@ class DetallesSerializer(serializers.ModelSerializer):
                 )
         
         # Check producto reventa
-        if producto_reventa:
-            if isinstance(producto_reventa, ProductosReventaVariantes):
-                base_unit = producto_reventa.unidad_medida_base
+        if producto_reventa_variante:
+            if isinstance(producto_reventa_variante, ProductosReventaVariantes):
+                base_unit = producto_reventa_variante.producto_reventa.unidad_medida_base
             else:
-                pr = ProductosReventaVariantes.objects.get(id=producto_reventa)
-                base_unit = pr.unidad_medida_base
+                pr_var = ProductosReventaVariantes.objects.get(id=producto_reventa_variante)
+                base_unit = pr_var.producto_reventa.unidad_medida_base
             
             if base_unit and unidad_compra.tipo_medida != base_unit.tipo_medida:
                 raise serializers.ValidationError(
@@ -221,10 +226,10 @@ class RecepcionCompraSerializer(serializers.Serializer):
 class DetallesResponseSerializer(serializers.ModelSerializer):
     # IDs of variants mapped to generic names for frontend compatibility
     materia_prima = serializers.IntegerField(source='variante_materia_prima.id', read_only=True, allow_null=True)
-    materia_prima_nombre = serializers.CharField(source='variante_materia_prima.materia_prima.nombre', read_only=True, allow_null=True)
+    materia_prima_nombre = serializers.CharField(source='variante_materia_prima.nombre_variante', read_only=True, allow_null=True)
     
     producto_reventa = serializers.IntegerField(source='variante_producto_reventa.id', read_only=True, allow_null=True)
-    producto_reventa_nombre = serializers.CharField(source='variante_producto_reventa.producto_reventa.nombre_producto', read_only=True, allow_null=True)
+    producto_reventa_nombre = serializers.CharField(source='variante_producto_reventa.nombre_variante', read_only=True, allow_null=True)
     
     # Nested objects
     unidad_medida_compra = UnidadMedidaSerializer(read_only=True)
@@ -232,6 +237,7 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
     
     # Computed fields from model properties
     cantidad_pendiente = serializers.ReadOnlyField()
+    modo_compra = serializers.SerializerMethodField()
     
     class Meta:
         model = DetalleOrdenesCompra
@@ -252,6 +258,11 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
             'subtotal_linea_usd',
             'subtotal_linea_ves'
         ]
+
+    def get_modo_compra(self, obj):
+        if obj.unidad_empaquetado:
+            return 'contenedor'
+        return 'unidad'
 
 
 class RecepcionCompraSerializer(serializers.Serializer):

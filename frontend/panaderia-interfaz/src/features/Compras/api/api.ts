@@ -51,6 +51,7 @@ export const getOrdenesComprasDetalles = async (
     const response = await apiClient.get(
       `/api/compras/ordenes-compra/${id}/detalles/`,
     );
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("Error fetching compras detalles:", error);

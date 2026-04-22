@@ -72,7 +72,7 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                     bulk_create_detalles.append(DetalleOrdenesCompra(
                         orden_compra=orden,
                         variante_materia_prima=materia_prima_obj,
-                        unidad_medida_compra=unidad_medida_compra_obj if modo_compra == 'unidad' else None,
+                        unidad_medida_compra=unidad_medida_compra_obj,
                         unidad_empaquetado=unidad_empaquetado_obj if modo_compra == 'contenedor' else None,  
                         **detalle_data
                     ))
@@ -80,7 +80,7 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                     bulk_create_detalles.append(DetalleOrdenesCompra(
                         orden_compra=orden,
                         variante_producto_reventa=producto_reventa_obj,
-                        unidad_medida_compra=unidad_medida_compra_obj if modo_compra == 'unidad' else None,
+                        unidad_medida_compra=unidad_medida_compra_obj,
                         unidad_empaquetado=unidad_empaquetado_obj if modo_compra == 'contenedor' else None,  
                         **detalle_data
                     ))

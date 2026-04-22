@@ -365,7 +365,9 @@ export const ComprasDetalles = ({
                             {item.cantidad_solicitada}
                           </TableCell>
                           <TableCell className="text-center">
-                            {item.unidad_medida_abrev}
+                            {item.empaquetado
+                              ? item.empaquetado.empaque_nombre
+                              : item.unidad_medida_compra?.nombre_completo}
                           </TableCell>
                           <TableCell className="text-right">
                             {formatCurrency(item.costo_unitario_usd)}
