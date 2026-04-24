@@ -47,6 +47,7 @@ export const OrdenCompraSchema = z.object({
 const loteRecepcion = z.object({
   id: z.number(),
   cantidad: z.coerce.number().min(1, "La cantidad debe ser mayor a 0"),
+  cantidad_inventario: z.coerce.number().optional(),
   fecha_caducidad: z.string().min(1, "La fecha de caducidad es requerida"),
 });
 
@@ -54,6 +55,7 @@ const detalleRecepcionSchema = z.object({
   detalle_oc_id: z.number(),
   lotes: z.array(loteRecepcion),
   cantidad_total_recibida: z.number(),
+  cantidad_total_inventario: z.number().optional(),
 });
 
 export const RecepcionFormSchema = z.object({

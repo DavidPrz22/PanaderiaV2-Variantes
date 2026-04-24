@@ -98,6 +98,7 @@ export type DetalleOC = {
   modo_compra: ModoCompra;
   empaquetado?: Empaquetado;
   unidad_medida_compra?: UnidadMedida;
+  unidad_medida_base?: UnidadMedida;
   cantidad_recibida?: number;
   cantidad_pendiente: number;
   costo_unitario_usd: number;
@@ -146,6 +147,7 @@ export type RecepcionOC = {
 export type LoteRecepcion = {
   id: number;
   cantidad: number;
+  cantidad_inventario?: number;
   fecha_caducidad: string;
 };
 

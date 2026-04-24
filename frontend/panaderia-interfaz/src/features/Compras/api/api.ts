@@ -135,7 +135,7 @@ export const crearRecepcionOC = async (
   params: TRecepcionFormSchema,
 ): Promise<{ message: string; orden: OrdenCompra }> => {
   try {
-    const response = await apiClient.post("/api/compras/compras/", params);
+    const response = await apiClient.post("/api/compras/recepciones/", params);
     return response.data;
   } catch (error) {
     console.error("Error creating reception:", error);

@@ -41,6 +41,7 @@ class ComponentesStockManagement(models.Model):
 
             self.__class__.objects.filter(id=self.id).update(stock_actual=stock_total)
             return stock_total
+
         
         # Fallback to product stock management if available (for ProductosElaborados)
         if hasattr(self, 'actualizar_product_stock'):
@@ -61,6 +62,16 @@ class ComponentesStockManagement(models.Model):
         if isinstance(self, MateriasPrimas):
             queryset = LotesMateriasPrimas.objects.filter(
                 variante_materia_prima__materia_prima=self, 
+                estado=LotesStatus.DISPONIBLE
+            )
+            if exclude_id:
+                queryset = queryset.exclude(id=exclude_id)
+            return queryset.order_by('fecha_caducidad').first()
+
+        from apps.inventario.models import MateriasPrimasVariantes
+        if isinstance(self, MateriasPrimasVariantes):
+            queryset = LotesMateriasPrimas.objects.filter(
+                variante_materia_prima=self, 
                 estado=LotesStatus.DISPONIBLE
             )
             if exclude_id:
@@ -117,7 +128,7 @@ class ComponentesStockManagement(models.Model):
                 'cantidad_consumida': cantidad_del_lote,
                 'costo_parcial_divisa': precio_calculado_divisa,
                 'costo_parcial_local': precio_calculado_local,
-                'es_materia_prima': isinstance(self, MateriasPrimas)
+                'es_materia_prima': True # Both MateriasPrimas and its variants
             })
             cantidad_restante -= cantidad_del_lote
 
@@ -356,7 +367,7 @@ class MateriasPrimasVariantes(models.Model):
     nombre_empaque_estandar = models.CharField(max_length=100, null=True, blank=True)
     cantidad_empaque_estandar = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     unidad_medida_empaque_estandar = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, related_name='materias_primas_empaque', null=True, blank=True)
-    
+
     def __str__(self):
         return self.nombre_variante 
 
@@ -967,11 +978,13 @@ def update_materia_prima_stock(sender, instance, **kwargs):
         )
         expired_lots.update(estado=LotesStatus.EXPIRADO)
 
-    total_stock = LotesMateriasPrimas.objects.filter(
-        variante_materia_prima__in=variantes,
-        fecha_caducidad__gt=timezone.now().date(),
-        estado=LotesStatus.DISPONIBLE
-    ).aggregate(total=Sum('stock_actual_lote'))['total'] or 0
+    # Update variant stock first
+    instance.variante_materia_prima.actualizar_stock()
+
+    # Update base material stock (sum of all its variants)
+    total_stock = MateriasPrimasVariantes.objects.filter(
+        materia_prima=materia_prima
+    ).aggregate(total=Sum('stock_actual'))['total'] or 0
 
     MateriasPrimas.objects.filter(id=materia_prima.id).update(stock_actual=total_stock)
 

@@ -145,7 +145,9 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                         unidad_empaquetado=detalle_data.get('unidad_empaquetado') if detalle_data.get('modo_compra') == 'contenedor' else None,
                         cantidad_recibida=detalle_data.get('cantidad_recibida', 0),
                         costo_unitario_usd=detalle_data.get('costo_unitario_usd', 0),
+                        costo_unitario_ves=detalle_data.get('costo_unitario_ves', 0),
                         subtotal_linea_usd=detalle_data.get('subtotal_linea_usd', 0),
+                        subtotal_linea_ves=detalle_data.get('subtotal_linea_ves', 0),
                     )
                     detalles_to_create.append(detalle_to_create)
                     continue
@@ -168,7 +170,9 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                 detalle_obj.unidad_empaquetado = detalle_data.get('unidad_empaquetado', detalle_obj.unidad_empaquetado) if detalle_data.get('modo_compra') == 'contenedor' else None
                 detalle_obj.cantidad_recibida = detalle_data.get('cantidad_recibida', detalle_obj.cantidad_recibida)
                 detalle_obj.costo_unitario_usd = detalle_data.get('costo_unitario_usd', detalle_obj.costo_unitario_usd)
+                detalle_obj.costo_unitario_ves = detalle_data.get('costo_unitario_ves', detalle_obj.costo_unitario_ves)
                 detalle_obj.subtotal_linea_usd = detalle_data.get('subtotal_linea_usd', detalle_obj.subtotal_linea_usd)
+                detalle_obj.subtotal_linea_ves = detalle_data.get('subtotal_linea_ves', detalle_obj.subtotal_linea_ves)
                 
                 detalles_to_update.append(detalle_obj)
 
@@ -178,7 +182,7 @@ class OrdenesCompraViewSet(viewsets.ModelViewSet):
                     detalles_to_update,
                     ['variante_materia_prima', 'variante_producto_reventa', 'cantidad_solicitada', 
                     'unidad_medida_compra', 'unidad_empaquetado', 'cantidad_recibida', 'costo_unitario_usd', 
-                    'subtotal_linea_usd']
+                    'costo_unitario_ves', 'subtotal_linea_usd', 'subtotal_linea_ves']
                 )
             
             if detalles_to_create:
@@ -273,7 +277,7 @@ class ComprasViewSet(viewsets.ModelViewSet):
             detalles_oc_ids = [d['detalle_oc_id'] for d in detalles_oc]
             detalles_orm = DetalleOrdenesCompra.objects.filter(
                 id__in=detalles_oc_ids
-            ).select_related('materia_prima', 'producto_reventa', 'unidad_medida_compra')
+            ).select_related('variante_materia_prima', 'variante_producto_reventa', 'unidad_medida_compra')
             
             # Create lookup dictionary for O(1) access
             detalles_dict = {d.id: d for d in detalles_orm}
@@ -294,21 +298,24 @@ class ComprasViewSet(viewsets.ModelViewSet):
                 
                 # Create lotes with individual quantities
                 for lote_data in detalle_data['lotes']:
-                    if oc_detalle.materia_prima:
-                        mp_map[oc_detalle.materia_prima.id] = oc_detalle.materia_prima
+                    if oc_detalle.variante_materia_prima:
+                        mp_map[oc_detalle.variante_materia_prima.materia_prima.id] = oc_detalle.variante_materia_prima.materia_prima
                         
                         # Convert purchase unit to base inventory unit if different
-                        base_unit_id = oc_detalle.materia_prima.unidad_medida_base_id
-                        purchase_unit_id = oc_detalle.unidad_medida_compra_id
-                        cantidad_lote = lote_data['cantidad']
+                        base_unit_id = oc_detalle.variante_materia_prima.materia_prima.unidad_medida_base_id
                         
+                        purchase_unit_id = oc_detalle.unidad_medida_compra_id if oc_detalle.unidad_medida_compra else oc_detalle.unidad_empaquetado.unidad_medida.id
+                        
+                        cantidad_lote = lote_data.get('cantidad_inventario', lote_data['cantidad'])
+                        
+                        # Fallback to backend conversion if cantidad_inventario not provided and units differ
                         if base_unit_id != purchase_unit_id:
                             from apps.core.models import UnidadesDeMedida
                             try:
                                 cantidad_lote = UnidadesDeMedida.convertir_cantidad(
                                     cantidad_lote, purchase_unit_id, base_unit_id
                                 )
-                                cantidad_lote = cantidad_lote.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                                cantidad_lote = cantidad_lote.quantize(Decimal('0.001'), rounding=ROUND_HALF_UP)
                             except ValidationError as e:
                                 return Response(
                                     {'error': str(e)},
@@ -316,22 +323,23 @@ class ComprasViewSet(viewsets.ModelViewSet):
                                 )
                         
                         lotes_mp_bulk.append(LotesMateriasPrimas(
-                            materia_prima=oc_detalle.materia_prima,
+                            variante_materia_prima=oc_detalle.variante_materia_prima,
                             proveedor=orden_compra.proveedor,
                             fecha_recepcion=fecha_recepcion,
                             fecha_caducidad=lote_data['fecha_caducidad'],
                             cantidad_recibida=cantidad_lote,  # Converted to base unit
                             stock_actual_lote=cantidad_lote,  # Converted to base unit
-                            costo_unitario_usd=oc_detalle.costo_unitario_usd,
+                            costo_unitario_divisa=oc_detalle.costo_unitario_usd,
+                            costo_unitario_local=oc_detalle.costo_unitario_ves,
                             detalle_oc=oc_detalle
                         ))
-                    elif oc_detalle.producto_reventa:
-                        pr_map[oc_detalle.producto_reventa.id] = oc_detalle.producto_reventa
+                    elif oc_detalle.variante_producto_reventa:
+                        pr_map[oc_detalle.variante_producto_reventa.id] = oc_detalle.variante_producto_reventa
                         
                         # Convert purchase unit to base inventory unit if different
-                        base_unit_id = oc_detalle.producto_reventa.unidad_base_inventario_id
-                        purchase_unit_id = oc_detalle.unidad_medida_compra_id
-                        cantidad_lote = lote_data['cantidad']
+                        base_unit_id = oc_detalle.variante_producto_reventa.producto_reventa.unidad_base_inventario_id
+                        purchase_unit_id = oc_detalle.variante_producto_reventa.unidad_medida_compra_id
+                        cantidad_lote = lote_data.get('cantidad_inventario', lote_data['cantidad'])
                         
                         if base_unit_id != purchase_unit_id:
                             from apps.core.models import UnidadesDeMedida
@@ -339,7 +347,7 @@ class ComprasViewSet(viewsets.ModelViewSet):
                                 cantidad_lote = UnidadesDeMedida.convertir_cantidad(
                                     cantidad_lote, purchase_unit_id, base_unit_id
                                 )
-                                cantidad_lote = cantidad_lote.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                                cantidad_lote = cantidad_lote.quantize(Decimal('0.001'), rounding=ROUND_HALF_UP)
                             except ValidationError as e:
                                 return Response(
                                     {'error': str(e)},
@@ -347,7 +355,7 @@ class ComprasViewSet(viewsets.ModelViewSet):
                                 )
                         
                         lotes_pr_bulk.append(LotesProductosReventa(
-                            producto_reventa=oc_detalle.producto_reventa,
+                            variante_producto_reventa=oc_detalle.variante_producto_reventa,
                             proveedor=orden_compra.proveedor,
                             fecha_recepcion=fecha_recepcion,
                             fecha_caducidad=lote_data['fecha_caducidad'],
@@ -407,10 +415,10 @@ class ComprasViewSet(viewsets.ModelViewSet):
                 detalles_compra_bulk.append(DetalleCompras(
                     compra=compra,
                     detalle_oc=oc_detalle,
-                    materia_prima=oc_detalle.materia_prima,
-                    producto_reventa=oc_detalle.producto_reventa,
+                    variante_materia_prima=oc_detalle.variante_materia_prima,
+                    variante_producto_reventa=oc_detalle.variante_producto_reventa,
                     cantidad_recibida=cantidad_total_recibida,
-                    unidad_medida=oc_detalle.unidad_medida_compra,
+                    unidad_medida=oc_detalle.unidad_medida_compra if oc_detalle.unidad_medida_compra else oc_detalle.unidad_empaquetado.unidad_medida,
                     costo_unitario_usd=oc_detalle.costo_unitario_usd,
                     subtotal_usd=cantidad_total_recibida * oc_detalle.costo_unitario_usd,
                 ))

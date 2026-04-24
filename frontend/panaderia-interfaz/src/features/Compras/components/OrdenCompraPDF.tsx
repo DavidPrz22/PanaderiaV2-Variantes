@@ -426,7 +426,7 @@ export const OrdenCompraPDF = ({
                 </Text>
                 <Text style={[styles.tableCell, styles.colDescription]}>
                   {item.producto_reventa_nombre || item.materia_prima_nombre}
-                  {item.unidad_medida_abrev && ` (${item.unidad_medida_abrev})`}
+                  {item.empaquetado ? ` (${item.empaquetado.empaque_nombre})` : ` (${item.unidad_medida_compra?.abreviatura})`}
                 </Text>
                 <Text style={[styles.tableCell, styles.colUnitPrice]}>
                   {formatCurrency(item.costo_unitario_usd)}

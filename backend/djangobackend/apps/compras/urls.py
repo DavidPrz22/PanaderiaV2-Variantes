@@ -5,6 +5,6 @@ router = DefaultRouter()
 router.register('proveedores', ProveedoresViewSet, basename='proveedores')
 router.register('ordenes-compra', OrdenesCompraViewSet, basename='ordenes-compra')
 router.register('ordenes-compra-lista', OrdenesCompraTableViewSet, basename='ordenes-compra-lista')
-router.register('compras', ComprasViewSet, basename='compras')
+router.register('recepciones', ComprasViewSet, basename='recepciones')
 router.register('pagos-proveedores', PagosProveedoresViewSet, basename='pagos-proveedores')
 urlpatterns = router.urls

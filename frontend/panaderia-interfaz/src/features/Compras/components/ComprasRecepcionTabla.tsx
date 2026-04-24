@@ -19,6 +19,7 @@ import { ComprasFormTotals } from "./ComprasFormTotals";
 import { ComprasRecepcionTotals } from "./ComprasRecepcionTotals";
 import { formatCurrency } from "../utils/itemHandlers";
 import { getReceptions } from "../utils/dataFormatter";
+import type { UnidadMedida, Empaquetado } from "../types/types";
 
 export function ComprasRecepcion({
   ordenCompra,
@@ -135,10 +136,12 @@ export function ComprasRecepcion({
               {
                 id: 1,
                 cantidad: detalle.cantidad_pendiente,
+                cantidad_inventario: detalle.empaquetado ? Number(detalle.cantidad_pendiente) * Number(detalle.empaquetado.cantidad_unidad_medida) : Number(detalle.cantidad_pendiente),
                 fecha_caducidad: "",
               },
             ],
             cantidad_total_recibida: Number(detalle.cantidad_pendiente),
+            cantidad_total_inventario: detalle.empaquetado ? Number(detalle.cantidad_pendiente) * Number(detalle.empaquetado.cantidad_unidad_medida) : Number(detalle.cantidad_pendiente),
           })),
         recibido_parcialmente: false,
         monto_total_recibido_usd: hasAdelanto
@@ -156,9 +159,15 @@ export function ComprasRecepcion({
       detalles: ordenCompra.detalles.map((detalle) => ({
         detalle_oc_id: detalle.id,
         lotes: [
-          { id: 1, cantidad: detalle.cantidad_solicitada, fecha_caducidad: "" },
+          { 
+            id: 1, 
+            cantidad: detalle.cantidad_solicitada, 
+            cantidad_inventario: detalle.empaquetado ? Number(detalle.cantidad_solicitada) * Number(detalle.empaquetado.cantidad_unidad_medida) : Number(detalle.cantidad_solicitada),
+            fecha_caducidad: "" 
+          },
         ],
         cantidad_total_recibida: Number(detalle.cantidad_solicitada),
+        cantidad_total_inventario: detalle.empaquetado ? Number(detalle.cantidad_solicitada) * Number(detalle.empaquetado.cantidad_unidad_medida) : Number(detalle.cantidad_solicitada),
       })),
       recibido_parcialmente: false,
       monto_total_recibido_usd: hasAdelanto
@@ -179,7 +188,7 @@ export function ComprasRecepcion({
     resolver: zodResolver(RecepcionFormSchema),
     defaultValues: getFormDefaultData() as TRecepcionFormSchema,
   });
-
+  console.log(watch("detalles"))
   const [receptions, setReceptions] = useState<ComponentesUIRecepcion[]>(
     getReceptions(ordenCompra),
   );
@@ -196,7 +205,7 @@ export function ComprasRecepcion({
             ...reception,
             lotes: [
               ...reception.lotes,
-              { id: newLotNumber, cantidad: 0, fecha_caducidad: "" },
+              { id: newLotNumber, cantidad: 0, cantidad_inventario: 0, fecha_caducidad: "" },
             ],
           };
         }
@@ -210,7 +219,7 @@ export function ComprasRecepcion({
 
     setValue(`detalles.${detalle_oc_index}.lotes`, [
       ...(watch(`detalles.${detalle_oc_index}.lotes`) || []),
-      { id: newLotNumber, cantidad: 0, fecha_caducidad: "" },
+      { id: newLotNumber, cantidad: 0, cantidad_inventario: 0, fecha_caducidad: "" },
     ]);
     setValue(`detalles.${detalle_oc_index}.cantidad_total_recibida`, 0);
   };
@@ -218,6 +227,7 @@ export function ComprasRecepcion({
   const handleRemoveLot = (lineId: number, lotId: number) => {
     let updatedLots: LoteRecepcion[] = [];
     let updatedCantidadTotalRecibida = 0;
+    let updatedCantidadTotalInventario = 0;
 
     const newReceptions = receptions.map((reception) => {
       if (reception.linea_oc.id === lineId) {
@@ -226,13 +236,18 @@ export function ComprasRecepcion({
           (sum, lot) => sum + (Number(lot.cantidad) || 0),
           0,
         );
+        updatedCantidadTotalInventario = updatedLots.reduce(
+          (sum, lot) => sum + (Number(lot.cantidad_inventario) || 0),
+          0,
+        );
         return {
           ...reception,
           lotes:
             updatedLots.length > 0
               ? updatedLots
-              : [{ id: 1, cantidad: 0, fecha_caducidad: "" }],
+              : [{ id: 1, cantidad: 0, cantidad_inventario: 0, fecha_caducidad: "" }],
           cantidad_total_recibida: updatedCantidadTotalRecibida,
+          cantidad_total_inventario: updatedCantidadTotalInventario,
         };
       }
       return reception;
@@ -244,8 +259,9 @@ export function ComprasRecepcion({
       lineId,
       updatedLots.length > 0
         ? updatedLots
-        : [{ id: 1, cantidad: 0, fecha_caducidad: "" }],
+        : [{ id: 1, cantidad: 0, cantidad_inventario: 0, fecha_caducidad: "" }],
       updatedCantidadTotalRecibida,
+      updatedCantidadTotalInventario,
     );
   };
 
@@ -253,6 +269,7 @@ export function ComprasRecepcion({
     detalle_oc_id: number,
     lotes: LoteRecepcion[],
     updatedCantidadTotalRecibida: number,
+    updatedCantidadTotalInventario: number,
   ) => {
     const detalle_oc_index = watch("detalles").findIndex(
       (detalle) => detalle.detalle_oc_id === detalle_oc_id,
@@ -262,40 +279,48 @@ export function ComprasRecepcion({
       `detalles.${detalle_oc_index}.cantidad_total_recibida`,
       updatedCantidadTotalRecibida,
     );
+    setValue(
+      `detalles.${detalle_oc_index}.cantidad_total_inventario`,
+      updatedCantidadTotalInventario,
+    );
   };
 
   const updateReceptions = (
     lineId: number,
     lotId: number,
-    field: "cantidad" | "fecha_caducidad",
-    value: string | number,
+    updates: Partial<LoteRecepcion>,
   ) => {
-    // Validate negative quantities - return current state if invalid
-    if (field === "cantidad" && typeof value === "number" && value < 0) {
+    // Validate negative quantities
+    if (updates.cantidad !== undefined && updates.cantidad < 0) {
       const currentReception = receptions.find((r) => r.linea_oc.id === lineId);
       if (currentReception) {
         return {
           updatedLots: currentReception.lotes,
-          updatedCantidadTotalRecibida:
-            currentReception.cantidad_total_recibida,
+          updatedCantidadTotalRecibida: currentReception.cantidad_total_recibida,
+          updatedCantidadTotalInventario: currentLotsInventoryTotal(currentReception.lotes),
         };
       }
-      return { updatedLots: [], updatedCantidadTotalRecibida: 0 };
+      return { updatedLots: [], updatedCantidadTotalRecibida: 0, updatedCantidadTotalInventario: 0 };
     }
 
     let updatedLots: LoteRecepcion[] = [];
     let updatedCantidadTotalRecibida = 0;
+    let updatedCantidadTotalInventario = 0;
 
     const newReceptions = receptions.map((reception) => {
       if (reception.linea_oc.id === lineId) {
         updatedLots = reception.lotes.map((lot) => {
           if (lot.id === lotId) {
-            return { ...lot, [field]: value };
+            return { ...lot, ...updates };
           }
           return lot;
         });
         updatedCantidadTotalRecibida = updatedLots.reduce(
           (sum, lot) => sum + (Number(lot.cantidad) || 0),
+          0,
+        );
+        updatedCantidadTotalInventario = updatedLots.reduce(
+          (sum, lot) => sum + (Number(lot.cantidad_inventario) || 0),
           0,
         );
         return {
@@ -308,7 +333,11 @@ export function ComprasRecepcion({
     });
 
     setReceptions(newReceptions);
-    return { updatedLots, updatedCantidadTotalRecibida };
+    return { updatedLots, updatedCantidadTotalRecibida, updatedCantidadTotalInventario };
+  };
+
+  const currentLotsInventoryTotal = (lots: LoteRecepcion[]) => {
+    return lots.reduce((sum, lot) => sum + (Number(lot.cantidad_inventario) || 0), 0);
   };
 
   const checkPartiallyReceived = (
@@ -337,19 +366,17 @@ export function ComprasRecepcion({
   const handleLotChange = (
     lineId: number,
     lotId: number,
-    field: "cantidad" | "fecha_caducidad",
-    value: string | number,
+    updates: Partial<LoteRecepcion>,
   ) => {
     // Update UI state and get the updated values
-    const { updatedLots, updatedCantidadTotalRecibida } = updateReceptions(
+    const { updatedLots, updatedCantidadTotalRecibida, updatedCantidadTotalInventario } = updateReceptions(
       lineId,
       lotId,
-      field,
-      value,
+      updates,
     );
 
     // Sync changes with react-hook-form state
-    updateFormDetalles(lineId, updatedLots, updatedCantidadTotalRecibida);
+    updateFormDetalles(lineId, updatedLots, updatedCantidadTotalRecibida, updatedCantidadTotalInventario);
     checkPartiallyReceived(lineId, updatedCantidadTotalRecibida);
     updateMontoTotalRecibido();
   };
@@ -438,6 +465,60 @@ export function ComprasRecepcion({
     return "";
   };
 
+  const convertAmountTobaseUnit = (
+    amount: number,
+    unidad_base?: UnidadMedida,
+    unidad_compra?: UnidadMedida,
+    empaquetado?: Empaquetado,
+  ) => {
+    if (!unidad_base) return "";
+
+    const conversionFactors: Record<string, number> = {
+      // Weight (reference: g)
+      mg: 0.001,
+      g: 1,
+      kg: 1000,
+      // Volume (reference: l)
+      ml: 0.001,
+      l: 1,
+    };
+
+    let totalInInputUnit = amount;
+    let inputUnit = unidad_compra;
+
+    if (empaquetado) {
+      // If buying by container, amount is number of containers
+      // Each container has cantidad_unidad_medida of its own unit_medida
+      totalInInputUnit = amount * empaquetado.cantidad_unidad_medida;
+      inputUnit = empaquetado.unidad_medida;
+    }
+
+    if (!inputUnit) {
+      return `${amount} unidades agregadas al stock`;
+    }
+
+    if (inputUnit.id === unidad_base.id) {
+      return `${totalInInputUnit} ${unidad_base.abreviatura} agregados al stock`;
+    }
+
+    const fromFactor = conversionFactors[inputUnit.abreviatura.toLowerCase()];
+    const toFactor = conversionFactors[unidad_base.abreviatura.toLowerCase()];
+
+    if (
+      fromFactor &&
+      toFactor &&
+      inputUnit.tipo_medida === unidad_base.tipo_medida
+    ) {
+      const convertedAmount = (totalInInputUnit * fromFactor) / toFactor;
+      // Round to 3 decimal places to avoid floating point issues
+      const roundedAmount = Math.round(convertedAmount * 1000) / 1000;
+      return `${roundedAmount} ${unidad_base.abreviatura} agregados al stock`;
+    }
+
+    // Fallback if no conversion found
+    return `${totalInInputUnit} ${inputUnit.abreviatura} agregados al stock`;
+  };
+
   return (
     <div className="mx-8 py-5 relative">
       {isCreatingRecepcion && (
@@ -495,6 +576,17 @@ export function ComprasRecepcion({
                         <p className="font-medium text-gray-900">
                           {getProductDisplayName(reception.linea_oc)}
                         </p>
+                        {reception.linea_oc.empaquetado && (
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-500">
+                              {reception.linea_oc.empaquetado.empaque_nombre}
+                            </p>
+                            <p className="text-sm">
+                              · Total esperado: {reception.linea_oc.cantidad_solicitada * reception.linea_oc.empaquetado.cantidad_unidad_medida}{" "}
+                              {reception.linea_oc.empaquetado.unidad_medida.abreviatura}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                     {isPartial ? (
@@ -616,18 +708,25 @@ export function ComprasRecepcion({
                                   const maxVal = isPartial
                                     ? reception.linea_oc.cantidad_pendiente
                                     : reception.linea_oc.cantidad_solicitada;
-                                  let val = Number(e.target.value) || 0;
+                                  let cantidad_recibida = Number(e.target.value) || 0;
 
-                                  if (val > maxVal) {
-                                    val = maxVal;
-                                    e.target.value = val.toString();
+                                  if (cantidad_recibida > maxVal) {
+                                    cantidad_recibida = maxVal;
+                                    e.target.value = cantidad_recibida.toString();
                                   }
 
+                                  let cantidad_inventario = cantidad_recibida;
+                                  if (reception.linea_oc.empaquetado){
+                                    cantidad_inventario = cantidad_recibida * reception.linea_oc.empaquetado.cantidad_unidad_medida;
+                                  }
+                                  
                                   handleLotChange(
                                     reception.linea_oc.id,
                                     lot.id,
-                                    "cantidad",
-                                    val
+                                    { 
+                                      cantidad: cantidad_recibida,
+                                      cantidad_inventario: cantidad_inventario 
+                                    }
                                   );
                                 }}
                                 placeholder="Cantidad a recibir..."
@@ -643,14 +742,23 @@ export function ComprasRecepcion({
                                   handleLotChange(
                                     reception.linea_oc.id,
                                     lot.id,
-                                    "fecha_caducidad",
-                                    v,
+                                    { fecha_caducidad: v },
                                   )
                                 }
                                 icon={<CalendarIcon className="h-4 w-4" />}
                               />
                             </div>
                           </div>
+
+                          <div className="text-sm px-2 font-medium">
+                                {convertAmountTobaseUnit(
+                                  Number(lot.cantidad) || 0,
+                                  reception.linea_oc.unidad_medida_base,
+                                  reception.linea_oc.unidad_medida_compra,
+                                  reception.linea_oc.empaquetado
+                                )}
+                          </div>
+
                           <div className="grid grid-cols-2 gap-2 text-red-500 text-xs">
                             <p className="col-span-1 text-red-500 text-sm">
                               {getErrorMessage(

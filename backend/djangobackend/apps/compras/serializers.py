@@ -207,6 +207,7 @@ class LoteRecepcionSerializer(serializers.Serializer):
     """Para recibir datos de lotes en la recepción"""
     id = serializers.IntegerField()
     cantidad = serializers.DecimalField(max_digits=10, decimal_places=2)
+    cantidad_inventario = serializers.DecimalField(max_digits=10, decimal_places=3, required=False)
     fecha_caducidad = serializers.DateField()
 
 
@@ -214,6 +215,7 @@ class DetalleRecepcionSerializer(serializers.Serializer):
     detalle_oc_id = serializers.IntegerField()
     lotes = LoteRecepcionSerializer(many=True)
     cantidad_total_recibida = serializers.DecimalField(max_digits=10, decimal_places=2)
+    cantidad_total_inventario = serializers.DecimalField(max_digits=10, decimal_places=3, required=False)
 
 
 class RecepcionCompraSerializer(serializers.Serializer):
@@ -234,6 +236,7 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
     # Nested objects
     unidad_medida_compra = UnidadMedidaSerializer(read_only=True)
     empaquetado = EmpaquetadoProductosSerializer(source='unidad_empaquetado', read_only=True)
+    unidad_medida_base = serializers.SerializerMethodField()
     
     # Computed fields from model properties
     cantidad_pendiente = serializers.ReadOnlyField()
@@ -251,6 +254,7 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
             'modo_compra',
             'empaquetado',
             'unidad_medida_compra',
+            'unidad_medida_base',
             'cantidad_recibida',
             'cantidad_pendiente',
             'costo_unitario_usd',
@@ -263,6 +267,13 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
         if obj.unidad_empaquetado:
             return 'contenedor'
         return 'unidad'
+
+    def get_unidad_medida_base(self, obj):
+        if obj.variante_materia_prima:
+            return UnidadMedidaSerializer(obj.variante_materia_prima.materia_prima.unidad_medida_base).data
+        if obj.variante_producto_reventa:
+            return UnidadMedidaSerializer(obj.variante_producto_reventa.producto_reventa.unidad_medida_base).data
+        return None
 
 
 class RecepcionCompraSerializer(serializers.Serializer):
@@ -284,7 +295,7 @@ class RecepcionCompraSerializer(serializers.Serializer):
         detalles_oc_ids = [d['detalle_oc_id'] for d in data['detalles']]
         detalles_oc = DetalleOrdenesCompra.objects.filter(
             id__in=detalles_oc_ids
-        ).select_related('materia_prima', 'producto_reventa')
+        ).select_related('variante_materia_prima', 'variante_producto_reventa')
         
         detalles_dict = {d.id: d for d in detalles_oc}
 
@@ -300,8 +311,8 @@ class RecepcionCompraSerializer(serializers.Serializer):
             
             if cantidad_recibida > cantidad_pendiente:
                 producto_nombre = (
-                    oc_detalle.materia_prima.nombre if oc_detalle.materia_prima 
-                    else oc_detalle.producto_reventa.nombre_producto
+                    oc_detalle.variante_materia_prima.materia_prima.nombre if oc_detalle.variante_materia_prima 
+                    else oc_detalle.variante_producto_reventa.producto_reventa.nombre_producto
                 )
                 raise serializers.ValidationError(
                     f"La cantidad recibida de '{producto_nombre}' ({cantidad_recibida}) "

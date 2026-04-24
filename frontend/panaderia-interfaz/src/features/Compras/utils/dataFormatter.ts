@@ -11,9 +11,15 @@ export const getReceptions = (
       .map((line) => ({
         linea_oc: line,
         lotes: [
-          { id: 1, cantidad: line.cantidad_pendiente, fecha_caducidad: "" },
+          { 
+            id: 1, 
+            cantidad: line.cantidad_pendiente, 
+            cantidad_inventario: line.empaquetado ? Number(line.cantidad_pendiente) * Number(line.empaquetado.cantidad_unidad_medida) : Number(line.cantidad_pendiente),
+            fecha_caducidad: "" 
+          },
         ],
         cantidad_total_recibida: Number(line.cantidad_pendiente),
+        cantidad_total_inventario: line.empaquetado ? Number(line.cantidad_pendiente) * Number(line.empaquetado.cantidad_unidad_medida) : Number(line.cantidad_pendiente),
         cantidad_en_inventario: Number(line.cantidad_recibida),
         cantidad_pendiente: Number(line.cantidad_pendiente),
       }));
@@ -24,9 +30,15 @@ export const getReceptions = (
     (line) => ({
       linea_oc: line,
       lotes: [
-        { id: 1, cantidad: line.cantidad_solicitada, fecha_caducidad: "" },
+        { 
+          id: 1, 
+          cantidad: line.cantidad_solicitada, 
+          cantidad_inventario: line.empaquetado ? Number(line.cantidad_solicitada) * Number(line.empaquetado.cantidad_unidad_medida) : Number(line.cantidad_solicitada),
+          fecha_caducidad: "" 
+        },
       ],
       cantidad_total_recibida: Number(line.cantidad_solicitada),
+      cantidad_total_inventario: line.empaquetado ? Number(line.cantidad_solicitada) * Number(line.empaquetado.cantidad_unidad_medida) : Number(line.cantidad_solicitada),
     }),
   );
 
