@@ -26,10 +26,10 @@ class OrdenesCompra(models.Model):
     fecha_entrega_esperada = models.DateField(null=False, blank=False)
     fecha_entrega_real = models.DateField(null=True, blank=True)
     estado_oc = models.ForeignKey(EstadosOrdenCompra, on_delete=models.CASCADE, null=False, blank=False)
-    monto_total_oc_usd = models.DecimalField(max_digits=15, decimal_places=3, default=0)
-    monto_total_oc_ves = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    monto_total_oc_usd = models.DecimalField(max_digits=15, decimal_places=4, default=0)
+    monto_total_oc_ves = models.DecimalField(max_digits=15, decimal_places=4, default=0)
     metodo_pago = models.ForeignKey(MetodosDePago, on_delete=models.CASCADE, null=False, blank=False)
-    tasa_cambio_aplicada = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    tasa_cambio_aplicada = models.DecimalField(max_digits=15, decimal_places=4, default=0)
     direccion_envio = models.TextField(max_length=255, null=True, blank=True)
     fecha_envio_oc = models.DateField(null=True, blank=True)
     email_enviado = models.BooleanField(default=False)
@@ -46,14 +46,14 @@ class DetalleOrdenesCompra(models.Model):
     orden_compra = models.ForeignKey(OrdenesCompra, on_delete=models.CASCADE, null=False, blank=False, related_name='detalles')
     variante_materia_prima = models.ForeignKey('inventario.MateriasPrimasVariantes', on_delete=models.CASCADE, null=True)
     variante_producto_reventa = models.ForeignKey('inventario.ProductosReventaVariantes', on_delete=models.CASCADE, null=True)
-    cantidad_solicitada = models.DecimalField(max_digits=15, decimal_places=3, default=0)
-    cantidad_recibida = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    cantidad_solicitada = models.DecimalField(max_digits=15, decimal_places=4, default=0)
+    cantidad_recibida = models.DecimalField(max_digits=15, decimal_places=4, default=0)
     unidad_medida_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=True, blank=True)
     unidad_empaquetado = models.ForeignKey(EmpaquetadoProductos, on_delete=models.CASCADE, null=True, blank=True)
-    costo_unitario_usd = models.DecimalField(max_digits=15, decimal_places=3, default=0)
-    costo_unitario_ves = models.DecimalField(max_digits=15, decimal_places=3, default=0)
-    subtotal_linea_usd = models.DecimalField(max_digits=15, decimal_places=3, default=0)
-    subtotal_linea_ves = models.DecimalField(max_digits=15, decimal_places=3, default=0)
+    costo_unitario_usd = models.DecimalField(max_digits=15, decimal_places=4, default=0)
+    costo_unitario_ves = models.DecimalField(max_digits=15, decimal_places=4, default=0)
+    subtotal_linea_usd = models.DecimalField(max_digits=15, decimal_places=4, default=0)
+    subtotal_linea_ves = models.DecimalField(max_digits=15, decimal_places=4, default=0)
     
     @property
     def cantidad_pendiente(self):
@@ -107,7 +107,7 @@ class Compras(models.Model):
 
     monto_pendiente_pago_usd = models.DecimalField(
         max_digits=15, 
-        decimal_places=3, 
+        decimal_places=4, 
         default=0,
         help_text="Monto pendiente de pago en USD"
     )
@@ -136,21 +136,21 @@ class Compras(models.Model):
     # Montos de esta recepción específica
     monto_recepcion_usd = models.DecimalField(
         max_digits=15, 
-        decimal_places=3, 
+        decimal_places=4, 
         default=0,
         help_text="Monto total de esta recepción en USD"
     )
 
     monto_recepcion_ves = models.DecimalField(
         max_digits=15, 
-        decimal_places=3, 
+        decimal_places=4, 
         default=0,
         help_text="Monto total de esta recepción en VES"
     )
 
     tasa_cambio_aplicada = models.DecimalField(
         max_digits=15, 
-        decimal_places=3, 
+        decimal_places=4, 
         default=0,
         help_text="Tasa de cambio USD/VES al momento de la recepción"
     )
@@ -219,7 +219,7 @@ class DetalleCompras(models.Model):
     # Cantidades
     cantidad_recibida = models.DecimalField(
         max_digits=10, 
-        decimal_places=2,
+        decimal_places=4,
         help_text="Cantidad recibida en esta entrega"
     )
     
@@ -232,13 +232,13 @@ class DetalleCompras(models.Model):
     # Costos
     costo_unitario_usd = models.DecimalField(
         max_digits=10, 
-        decimal_places=2,
+        decimal_places=4,
         help_text="Costo unitario en USD"
     )
     
     subtotal_usd = models.DecimalField(
         max_digits=10, 
-        decimal_places=2,
+        decimal_places=4,
         help_text="Subtotal de esta línea (cantidad * costo_unitario)"
     )
     
@@ -317,19 +317,19 @@ class PagosProveedores(models.Model):
     # Montos
     monto_pago_usd = models.DecimalField(
         max_digits=10, 
-        decimal_places=3,
+        decimal_places=4,
         help_text="Monto pagado en USD"
     )
     
     monto_pago_ves = models.DecimalField(
         max_digits=10, 
-        decimal_places=3,
+        decimal_places=4,
         help_text="Monto pagado en VES"
     )
     
     tasa_cambio_aplicada = models.DecimalField(
         max_digits=10, 
-        decimal_places=3,
+        decimal_places=4,
         help_text="Tasa de cambio USD/VES al momento del pago"
     )
     

@@ -21,9 +21,25 @@ export function CompraLineaRow({ linea, tasaCambio, onChange, onRemove, autoFocu
 
   // Optimized state: only store the base unit details needed for filtering
   const [baseUnit, setBaseUnit] = useState<UnidadMedida | null>(null);
-  const [costoUnitarioUSD, setCostoUnitarioUSD] = useState<number>(linea.costo_unitario_usd || 0);
+  const [costoUnitarioUSD, setCostoUnitarioUSD] = useState<string>(linea.costo_unitario_usd?.toString() || "");
+  const [cantidadSolicitada, setCantidadSolicitada] = useState<string>(linea.cantidad_solicitada?.toString() || "");
   const { data: unidadesMedida } = useUnidadesMedidaQuery();
   const { data: empaquetadoProductos } = useEmpaquetadoProductosQuery();
+
+  // Sync local string states with props when they change externally
+  useMemo(() => {
+    const propCosto = linea.costo_unitario_usd?.toString() || "";
+    const propCant = linea.cantidad_solicitada?.toString() || "";
+    
+    // Only update if the numeric value actually changed (to avoid breaking "0." typing)
+    if (parseFloat(costoUnitarioUSD) !== (linea.costo_unitario_usd || 0)) {
+      setCostoUnitarioUSD(propCosto);
+    }
+    if (parseFloat(cantidadSolicitada) !== (linea.cantidad_solicitada || 0)) {
+      setCantidadSolicitada(propCant);
+    }
+  }, [linea.costo_unitario_usd, linea.cantidad_solicitada]);
+
 
   // Derived measurement type: prioritized current selection, falls back to unit lookup
   const currentUnitIdValue = useMemo(() => {
@@ -54,9 +70,10 @@ export function CompraLineaRow({ linea, tasaCambio, onChange, onRemove, autoFocu
 
   const handleSelectProduct = (producto: Producto, variante: VarianteProducto) => {
     setBaseUnit(producto.unidad_medida_base);
-    setCostoUnitarioUSD(variante.precio_compra_divisa);
-    const newLinea = handleProductSelection(linea, producto, variante);
-    onChange(newLinea);
+    const precio = variante.precio_compra_divisa;
+    setCostoUnitarioUSD(precio.toString());
+    const newLine = handleProductSelection(linea, producto, variante);
+    onChange({ ...newLine, costo_unitario_usd: precio });
   };
 
   const currentProductName = linea.materia_prima_nombre || linea.producto_reventa_nombre;
@@ -66,16 +83,19 @@ export function CompraLineaRow({ linea, tasaCambio, onChange, onRemove, autoFocu
   const displaySubtotalLocal = RoundToTwo(displaySubtotal * (tasaCambio || 1));
 
   const handleCantidadChange = (val: string) => {
+    setCantidadSolicitada(val);
     const cantidad = parseFloat(val) || 0;
     const newLinea = updateItemField(linea, "cantidad_solicitada", cantidad);
     onChange(newLinea);
   };
 
   const handleCostoChange = (val: string) => {
+    setCostoUnitarioUSD(val);
     const costo = parseFloat(val) || 0;
-    let costoUsd = RoundToTwo(costo);
+    // Allow up to 4 decimal places for unit costs to support values like 0.045
+    let costoUsd = Math.round(costo * 10000) / 10000;
     let costoBs = RoundToTwo(costo * tasaCambio);
-    setCostoUnitarioUSD(costoUsd);
+    
     const newLineausd = updateItemField(linea, "costo_unitario_usd", costoUsd);
     const newLinea = updateItemField(newLineausd, "costo_unitario_ves", costoBs);
     onChange(newLinea);
@@ -185,7 +205,8 @@ export function CompraLineaRow({ linea, tasaCambio, onChange, onRemove, autoFocu
         <FormInput
           type="number"
           min={0}
-          value={linea.cantidad_solicitada || ""}
+          step="any"
+          value={cantidadSolicitada}
           onChange={(e) => handleCantidadChange(e.target.value)}
           className="h-10 text-center w-full"
           placeholder="0"
@@ -197,12 +218,13 @@ export function CompraLineaRow({ linea, tasaCambio, onChange, onRemove, autoFocu
       <div className="col-span-2 flex items-center gap-1">
         <FormInput
           type="number"
-          step="0.01"
-          value={costoUnitarioUSD || ""}
+          step="any"
+          value={costoUnitarioUSD}
           onChange={(e) => handleCostoChange(e.target.value)}
           className="h-10 pl-8 w-full"
-          placeholder="0.00"
+          placeholder="0.000"
           containerClassName="w-full"
+          
           disabled={!currentProductId}
         />
       </div>

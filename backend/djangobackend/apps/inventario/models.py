@@ -346,9 +346,9 @@ class ProductosStockManagement(models.Model):
 class MateriasPrimas(ComponentesStockManagement):
     nombre = models.CharField(max_length=100, null=False, blank=False, unique=True)
     unidad_medida_base = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='materias_primas_unidad_base')
-    stock_actual = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    stock_actual = models.DecimalField(max_digits=20, decimal_places=4, default=0)
     SKU = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    punto_reorden = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=False, blank=False)
+    punto_reorden = models.DecimalField(max_digits=20, decimal_places=4, default=0, null=False, blank=False)
     categoria = models.ForeignKey(CategoriasMateriaPrima, on_delete=models.CASCADE)
     descripcion = models.TextField(max_length=255, null=True, blank=True)
     fecha_creacion_registro = models.DateField(auto_now_add=True)
@@ -362,10 +362,10 @@ class MateriasPrimasVariantes(models.Model):
     nombre_variante = models.CharField(max_length=100, null=False, blank=False)
     unidad_compra = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False)
     SKU_variante = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    precio_compra_divisa = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
-    precio_compra_local = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
+    precio_compra_divisa = models.DecimalField(max_digits=20, decimal_places=4, default=0, null=True, blank=True)
+    precio_compra_local = models.DecimalField(max_digits=20, decimal_places=4, default=0, null=True, blank=True)
     nombre_empaque_estandar = models.CharField(max_length=100, null=True, blank=True)
-    cantidad_empaque_estandar = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    cantidad_empaque_estandar = models.DecimalField(max_digits=20, decimal_places=4, null=True, blank=True)
     unidad_medida_empaque_estandar = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, related_name='materias_primas_empaque', null=True, blank=True)
 
     def __str__(self):
@@ -377,10 +377,10 @@ class LotesMateriasPrimas(models.Model):
     proveedor = models.ForeignKey('compras.Proveedores', on_delete=models.CASCADE, null=True, blank=True)
     fecha_recepcion = models.DateField(null=False, blank=False)
     fecha_caducidad = models.DateField(null=False, blank=False)
-    cantidad_recibida = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=False, blank=False)
-    stock_actual_lote = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=False, blank=False)
-    costo_unitario_divisa = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=False, blank=False)
-    costo_unitario_local = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=False, blank=False)
+    cantidad_recibida = models.DecimalField(max_digits=10, decimal_places=4, default=0, null=False, blank=False)
+    stock_actual_lote = models.DecimalField(max_digits=10, decimal_places=4, default=0, null=False, blank=False)
+    costo_unitario_divisa = models.DecimalField(max_digits=10, decimal_places=4, default=0, null=False, blank=False)
+    costo_unitario_local = models.DecimalField(max_digits=10, decimal_places=4, default=0, null=False, blank=False)
     detalle_oc = models.ForeignKey('compras.DetalleOrdenesCompra', on_delete=models.CASCADE, null=True, blank=True)
     estado = models.CharField(
         max_length=10, 
