@@ -3,8 +3,8 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDownIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { clientesListOptions } from "@/features/Ventas/Clientes/hooks/ClientesQueryOptions";
-import { useDeleteCliente, useUpdateCliente } from "../hooks/mutations";
+import { clientesListOptions } from "../hooks/ClientesQueryOptions";
+import { useDeleteCliente } from "../hooks/mutations";
 import { useClientContext } from "@/context/ClientContext";
 
 function Accordion({

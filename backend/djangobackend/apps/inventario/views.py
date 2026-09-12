@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, inline_serializer, OpenApiParameter
+from rest_framework import serializers
 from apps.inventario.models import MateriasPrimas, ProductosElaborados, ProductosReventa, ProductosFinales, ProductosIntermedios
 from django.db.models import Value, CharField
 from apps.core.models import CategoriasProductosReventa, CategoriasProductosElaborados
@@ -8,7 +10,49 @@ from apps.inventario.serializers import CajaProductosSerializer
 from apps.core.serializers import UnidadMedidaSerializer
 from collections import defaultdict
 
+class ComponenteRecetaItemSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    nombre = serializers.CharField()
+    tipo = serializers.CharField()
+    unidad_medida = serializers.CharField()
+    stock = serializers.DecimalField(max_digits=10, decimal_places=3, required=False)
+
 class ProductosPedidoSearchView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='search', description='Termino de búsqueda', required=True, type=str)
+        ],
+        responses={
+            200: inline_serializer(
+                name='ProductosPedidoSearchResponse',
+                fields={
+                    'productos': inline_serializer(
+                        name='ProductoPedidoItem',
+                        fields={
+                            'id': serializers.IntegerField(),
+                            'nombre_producto': serializers.CharField(),
+                            'unidad_venta': inline_serializer(
+                                name='UnidadVentaSimple',
+                                fields={
+                                    'id': serializers.IntegerField(),
+                                    'abreviatura': serializers.CharField(),
+                                }
+                            ),
+                            'SKU': serializers.CharField(),
+                            'precio_venta_usd': serializers.DecimalField(max_digits=10, decimal_places=3),
+                            'stock_actual': serializers.DecimalField(max_digits=10, decimal_places=3),
+                            'tipo': serializers.CharField(),
+                        },
+                        many=True
+                    )
+                }
+            ),
+            400: inline_serializer(
+                name='SearchErrorResponse',
+                fields={'error': serializers.CharField()}
+            )
+        }
+    )
     def get(self, request, *args, **kwargs):
         param = request.query_params.get('search')
         if not param:
@@ -69,6 +113,43 @@ class ProductosPedidoSearchView(APIView):
 
 
 class ProductosComprasSearchView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='search', description='Termino de búsqueda', required=True, type=str)
+        ],
+        responses={
+            200: inline_serializer(
+                name='ProductosComprasSearchResponse',
+                fields={
+                    'productos': inline_serializer(
+                        name='ProductoCompraItem',
+                        fields={
+                            'id': serializers.IntegerField(),
+                            'nombre': serializers.CharField(),
+                            'unidad_medida_base': UnidadMedidaSerializer(),
+                            'variantes': inline_serializer(
+                                name='ProductoCompraVariante',
+                                fields={
+                                    'id': serializers.IntegerField(),
+                                    'nombre': serializers.CharField(),
+                                    'SKU': serializers.CharField(),
+                                    'precio_compra_divisa': serializers.DecimalField(max_digits=10, decimal_places=3),
+                                    'unidad_compra': UnidadMedidaSerializer(),
+                                },
+                                many=True
+                            ),
+                            'tipo': serializers.CharField(),
+                        },
+                        many=True
+                    )
+                }
+            ),
+            400: inline_serializer(
+                name='ComprasSearchErrorResponse',
+                fields={'error': serializers.CharField()}
+            )
+        }
+    )
     def get(self, request, *args, **kwargs):
         param = request.query_params.get('search')
         if not param:
@@ -139,6 +220,16 @@ class ProductosComprasSearchView(APIView):
 
     
 class ProductosVentasListaView(APIView):
+    @extend_schema(
+        responses={
+            200: inline_serializer(
+                name='ProductosVentasListaResponse',
+                fields={
+                    'productos': CajaProductosSerializer(many=True)
+                }
+            )
+        }
+    )
     def get(self, request, *args, **kwargs):
 
         pf = ProductosFinales.objects.filter(stock_actual__gt=0).select_related('categoria', 'unidad_venta')
@@ -155,6 +246,23 @@ class ProductosVentasListaView(APIView):
 
 class CategoriasProductosView(APIView):
 
+    @extend_schema(
+        responses={
+            200: inline_serializer(
+                name='CategoriasProductosResponse',
+                fields={
+                    'categorias': inline_serializer(
+                        name='CategoriasMap',
+                        fields={
+                            'todos': serializers.ListField(child=serializers.CharField()),
+                            'final': serializers.ListField(child=serializers.CharField()),
+                            'reventa': serializers.ListField(child=serializers.CharField()),
+                        }
+                    )
+                }
+            )
+        }
+    )
     def get(self, request, *args, **kwargs):
         categorias_pf = CategoriasProductosElaborados.objects.filter(es_intermediario=False).values_list('nombre_categoria', flat=True)
         categorias_pr = CategoriasProductosReventa.objects.values_list('nombre_categoria', flat=True)
@@ -170,6 +278,24 @@ class CategoriasProductosView(APIView):
 
 class ComponenteRecetasView(APIView):
     
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='search', description='Termino de búsqueda', required=True, type=str),
+            OpenApiParameter(name='stock', description='Incluir stock actual', required=False, type=str),
+        ],
+        responses={
+            200: inline_serializer(
+                name='ComponenteRecetasResponse',
+                fields={
+                    'nombre_categoria': ComponenteRecetaItemSerializer(many=True)
+                }
+            ),
+            400: inline_serializer(
+                name='RecetaSearchErrorResponse',
+                fields={'error': serializers.CharField()}
+            )
+        }
+    )
     def get(self, request, *args, **kwargs):
         search_query = request.query_params.get('search')
         stock_requested = request.query_params.get('stock')

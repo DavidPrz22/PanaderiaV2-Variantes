@@ -11,6 +11,7 @@ from apps.inventario.models import (
 from apps.ventas.models import AperturaCierreCaja, Ventas, DetalleVenta
 from django.db.models import Count, Sum, Q
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema_field
 
 
 class InventoryItemSerializer(serializers.Serializer):
@@ -61,6 +62,7 @@ class SessionReportSerializer(serializers.ModelSerializer):
             'notas_cierre'
         ]
     
+    @extend_schema_field(serializers.IntegerField())
     def get_numero_transacciones(self, obj):
         return Ventas.objects.filter(apertura_caja=obj).count()
 
@@ -92,6 +94,7 @@ class TransaccionVentaSerializer(serializers.ModelSerializer):
             'notas'
         ]
     
+    @extend_schema_field(serializers.IntegerField())
     def get_numero_items(self, obj):
         return DetalleVenta.objects.filter(venta=obj).count()
 
@@ -136,10 +139,12 @@ class SessionDetailSerializer(serializers.ModelSerializer):
             'items_vendidos'
         ]
     
+    @extend_schema_field(TransaccionVentaSerializer(many=True))
     def get_transacciones(self, obj):
         ventas = Ventas.objects.filter(apertura_caja=obj).order_by('-fecha_venta')
         return TransaccionVentaSerializer(ventas, many=True).data
     
+    @extend_schema_field(ItemVendidoSerializer(many=True))
     def get_items_vendidos(self, obj):
         # Get all sale details for this session
         detalles = DetalleVenta.objects.filter(

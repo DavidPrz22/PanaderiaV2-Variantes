@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from .models import (
     UnidadesDeMedida, 
     CategoriasMateriaPrima, 
@@ -49,6 +50,7 @@ class EmpaquetadoProductosSerializer(serializers.ModelSerializer):
             'cantidad_unidad_medida',
         ]
 
+    @extend_schema_field(serializers.CharField())
     def get_empaque_nombre(self, obj):
         return obj.__str__()
 
@@ -83,6 +85,10 @@ class EstadosOrdenCompraSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre_estado']
 
 class VarianteNotificacionesSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    nombre = serializers.CharField()
+    sku = serializers.CharField(allow_null=True)
+
     def to_representation(self, instance):
         # Handle variations in field names across models
         sku = getattr(instance, 'SKU', getattr(instance, 'SKU_variante', None))
@@ -110,6 +116,7 @@ class NotificacionesSerializer(serializers.ModelSerializer):
             'prioridad'
         ]
     
+    @extend_schema_field(VarianteNotificacionesSerializer)
     def get_variante(self, obj):
         if not obj.variante_id:
             return None
@@ -126,6 +133,7 @@ class NotificacionesSerializer(serializers.ModelSerializer):
             return VarianteNotificacionesSerializer(variante).data
         return None
 
+    @extend_schema_field(serializers.CharField())
     def get_tiempo(self, obj):
         from django.utils import timezone
         if obj.fecha_notificacion:

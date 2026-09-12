@@ -46,6 +46,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated', # TODO: Change to IsAuthenticated
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -90,7 +91,16 @@ INSTALLED_APPS = [
     'apps.ventas.apps.VentasConfig',
     'apps.transformacion.apps.TransformacionConfig',
     'apps.reportes.apps.ReportesConfig',
+    'drf_spectacular',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Panaderia API',
+    'DESCRIPTION': 'API para la gestion de una panaderia',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

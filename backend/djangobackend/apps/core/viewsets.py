@@ -32,6 +32,16 @@ from djangobackend.permissions import IsAllUsersCRUD
 from datetime import timedelta
 from django.utils import timezone
 
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
+@extend_schema_view(
+    list=extend_schema(description='List all units of measure'),
+    create=extend_schema(description='Create a new unit of measure'),
+    retrieve=extend_schema(description='Get a unit of measure by ID'),
+    update=extend_schema(description='Update a unit of measure by ID'),
+    partial_update=extend_schema(description='Partial update of a unit of measure by ID'),
+    destroy=extend_schema(description='Delete a unit of measure by ID'),
+)
 class UnidadMedidaViewSet(viewsets.ModelViewSet):
     queryset = UnidadesDeMedida.objects.all()
     serializer_class = UnidadMedidaSerializer
@@ -41,35 +51,86 @@ class ConversionUnidadViewSet(viewsets.ModelViewSet):
     queryset = ConversionesUnidades.objects.all()
     serializer_class = ConversionUnidadSerializer
 
+@extend_schema_view(
+    list=extend_schema(description='List all packaging products'),
+    create=extend_schema(description='Create a new packaging products'),
+    retrieve=extend_schema(description='Get a packaging products by ID'),
+    update=extend_schema(description='Update a packaging products by ID'),
+    partial_update=extend_schema(description='Partial update of a packaging products by ID'),
+    destroy=extend_schema(description='Delete a packaging products by ID'),
+)
 class EmpaquetadoProductosViewSet(viewsets.ModelViewSet):
     queryset = EmpaquetadoProductos.objects.all()
     serializer_class = EmpaquetadoProductosSerializer
 
+@extend_schema_view(
+    list=extend_schema(description='List all raw material categories'),
+    create=extend_schema(description='Create a new raw material category'),
+    retrieve=extend_schema(description='Get a raw material category by ID'),
+    update=extend_schema(description='Update a raw material category by ID'),
+    partial_update=extend_schema(description='Partial update of a raw material category by ID'),
+    destroy=extend_schema(description='Delete a raw material category by ID'),
+)
 class CategoriaMateriaPrimaViewSet(viewsets.ModelViewSet):
     queryset = CategoriasMateriaPrima.objects.all()
     serializer_class = CategoriaMateriaPrimaSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all intermediate product categories'),
+    create=extend_schema(description='Create a new intermediate product category'),
+    retrieve=extend_schema(description='Get a intermediate product category by ID'),
+    update=extend_schema(description='Update a intermediate product category by ID'),
+    partial_update=extend_schema(description='Partial update of a intermediate product category by ID'),
+    destroy=extend_schema(description='Delete a intermediate product category by ID'),
+)
 class CategoriaProductoIntermedioViewSet(viewsets.ModelViewSet):
     queryset = CategoriasProductosElaborados.objects.filter(es_intermediario=True)
     serializer_class = CategoriaProductoSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all final product categories'),
+    create=extend_schema(description='Create a new final product category'),
+    retrieve=extend_schema(description='Get a final product category by ID'),
+    update=extend_schema(description='Update a final product category by ID'),
+    partial_update=extend_schema(description='Partial update of a final product category by ID'),
+    destroy=extend_schema(description='Delete a final product category by ID'),
+)
 class CategoriaProductoFinalViewSet(viewsets.ModelViewSet):
     queryset = CategoriasProductosElaborados.objects.filter(es_intermediario=False)
     serializer_class = CategoriaProductoSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all resale product categories'),
+    create=extend_schema(description='Create a new resale product category'),
+    retrieve=extend_schema(description='Get a resale product category by ID'),
+    update=extend_schema(description='Update a resale product category by ID'),
+    partial_update=extend_schema(description='Partial update of a resale product category by ID'),
+    destroy=extend_schema(description='Delete a resale product category by ID'),
+)
 class CategoriaProductosReventaViewSet(viewsets.ModelViewSet):
     queryset = CategoriasProductosReventa.objects.all()
     serializer_class = CategoriaProductosReventaSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all payment methods'),
+    create=extend_schema(description='Create a new payment method'),
+    retrieve=extend_schema(description='Get a payment method by ID'),
+    update=extend_schema(description='Update a payment method by ID'),
+    partial_update=extend_schema(description='Partial update of a payment method by ID'),
+    destroy=extend_schema(description='Delete a payment method by ID'),
+)
 class MetodosDePagoViewSet(viewsets.ModelViewSet):
     queryset = MetodosDePago.objects.all()
     serializer_class = MetodosDePagoSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all sales order statuses'),
+    create=extend_schema(description='Create a new sales order status'),
+    update=extend_schema(description='Update a sales order status by ID'),
+    partial_update=extend_schema(description='Partial update of a sales order status by ID'),
+    destroy=extend_schema(description='Delete a sales order status by ID'),
+    get_estados_registro=extend_schema(description='Get sales order statuses for registration'),
+)
 class EstadosOrdenVentaViewSet(viewsets.ModelViewSet):
     queryset = EstadosOrdenVenta.objects.all()
     serializer_class = EstadosOrdenVentaSerializer
@@ -80,7 +141,14 @@ class EstadosOrdenVentaViewSet(viewsets.ModelViewSet):
         serializer = EstadosOrdenVentaSerializer(estados, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all purchase order statuses'),
+    create=extend_schema(description='Create a new purchase order status'),
+    update=extend_schema(description='Update a purchase order status by ID'),
+    partial_update=extend_schema(description='Partial update of a purchase order status by ID'),
+    destroy=extend_schema(description='Delete a purchase order status by ID'),
+    get_estados_registro=extend_schema(description='Get purchase order statuses for registration'),
+)
 class EstadosOrdenCompraViewSet(viewsets.ModelViewSet):
     queryset = EstadosOrdenCompra.objects.all()
     serializer_class = EstadosOrdenCompraSerializer
@@ -91,7 +159,13 @@ class EstadosOrdenCompraViewSet(viewsets.ModelViewSet):
         serializer = EstadosOrdenCompraSerializer(estados, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+@extend_schema_view(
+    list=extend_schema(description='List all notifications while updating unread status'),
+    create=extend_schema(description='Create a new notification'),
+    update=extend_schema(description='Update a notification by ID'),
+    partial_update=extend_schema(description='Partial update of a notification by ID'),
+    destroy=extend_schema(description='Delete a notification by ID'),
+)
 class NotificacionesViewSet(viewsets.ModelViewSet):
     queryset = Notificaciones.objects.all()
     serializer_class = NotificacionesSerializer

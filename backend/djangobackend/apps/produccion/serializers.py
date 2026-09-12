@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.produccion.models import Produccion, DetalleProduccionConsumos
-
+from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, inline_serializer
+from drf_spectacular.types import OpenApiTypes
 
 class componentsSerializer(serializers.Serializer):
     componente_id = serializers.IntegerField()
@@ -47,6 +48,14 @@ class RecetasDetallesSerializer(serializers.ModelSerializer):
                     'esCompuesta'
                 ]
 
+    @extend_schema_field(inline_serializer(
+        name='RecetaProductoElaboradoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre': serializers.CharField(),
+            'unidad_medida': serializers.CharField(allow_null=True),
+        }
+    ))
     def get_producto_elaborado(self, obj):
         variante = obj.producto_elaborado_variante
         if not variante:
@@ -57,7 +66,7 @@ class RecetasDetallesSerializer(serializers.ModelSerializer):
             'unidad_medida': variante.producto_elaborado.unidad_produccion.nombre_completo if variante.producto_elaborado.unidad_produccion else None
         }
     
-
+    @extend_schema_field(OpenApiTypes.BOOL)
     def get_esCompuesta(self, obj):
         return RelacionesRecetas.objects.filter(receta_principal=obj).exists()
 
@@ -113,6 +122,7 @@ class ComponentesProduccionSerializer(serializers.ModelSerializer):
         model = DetalleProduccionConsumos
         fields = ['materia_prima_consumida', 'producto_intermedio_consumido', 'cantidad_consumida', 'unidad_medida']
 
+    @extend_schema_field(serializers.CharField())
     def get_unidad_medida(self, obj):
         if obj.materia_prima_consumida:
             return obj.materia_prima_consumida.unidad_medida_base.abreviatura
@@ -141,6 +151,7 @@ class ProduccionDetallesSerializer(serializers.ModelSerializer):
             'componentes_produccion',
         ]
 
+    @extend_schema_field(ComponentesProduccionSerializer(many=True))
     def get_componentes_produccion(self, obj):
 
         componentes = DetalleProduccionConsumos.objects.filter(produccion=obj)

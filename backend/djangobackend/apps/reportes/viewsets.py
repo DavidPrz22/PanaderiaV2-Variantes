@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Count, Sum, Q, F
@@ -32,12 +32,13 @@ from .serializers import (
     ItemVendidoSerializer
 )
 from djangobackend.permissions import IsAllUsersCRUD
-
+from drf_spectacular.utils import extend_schema, OpenApiTypes, inline_serializer, OpenApiParameter
 
 class InventoryReportViewSet(viewsets.ViewSet):
     """ViewSet for inventory reports"""
     permission_classes = [IsAllUsersCRUD]
     
+    @extend_schema(request=None, responses=InventoryItemSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='materias-primas')
     def materias_primas(self, request):
         """Get inventory report for raw materials"""
@@ -76,6 +77,7 @@ class InventoryReportViewSet(viewsets.ViewSet):
         serializer = InventoryItemSerializer(data, many=True)
         return Response(serializer.data)
     
+    @extend_schema(request=None, responses=InventoryItemSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='productos-finales')
     def productos_finales(self, request):
         """Get inventory report for finished products"""
@@ -114,6 +116,7 @@ class InventoryReportViewSet(viewsets.ViewSet):
         serializer = InventoryItemSerializer(data, many=True)
         return Response(serializer.data)
     
+    @extend_schema(request=None, responses=InventoryItemSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='productos-intermedios')
     def productos_intermedios(self, request):
         """Get inventory report for intermediate products"""
@@ -152,6 +155,7 @@ class InventoryReportViewSet(viewsets.ViewSet):
         serializer = InventoryItemSerializer(data, many=True)
         return Response(serializer.data)
     
+    @extend_schema(request=None, responses=InventoryItemSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='productos-reventa')
     def productos_reventa(self, request):
         """Get inventory report for resale products"""
@@ -191,6 +195,20 @@ class InventoryReportViewSet(viewsets.ViewSet):
         serializer = InventoryItemSerializer(data, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=None,
+        responses={
+            200: inline_serializer(
+                name='InventoryResumenResponse',
+                fields={
+                    'materias_primas': serializers.IntegerField(),
+                    'productos_finales': serializers.IntegerField(),
+                    'productos_intermedios': serializers.IntegerField(),
+                    'productos_reventa': serializers.IntegerField(),
+                }
+            )
+        }
+    )
     @action(detail=False, methods=['get'])
     def resumen(self, request):
         """Get counts for all inventory types"""
@@ -202,6 +220,19 @@ class InventoryReportViewSet(viewsets.ViewSet):
         }
         return Response(counts)
 
+    @extend_schema(
+        request=None,
+        parameters=[
+            OpenApiParameter(name='type', description='Tipo de reporte (materias-primas, productos-finales, productos-intermedios, productos-reventa)', required=False, type=str)
+        ],
+        responses={
+            200: OpenApiTypes.BINARY,
+            400: inline_serializer(
+                name='PDFErrorResponse',
+                fields={'error': serializers.CharField()}
+            )
+        }
+    )
     @action(detail=False, methods=['get'], url_path='pdf')
     def pdf(self, request):
         """Generate PDF report for inventory"""
@@ -341,7 +372,9 @@ class InventoryReportViewSet(viewsets.ViewSet):
 class SalesReportViewSet(viewsets.ViewSet):
     """ViewSet for sales reports"""
     permission_classes = [IsAllUsersCRUD]
+    queryset = AperturaCierreCaja.objects.all()
     
+    @extend_schema(request=None, responses=SessionReportSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='sesiones')
     def sesiones(self, request):
         """Get list of sales sessions with optional date filtering"""
@@ -368,12 +401,32 @@ class SalesReportViewSet(viewsets.ViewSet):
         serializer = SessionReportSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        responses={
+            200: inline_serializer(
+                    name='SalesResumenResponse',
+                    fields={
+                        'count': serializers.IntegerField(),
+                    }
+            )
+        }
+    )
     @action(detail=False, methods=['get'])
     def resumen(self, request):
         """Get summary count for sales sessions"""
         count = AperturaCierreCaja.objects.count()
         return Response({'count': count})
     
+    @extend_schema(
+        request=None, 
+        responses={
+            200: SessionDetailSerializer,
+            404: inline_serializer(
+                    name='NotFoundResponse',
+                    fields={'error': serializers.CharField()}
+                ), 
+        }
+    )
     @action(detail=True, methods=['get'], url_path='detalle')
     def session_detail(self, request, pk=None):
         """Get detailed information for a specific session"""
@@ -387,6 +440,16 @@ class SalesReportViewSet(viewsets.ViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
     
+    @extend_schema(
+        request=None,
+        responses={
+            200: ItemVendidoSerializer(many=True),
+            404: inline_serializer(
+                name='ItemVendidoNotFoundResponse',
+                fields={'error': serializers.CharField()}
+            )
+        }
+    )
     @action(detail=True, methods=['get'], url_path='items-vendidos')
     def items_vendidos(self, request, pk=None):
         """Get aggregated items sold for a specific session"""
@@ -441,6 +504,16 @@ class SalesReportViewSet(viewsets.ViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+    @extend_schema(
+        request=None,
+        parameters=[
+            OpenApiParameter(name='start_date', description='Fecha de inicio (YYYY-MM-DD)', required=False, type=str),
+            OpenApiParameter(name='end_date', description='Fecha de fin (YYYY-MM-DD)', required=False, type=str)
+        ],
+        responses={
+            200: OpenApiTypes.BINARY
+        }
+    )
     @action(detail=False, methods=['get'], url_path='pdf')
     def pdf(self, request):
         """Generate PDF report for sales"""

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field, inline_serializer
 from apps.compras.models import Proveedores
 from apps.compras.models import OrdenesCompra, PagosProveedores, DetalleOrdenesCompra, Compras
 from apps.core.serializers import (
@@ -263,11 +264,13 @@ class DetallesResponseSerializer(serializers.ModelSerializer):
             'subtotal_linea_ves'
         ]
 
+    @extend_schema_field(serializers.ChoiceField(choices=[('unidad', 'Unidad'), ('contenedor', 'Contenedor')]))
     def get_modo_compra(self, obj):
         if obj.unidad_empaquetado:
             return 'contenedor'
         return 'unidad'
 
+    @extend_schema_field(UnidadMedidaSerializer(allow_null=True))
     def get_unidad_medida_base(self, obj):
         if obj.variante_materia_prima:
             return UnidadMedidaSerializer(obj.variante_materia_prima.materia_prima.unidad_medida_base).data
@@ -429,6 +432,14 @@ class FormattedResponseOCSerializer(serializers.ModelSerializer):
             'monto_pendiente_pago_usd',
         ]
     
+    @extend_schema_field(inline_serializer(
+        name='PagosEnAdelantadoResponse',
+        fields={
+            'monto_pago_usd': serializers.DecimalField(max_digits=10, decimal_places=3),
+            'monto_pago_ves': serializers.DecimalField(max_digits=10, decimal_places=3),
+        },
+        allow_null=True
+    ))
     def get_pagos_en_adelantado(self, obj):
         pagos = PagosProveedores.objects.filter(orden_compra_asociada=obj, compra_asociada__isnull=True)
         if not pagos.exists():
@@ -439,6 +450,7 @@ class FormattedResponseOCSerializer(serializers.ModelSerializer):
             "monto_pago_ves": pagos.aggregate(total=Sum('monto_pago_ves'))['total'] or 0,
         }
 
+    @extend_schema_field(serializers.DecimalField(max_digits=10, decimal_places=3, allow_null=True))
     def get_monto_pendiente_pago_usd(self, obj):
         pagos_adelantados_sin_registrar = PagosProveedores.objects.filter(orden_compra_asociada=obj, compra_asociada__isnull=True).aggregate(total=Sum('monto_pago_usd'))['total'] or 0
 

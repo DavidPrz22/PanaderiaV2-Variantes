@@ -9,8 +9,21 @@ from django.contrib.auth.signals import user_logged_in
 from django.conf import settings
 from apps.users.serializers import UserSerializer
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    @extend_schema(
+        responses={
+            200: inline_serializer(
+                name='AuthTokenResponse',
+                fields={
+                    'access': serializers.CharField(),
+                    'userData': UserSerializer()
+                }
+            )
+        }
+    )
     def post(self, request, *args, **kwargs):
 
         # Validate credentials first
@@ -63,6 +76,17 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = TokenRefreshSerializer
 
+    @extend_schema(
+        responses={
+            200: inline_serializer(
+                name='AuthRefreshResponse',
+                fields={
+                    'access': serializers.CharField(),
+                    'userData': UserSerializer()
+                }
+            )
+        }
+    )
     def post(self, request, *args, **kwargs):
         refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
@@ -104,6 +128,15 @@ class CustomLogoutView(APIView):
     """
     permission_classes = []  # Allow both authenticated and unauthenticated users
     
+    @extend_schema(
+        request=None,
+        responses={
+            200: inline_serializer(
+                name='LogoutCustomResponse',
+                fields={'detail': serializers.CharField()}
+            )
+        }
+    )
     def post(self, request, *args, **kwargs):
         response = Response(
             {'detail': 'Successfully logged out'}, 

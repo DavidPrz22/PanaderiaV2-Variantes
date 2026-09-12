@@ -16,6 +16,7 @@ import ClientesPage from "./pages/ClientesPage";
 import POSPage from "./pages/POSPage";
 import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 import ReportsPage from "./pages/ReportsPage";
+import ApiDocsPage from "./pages/ApiDocsPage";
 
 
 const ProtectedLandingPage = withAuth(LandingPage);
@@ -102,6 +103,7 @@ function App() {
             path="/dashboard/reportes"
             element={<ProtectedReportsPage />}
           />
+          <Route path="/api-docs" element={<ApiDocsPage />} />
 
         </Routes>
       </AuthProvider>

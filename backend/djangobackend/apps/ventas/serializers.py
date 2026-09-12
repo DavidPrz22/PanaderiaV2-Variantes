@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from .models import Clientes, OrdenVenta, DetallesOrdenVenta, Pagos, AperturaCierreCaja, Ventas
 from apps.core.serializers import MetodosDePagoSerializer, EstadosOrdenVentaSerializer
 from apps.inventario.serializers import ProductosElaboradosSerializer, ProductosReventaSerializer
@@ -153,11 +154,17 @@ class OrdenesDetallesSerializer(serializers.ModelSerializer):
             'referencia_pago': {'read_only': True},
         }
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_referencia_pago(self, instance):
         return Pagos.objects.filter(orden_venta_asociada=instance).values_list('referencia_pago', flat=True).first()
 
 
 class OrdenesTableSerializer(serializers.ModelSerializer):
+    cliente = serializers.CharField(source='cliente.nombre_cliente', read_only=True)
+    estado_orden = serializers.CharField(source='estado_orden.nombre_estado', read_only=True)
+    metodo_pago = serializers.CharField(source='metodo_pago.nombre_metodo', read_only=True)
+    total = serializers.DecimalField(source='monto_total_usd', max_digits=10, decimal_places=2, read_only=True)
+
     class Meta:
         model = OrdenVenta
         fields = [
@@ -169,20 +176,7 @@ class OrdenesTableSerializer(serializers.ModelSerializer):
             'estado_orden',
             'metodo_pago',
             'total',
-            'pago',
         ]
-
-    def to_representation(self, instance):
-        return {
-            'id': instance.id,
-            'cliente': instance.cliente.nombre_cliente,
-            'fecha_creacion_orden': instance.fecha_creacion_orden,
-            'fecha_entrega_solicitada': instance.fecha_entrega_solicitada,
-            'fecha_entrega_definitiva': instance.fecha_entrega_definitiva,
-            'estado_orden': instance.estado_orden.nombre_estado,
-            'metodo_pago': instance.metodo_pago.nombre_metodo,
-            'total': instance.monto_total_usd,
-        }
 
 
 class VentasDetallesSerializer(serializers.Serializer):

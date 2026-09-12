@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field, inline_serializer
 
 from .models import (
     MateriasPrimas, LotesMateriasPrimas, 
@@ -269,6 +270,7 @@ class ProductosIntermediosListSerializer(serializers.ModelSerializer):
         ]
 
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_unidad_produccion_nombre(self, obj):
         return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
 
@@ -296,7 +298,7 @@ class ProductosIntermediosSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductosIntermedios
         fields = [
-            'producto_id'
+            'producto_id',
             'nombre_producto', 
             'categoria',
             'unidad_produccion',
@@ -329,6 +331,13 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
             'variantes'
         ]
 
+    @extend_schema_field(inline_serializer(
+        name='IntermedioCategoriaProductoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_categoria': serializers.CharField(),
+        }
+    ))
     def get_categoria_producto(self, obj):
         if not obj.categoria:
             return None
@@ -337,6 +346,13 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
             'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
+    @extend_schema_field(inline_serializer(
+        name='IntermedioUnidadProduccionProductoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_completo': serializers.CharField(),
+        }
+    ))
     def get_unidad_produccion_producto(self, obj):
         if not obj.unidad_produccion:
             return None
@@ -346,9 +362,17 @@ class ProductosIntermediosDetallesSerializer(serializers.ModelSerializer):
         }
 
 
+    @extend_schema_field(serializers.IntegerField())
     def get_punto_reorden(self, obj):
         return 0
 
+    @extend_schema_field(inline_serializer(
+        name='IntermedioRecetaRelacionadaResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre': serializers.CharField(),
+        }
+    ))
     def get_receta_relacionada(self, obj):
         """Get the related recipe for a product."""
         receta_relacionada = Recetas.objects.filter(producto_elaborado_variante__producto_elaborado=obj).first()
@@ -398,6 +422,7 @@ class ProductosFinalesListSerializer(serializers.ModelSerializer):
         ]
 
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_unidad_produccion_nombre(self, obj):
         return obj.unidad_produccion.nombre_completo if obj.unidad_produccion else None
 
@@ -447,6 +472,13 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
             'punto_reorden',
         ]
 
+    @extend_schema_field(inline_serializer(
+        name='FinalCategoriaProductoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_categoria': serializers.CharField(),
+        }
+    ))
     def get_categoria_producto(self, obj):
         if not obj.categoria:
             return None
@@ -455,6 +487,13 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
             'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
+    @extend_schema_field(inline_serializer(
+        name='FinalUnidadProduccionProductoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_completo': serializers.CharField(),
+        }
+    ))
     def get_unidad_produccion_producto(self, obj):
         if not obj.unidad_produccion:
             return None
@@ -463,6 +502,13 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
             'nombre_completo': obj.unidad_produccion.nombre_completo,
         }
 
+    @extend_schema_field(inline_serializer(
+        name='FinalUnidadVentaProductoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_completo': serializers.CharField(),
+        }
+    ))
     def get_unidad_venta_producto(self, obj):
         if not obj.unidad_venta:
             return None
@@ -472,10 +518,18 @@ class ProductosFinalesDetallesSerializer(serializers.ModelSerializer):
         }
 
 
+    @extend_schema_field(serializers.IntegerField())
     def get_punto_reorden(self, obj):
         # Can return 0 here, it's mostly handled per variant
         return 0
 
+    @extend_schema_field(inline_serializer(
+        name='FinalRecetaRelacionadaResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre': serializers.CharField(),
+        }
+    ))
     def get_receta_relacionada(self, obj):
         """Get the related recipe for a product."""
         receta_relacionada = Recetas.objects.filter(producto_elaborado_variante__producto_elaborado=obj).first()
@@ -521,6 +575,13 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
             "costo_unitario_divisa",
         ]
 
+    @extend_schema_field(inline_serializer(
+        name='ProductoElaboradoVarianteResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_variante': serializers.CharField(),
+        }
+    ))
     def get_producto_elaborado_variante(self, obj):
         return {
             'id': obj.producto_elaborado_variante.id,
@@ -556,12 +617,15 @@ class LotesProductosElaboradosSerializer(serializers.ModelSerializer):
 
         return data
 
+    @extend_schema_field(serializers.DecimalField(max_digits=10, decimal_places=2))
     def get_peso_promedio_por_unidad(self, obj):
         return obj.peso_promedio_por_unidad
 
+    @extend_schema_field(serializers.DecimalField(max_digits=10, decimal_places=2))
     def get_volumen_promedio_por_unidad(self, obj):
         return obj.volumen_promedio_por_unidad
 
+    @extend_schema_field(serializers.DecimalField(max_digits=10, decimal_places=2))
     def get_costo_unitario_divisa(self, obj):
         return obj.costo_unitario_divisa
 
@@ -612,6 +676,13 @@ class ProductosReventaListSerializer(serializers.ModelSerializer):
 
 class ProductosReventaSerializer(serializers.ModelSerializer):
     variantes = ProductosReventaVariantesSerializer(many=True, required=False)
+    unidad_base_inventario = serializers.PrimaryKeyRelatedField(
+        source='unidad_medida_base',
+        queryset=UnidadesDeMedida.objects.all(),
+        required=False,
+        allow_null=True
+    )
+    
     class Meta:
         model = ProductosReventa
         fields = [
@@ -699,6 +770,13 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             'fecha_creacion_registro',
         ]
 
+    @extend_schema_field(inline_serializer(
+        name='ReventaCategoriaResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_categoria': serializers.CharField(),
+        }
+    ))
     def get_categoria(self, obj):
         if not obj.categoria:
             return None
@@ -707,6 +785,13 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             'nombre_categoria': obj.categoria.nombre_categoria,
         }
 
+    @extend_schema_field(inline_serializer(
+        name='ProveedorPreferidoResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_proveedor': serializers.CharField(),
+        }
+    ))
     def get_proveedor_preferido(self, obj):
         if obj.proveedor_preferido:
             return {
@@ -715,6 +800,14 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             }
         return None
 
+    @extend_schema_field(inline_serializer(
+        name='UnidadBaseInventarioResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_completo': serializers.CharField(),
+            'abreviatura': serializers.CharField(),
+        }
+    ))
     def get_unidad_base_inventario(self, obj):
         if not obj.unidad_base_inventario:
             return None
@@ -724,6 +817,14 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
             'abreviatura': obj.unidad_base_inventario.abreviatura,
         }
 
+    @extend_schema_field(inline_serializer(
+        name='ReventaUnidadVentaResponse',
+        fields={
+            'id': serializers.IntegerField(),
+            'nombre_completo': serializers.CharField(),
+            'abreviatura': serializers.CharField(),
+        }
+    ))
     def get_unidad_venta(self, obj):
         if not obj.unidad_venta:
             return None

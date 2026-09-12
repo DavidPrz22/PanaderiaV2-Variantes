@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -31,6 +32,7 @@ class DashboardViewSet(viewsets.ViewSet):
     """
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses=SalesTodaySerializer)
     @action(detail=False, methods=['get'], url_path='sales-today')
     def sales_today(self, request):
         """
@@ -81,6 +83,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = SalesTodaySerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=PendingOrdersSerializer)
     @action(detail=False, methods=['get'], url_path='pending-orders')
     def pending_orders(self, request):
         """
@@ -111,6 +114,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = PendingOrdersSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=StockAlertsSerializer)
     @action(detail=False, methods=['get'], url_path='stock-alerts')
     def stock_alerts(self, request):
         """
@@ -175,6 +179,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = StockAlertsSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=RecentProductionsSerializer)
     @action(detail=False, methods=['get'], url_path='recent-productions')
     def recent_productions(self, request):
         """
@@ -219,6 +224,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = RecentProductionsSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=SalesTrendDataSerializer)
     @action(detail=False, methods=['get'], url_path='sales-trends')
     def sales_trends(self, request):
         """
@@ -255,6 +261,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = SalesTrendDataSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=TopProductsDataSerializer)
     @action(detail=False, methods=['get'], url_path='top-products')
     def top_products(self, request):
         """
@@ -304,6 +311,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = TopProductsDataSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=RecentPurchasesSerializer)
     @action(detail=False, methods=['get'], url_path='recent-purchases')
     def recent_purchases(self, request):
         """
@@ -330,6 +338,7 @@ class DashboardViewSet(viewsets.ViewSet):
         serializer = RecentPurchasesSerializer(data)
         return Response(serializer.data)
 
+    @extend_schema(responses=RecentSalesSerializer)
     @action(detail=False, methods=['get'], url_path='recent-sales')
     def recent_sales(self, request):
         """
