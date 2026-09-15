@@ -76,23 +76,56 @@ The system replaces manual spreadsheets and paper-based tracking with a real-tim
 
 ### System Overview
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Frontend (React SPA)                  │
-│  Vite + React 19 + TypeScript + Tailwind + shadcn/ui    │
-│  Feature-based architecture with React Query data layer │
-└────────────────────────┬────────────────────────────────┘
-                         │ HTTPS / REST / JWT
-┌────────────────────────▼────────────────────────────────┐
-│                 Backend (Django REST API)                │
-│  DRF ViewSets + Serializers + JWT Auth + Permissions    │
-│  Modular Django apps (domain-driven boundaries)         │
-└────────────────────────┬────────────────────────────────┘
-                         │ ORM (psycopg2)
-┌────────────────────────▼────────────────────────────────┐
-│              PostgreSQL / SQLite Database                │
-│  40+ tables with FK constraints and CHECK constraints   │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 80, 'rankSpacing': 100, 'curve': 'basis', 'padding': 20}} }%%
+flowchart TD
+    subgraph Frontend["Frontend — React SPA"]
+        spa["React SPA"]
+        auth_ctx["AuthContext\nsimplejwt"]
+        token_store["Token Store\naccess + refresh"]
+    end
+
+    subgraph API["Backend — DRF  /api/"]
+        gateway["API Gateway\n/api/"]
+        jwt_auth["JWT Auth\nsimplejwt"]
+
+        subgraph Apps["Django Apps"]
+            users_app["users"]
+            inventario_app["inventario"]
+            compras_app["compras"]
+            produccion_app["produccion"]
+            ventas_app["ventas"]
+            transformacion_app["transformacion"]
+        end
+    end
+
+    subgraph Database["Database"]
+        pg[("PostgreSQL")]
+    end
+
+    spa -->|"1. POST /api/token/"| jwt_auth
+    jwt_auth -->|"2. access + refresh"| auth_ctx
+    auth_ctx -->|"3. store tokens"| token_store
+
+    token_store -->|"4. Bearer header"| spa
+    spa -->|"5. GET /api/<app>/"| gateway
+
+    gateway --> users_app
+    gateway --> inventario_app
+    gateway --> compras_app
+    gateway --> produccion_app
+    gateway --> ventas_app
+    gateway --> transformacion_app
+
+    users_app --> pg
+    inventario_app --> pg
+    compras_app --> pg
+    produccion_app --> pg
+    ventas_app --> pg
+    transformacion_app --> pg
+
+    jwt_auth -.->|"6. HttpOnly cookie\nrefresh"| token_store
+    token_store -.->|"7. POST /api/token/refresh/"| jwt_auth
 ```
 
 ### Frontend Architecture
@@ -147,11 +180,62 @@ The system replaces manual spreadsheets and paper-based tracking with a real-tim
 | **Producto Final** | Sellable baked good (bread, cake, empanada) produced from recipes |
 | **Producto Reventa** | Resale product (beverages, packaged goods) not produced in-house |
 | **Receta** | Bill of materials linking intermediate/final products to their components |
-| **Lote** | Batch/lot with expiration tracking for traceability and FIFO consumption |
+| **Lote** | Batch/lot with expiration tracking for traceability and FEFO consumption |
 | **Orden de Compra** | Purchase order to supplier with line items and receiving workflow |
 | **Orden de Venta** | Sales order with state machine (pending → in-progress → delivered) |
 
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'curve': 'basis', 'padding': 20}} }%%
+flowchart TD
+    subgraph MP["Materias Primas"]
+        mp_prod["MateriasPrimas\n(product template)"]
+        mp_var["MateriasPrimasVariantes\nstock_actual · precio · costo"]
+        mp_lot["LotesMateriasPrimas\ncantidad · costo · fecha_vencimiento"]
+        mp_prod --> mp_var --> mp_lot
+    end
+
+    subgraph PE["Productos Elaborados"]
+        pe_prod["ProductosElaborados\nes_intermediario = true/false"]
+        pe_var["ProductosElaboradosVariantes\nstock_actual · precio · receta_id (1:1)"]
+        pe_lot["LotesProductosElaborados\ncantidad · costo · fecha_vencimiento"]
+        pe_prod --> pe_var --> pe_lot
+    end
+
+    subgraph PR["Productos Reventa"]
+        pr_prod["ProductosReventa\n(product template)"]
+        pr_var["ProductosReventaVariantes\nstock_actual · precio · costo"]
+        pr_lot["LotesProductosReventa\ncantidad · costo · fecha_vencimiento"]
+        pr_prod --> pr_var --> pr_lot
+    end
+
+    subgraph Notes["Key Rules"]
+        n1["Lots hold qty · cost · expiry"]
+        n2["Variant stock_actual = rollup of lots"]
+        n3["Consumption policy = FEFO"]
+    end
+
+    mp_lot ~~~ n1
+    pe_lot ~~~ n2
+    pr_lot ~~~ n3
+```
+
 ### Core Workflows
+
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'curve': 'basis', 'padding': 20}} }%%
+flowchart TD
+    oc["Orden de Compra"] --> recepcion["Recepción"]
+
+    recepcion --> lotes_mp["Lotes Materias Primas"]
+    recepcion --> lotes_reventa["Lotes Reventa"]
+
+    lotes_mp --> produccion["Producción\nreceta"]
+    produccion --> lotes_pe["Lotes Productos Elaborados"]
+    lotes_pe --> transformacion["Transformación\nopcional"]
+    transformacion --> pos["POS / Pedido"]
+
+    lotes_reventa -->|"skip production"| pos
+```
 
 #### 1. Procurement Pipeline
 ```
@@ -169,7 +253,7 @@ Definir Receta → Planificar Produccion → Consumir Lotes (MP/Intermedios)
 ```
 Apertura de Caja → Agregar Productos al Carrito → Calcular Total (USD/VES)
     → Procesar Pago (Efectivo/Tarjeta/Transferencia/Pago Movil)
-    → Consumir Lotes (FIFO) → Cierre de Caja con Arqueo
+    → Consumir Lotes (FEFO) → Cierre de Caja con Arqueo
 ```
 
 #### 4. Sales Order Pipeline
@@ -181,7 +265,36 @@ Crear Orden → Asignar Productos → Reservar Lotes → Producir (si aplica)
 ### Key Algorithms
 
 - **Recipe Explosion**: Recursive resolution of nested recipes (final product → intermediate products → raw materials) for cost calculation and material requirements planning.
-- **FIFO Lot Consumption**: Sales and production consume inventory from oldest lots first, respecting expiration dates.
+
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 80, 'rankSpacing': 100, 'curve': 'basis', 'padding': 20}} }%%
+flowchart TD
+    subgraph Final["Final Product"]
+        final_var["Final Variant\nProductosElaboradosVariantes"]
+        final_recipe["Final Recipe BOM\n1:1 attachment"]
+        final_var -->|"has recipe"| final_recipe
+    end
+
+    subgraph Inter["Intermediate Product"]
+        int_var["Intermediate Variant\nes_intermediario = true"]
+        int_recipe["Intermediate Recipe BOM\n1:1 attachment"]
+        int_var -->|"has recipe"| int_recipe
+    end
+
+    subgraph Raw["Materias Primas"]
+        mp1["Materia Prima\nFlour"]
+        mp2["Materia Prima\nWater"]
+        mp3["Materia Prima\nSugar"]
+    end
+
+    final_recipe -->|"consumes intermediate"| int_var
+    final_recipe -->|"consumes MP directly"| mp1
+
+    int_recipe -->|"consumes MP only"| mp2
+    int_recipe -->|"consumes MP only"| mp3
+```
+
+- **FEFO Lot Consumption**: Sales and production consume inventory from earliest-expiring lots first.
 - **Dual-Currency Conversion**: All transactions store both USD and VES amounts with the applied exchange rate for accurate financial reporting.
 - **Unit Conversion**: Automatic conversion between base units and packaging units using configurable conversion factors.
 - **Transformation Cost Calculation**: When transforming one product into another, the system calculates input cost and distributes it to output units.
@@ -201,7 +314,7 @@ Crear Orden → Asignar Productos → Reservar Lotes → Producir (si aplica)
 ## Key Features
 
 - **Multi-level Recipe Management** — Hierarchical bill of materials with intermediate and final products
-- **Lot Traceability** — Full batch tracking from raw material reception to final sale with FIFO consumption
+- **Lot Traceability** — Full batch tracking from raw material reception to final sale with FEFO consumption
 - **Point of Sale (POS)** — Integrated register with cash drawer management, multi-payment-method support, and change calculation
 - **Dual-Currency Operations** — All transactions in USD and VES with configurable exchange rates
 - **Purchase Order Workflow** — Complete procurement cycle from order creation to supplier payment
