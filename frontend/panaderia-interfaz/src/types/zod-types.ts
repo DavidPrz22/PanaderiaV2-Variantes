@@ -6,7 +6,7 @@ export const UnidadMedidaSchema = z.object({
     nombre_completo: z.string(),
     abreviatura: z.string(),
     descripcion: z.string().optional().nullable(),
-    tipo_medida: z.enum([TIPO_MEDIDA.PESO, TIPO_MEDIDA.VOLUMEN, TIPO_MEDIDA.UNIDAD, TIPO_MEDIDA.LONGITUD, TIPO_MEDIDA.OTRO]),
+    tipo_medida: z.enum([TIPO_MEDIDA.PESO, TIPO_MEDIDA.VOLUMEN, TIPO_MEDIDA.UNIDAD, TIPO_MEDIDA.LONGITUD, TIPO_MEDIDA.OTRO, TIPO_MEDIDA.CANTIDAD]),
 });
 
 export const CategoriaMateriaPrimaSchema = z.object({

@@ -115,3 +115,13 @@ export const changeEstadoLoteProductosFinales = async (id: number) => {
     return null;
   }
 };
+
+export const uploadCSV = async (file: string) => {
+  try {
+    const response = await apiClient.post(`/api/inventario/productoselaborados/register-csv/`, { file: file });
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading CSV:", error);
+    throw error;
+  }
+};

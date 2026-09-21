@@ -14,7 +14,7 @@ from apps.inventario.serializers import (
     ProductosIntermediosSerializer, ProductosIntermediosListSerializer, ProductosFinalesSerializer, ProductosIntermediosDetallesSerializer, 
     ProductosElaboradosSerializer, ProductosFinalesListSerializer, ProductosFinalesDetallesSerializer,
     ProductosFinalesListaTransformacionSerializer, LotesProductosElaboradosSerializer, 
-    ProductosReventaSerializer, ProductionSearchSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterCSVSerializer, ProductosReventaDetallesSerializer,
+    ProductosReventaSerializer, ProductionSearchSerializer, ProductosReventaListSerializer, LotesProductosReventaSerializer, RegisterYAMLSerializer, ProductosReventaDetallesSerializer,
     VarianteSearchSerializer
 )
 from rest_framework.response import Response
@@ -43,37 +43,56 @@ class MateriaPrimaViewSet(viewsets.ModelViewSet):
             return MateriaPrimaDetailsSerializer
         return MateriaPrimaSerializer
 
-    @action(detail=False, methods=['post'], url_path='register-csv',)
-    def register_csv(self, request):
+    @action(detail=False, methods=['post'], url_path='register-yaml',)
+    def register_yaml(self, request):
         import base64
-        import csv
-        import io
+        import yaml
 
-        serializer = RegisterCSVSerializer(data=request.data)
+        serializer = RegisterYAMLSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         file = serializer.validated_data['file']
         decoded_file = base64.b64decode(file)
-        text_stream = io.TextIOWrapper(io.BytesIO(decoded_file), encoding='utf-8')
+        yaml_data = yaml.safe_load(decoded_file.decode('utf-8'))
 
-        reader = csv.DictReader(text_stream)
         materias_primas = []
-        for mp in reader:
+        variantes_data_map = []
+        for mp in yaml_data:
             mp_created = MateriasPrimas(
                 nombre=mp['nombre'],
-                SKU=mp['SKU'],
-                precio_compra_usd=mp['precio_compra_usd'],
-                nombre_empaque_estandar=mp.get('nombre_empaque_estandar') or None,
-                cantidad_empaque_estandar=mp.get('cantidad_empaque_estandar') or None,
-                unidad_medida_empaque_estandar_id=mp.get('unidad_medida_empaque_estandar_id') or None,
+                SKU=mp.get('SKU'),
                 punto_reorden=mp['punto_reorden'],
                 unidad_medida_base_id=mp.get('unidad_medida_base_id'),
                 categoria_id=mp.get('categoria_id'),
                 descripcion=mp.get('descripcion')
             )
             materias_primas.append(mp_created)
+            variantes_data_map.append(mp.get('variantes', []))
 
-        MateriasPrimas.objects.bulk_create(materias_primas)
+        materias_primas_creadas = MateriasPrimas.objects.bulk_create(materias_primas)
+        
+        variantes_bucket = []
+        for idx, mp_created in enumerate(materias_primas_creadas):
+            variantes_data = variantes_data_map[idx]
+            if variantes_data:
+                for variante in variantes_data:
+                    variantes_bucket.append(
+                        MateriasPrimasVariantes(
+                            materia_prima=mp_created,
+                            nombre_variante=variante.get('nombre_variante'),
+                            unidad_compra_id=variante.get('unidad_compra'),
+                            SKU_variante=variante.get('SKU_variante'),
+                            precio_compra_divisa=variante.get('precio_compra_divisa'),
+                            precio_compra_local=variante.get('precio_compra_local'),
+                            nombre_empaque_estandar=variante.get('nombre_empaque_estandar'),
+                            cantidad_empaque_estandar=variante.get('cantidad_empaque_estandar'),
+                            unidad_medida_empaque_estandar_id=variante.get('unidad_medida_empaque_estandar'),
+                        )
+                    )
+        
+        if variantes_bucket:
+            MateriasPrimasVariantes.objects.bulk_create(variantes_bucket)
+        
         return Response({'message': "Materias primas registradas exitosamente"}, status=status.HTTP_200_OK)
 
 
@@ -327,6 +346,61 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
     queryset = ProductosElaborados.objects.all()
     serializer_class = ProductosElaboradosSerializer
     permission_classes = [IsStaffOrVendedorReadOnly]
+
+    @action(detail=False, methods=['post'], url_path='register-csv')
+    def register_csv(self, request):
+        import base64
+        import csv
+        import io
+
+        try:
+            serializer = RegisterCSVSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            file = serializer.validated_data['file']
+            decoded_file = base64.b64decode(file)
+            text_stream = io.TextIOWrapper(io.BytesIO(decoded_file), encoding='utf-8')
+
+            reader = csv.DictReader(text_stream)
+            rows = list(reader)
+            
+            productos_elaborados = []
+            for pe in rows:
+                es_intermediario = pe.get('es_intermediario', 'False').upper() == 'TRUE'
+                
+                producto = ProductosElaborados(
+                    nombre_producto=pe['nombre_producto'],
+                    descripcion=pe.get('descripcion') or None,
+                    unidad_produccion_id=pe.get('unidad_produccion_id') or None,
+                    unidad_venta_id=pe.get('unidad_venta_id') or None,
+                    categoria_id=pe.get('categoria_id') or None,
+                    es_intermediario=es_intermediario,
+                    tipo_medida_fisica=pe.get('tipo_medida_fisica', 'PESO'),
+                    vendible_por_medida_real=pe.get('vendible_por_medida_real', 'False').upper() == 'TRUE',
+                )
+                productos_elaborados.append(producto)
+
+            productos_creados = ProductosElaborados.objects.bulk_create(productos_elaborados)
+            
+            variantes = []
+            for idx, pe in enumerate(rows):
+                producto = productos_creados[idx]
+                variante = ProductosElaboradosVariantes(
+                    producto_elaborado=producto,
+                    nombre_variante=producto.nombre_producto,
+                    SKU=pe.get('SKU') or None,
+                    precio_venta_divisa=pe.get('precio_venta_usd') or None,
+                    punto_reorden=pe.get('punto_reorden') or None,
+                    atributo='UNIDAD',
+                    is_vendible=True,
+                )
+                variantes.append(variante)
+
+            ProductosElaboradosVariantes.objects.bulk_create(variantes)
+
+            return Response({'message': "Productos elaborados registrados exitosamente"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=True, methods=['post'], url_path='clear-receta-relacionada')
     def clear_receta_relacionada(self, request, *args, **kwargs):

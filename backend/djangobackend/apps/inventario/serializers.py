@@ -859,5 +859,5 @@ class CajaProductosSerializer(serializers.Serializer):
             'variantes': CajaProductosVariantesSerializer(instance.variantes, many=True).data if instance.variantes else []
         }
 
-class RegisterCSVSerializer(serializers.Serializer):
+class RegisterYAMLSerializer(serializers.Serializer):
     file = serializers.CharField(min_length=2)

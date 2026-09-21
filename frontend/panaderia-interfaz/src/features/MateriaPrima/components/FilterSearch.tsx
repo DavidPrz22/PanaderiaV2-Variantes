@@ -9,7 +9,7 @@ import DownloadSampleDataButton from "@/components/DownloadSampleDataButton";
 import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
 
-import { useImportCSVMutationMateriaPrima } from "@/features/MateriaPrima/hooks/mutations/materiaPrimaMutations"
+import { useImportYAMLMutationMateriaPrima } from "@/features/MateriaPrima/hooks/mutations/materiaPrimaMutations"
 
 export default function FilterSearch() {
   const { setShowMateriaprimaForm } = useMateriaPrimaContext();
@@ -17,20 +17,36 @@ export default function FilterSearch() {
   const handleNewButtonClick = () => {
     setShowMateriaprimaForm(true);
   };
-  const { mutateAsync, isPending } = useImportCSVMutationMateriaPrima()
+  const { mutateAsync, isPending } = useImportYAMLMutationMateriaPrima()
   const hasPermission = userHasPermission(user!, 'materias_primas', 'add')
 
   return (
     <div className="flex items-center px-8 justify-between">
       <SearchInput />
       <div className="flex gap-4">
-        <DownloadSampleDataButton filePath="/DataMateriasPrimas.csv" fileName="DataMateriasPrimas.csv" />
+        <DownloadSampleDataButton filePath="/DataMateriasPrimas.yaml" fileName="DataMateriasPrimas.yaml" label="Ejemplo YAML" />
         {hasPermission && 
         <ImportCSV 
-          descripcion="Selecciona un archivo CSV para importay los datos de las materias primas"
+          descripcion="Selecciona un archivo YAML para importar los datos de las materias primas"
           uploadFunction={mutateAsync}
           isPending={isPending}
-          csvContent={"nombre,SKU,precio_compra_usd,nombre_empaque_estandar,cantidad_empaque_estandar,unidad_medida_empaque_estandar_id,punto_reorden,unidad_medida_base_id,categoria_id,descripcion\n"}
+          fileType="yaml"
+          csvContent={`- nombre: ""
+  SKU: ""
+  punto_reorden: 0
+  unidad_medida_base_id: null
+  categoria_id: null
+  descripcion: ""
+  variantes:
+    - nombre_variante: ""
+      unidad_compra: null
+      SKU_variante: ""
+      precio_compra_divisa: 0
+      precio_compra_local: 0
+      nombre_empaque_estandar: ""
+      cantidad_empaque_estandar: 0
+      unidad_medida_empaque_estandar: null
+`}
         />
         }
         <FilterButton />

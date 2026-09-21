@@ -6,7 +6,7 @@ import {
   handleDeleteMateriaPrima,
   handleCreateUpdateLoteMateriaPrima,
   handleCreateUpdateMateriaPrima,
-  uploadCSV
+  uploadYAML
 } from "../../api/api";
 
 import {
@@ -151,10 +151,10 @@ export const useCreateUpdateLoteMateriaPrimaMutation = (
 };
 
 
-export const useImportCSVMutationMateriaPrima = () => {
+export const useImportYAMLMutationMateriaPrima = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (file: string) => uploadCSV(file),
+    mutationFn: (file: string) => uploadYAML(file),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: createMateriaPrimaListQueryOptions().queryKey,

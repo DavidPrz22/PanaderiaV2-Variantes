@@ -162,14 +162,14 @@ export const handleChangeLoteMateriaPrimaStatus = async (
 };
 
 
-export const uploadCSV = async (Base64File: string): Promise<{ status: number, message: string }> => {
+export const uploadYAML = async (Base64File: string): Promise<{ status: number, message: string }> => {
   try {
-    const response = await apiClient.post('/api/materiaprima/register-csv/', { file: Base64File });
+    const response = await apiClient.post('/api/inventario/materiaprima/register-yaml/', { file: Base64File });
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<{ detail?: string }>;
     throw new Error(
-      axiosError.response?.data?.detail || "Failed to upload CSV",
+      axiosError.response?.data?.detail || "Failed to upload YAML",
     );
   }
 }

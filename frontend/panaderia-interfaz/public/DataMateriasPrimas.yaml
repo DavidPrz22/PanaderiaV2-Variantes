@@ -1,0 +1,3567 @@
+- nombre: Vino Dulce Cocina Harina P.A.N.
+  SKU: MP-BEB-4883
+  categoria_id: 10
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-4883-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.25
+    precio_compra_local: 50.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-4883-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.38
+    precio_compra_local: 95.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-4883-25K
+    unidad_compra: 1
+    precio_compra_divisa: 59.38
+    precio_compra_local: 2375.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Lluvia de Chocolate Bakels
+  SKU: MP-DUL-2298
+  categoria_id: 12
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-DUL-2298-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.08
+    precio_compra_local: 83.2
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-DUL-2298-20L
+    unidad_compra: 3
+    precio_compra_divisa: 39.52
+    precio_compra_local: 1580.8
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-DUL-2298-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.09
+    precio_compra_local: 43.6
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Cardamomo Harina P.A.N.
+  SKU: MP-ESP-1261
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-ESP-1261-6K
+    unidad_compra: 1
+    precio_compra_divisa: 66.87
+    precio_compra_local: 2674.8
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-1261-1K
+    unidad_compra: 1
+    precio_compra_divisa: 11.7
+    precio_compra_local: 468.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESP-1261-500G
+    unidad_compra: 2
+    precio_compra_divisa: 5.85
+    precio_compra_local: 234.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Sirope de Chocolate Kraft
+  SKU: MP-MER-7790
+  categoria_id: 7
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-MER-7790-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.21
+    precio_compra_local: 128.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-7790-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.1
+    precio_compra_local: 244.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-MER-7790-25K
+    unidad_compra: 1
+    precio_compra_divisa: 152.47
+    precio_compra_local: 6098.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pulpa de Mora Campestre
+  SKU: MP-CON-2738
+  categoria_id: 8
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-2738-1K
+    unidad_compra: 1
+    precio_compra_divisa: 5.74
+    precio_compra_local: 229.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-2738-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.01
+    precio_compra_local: 120.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Cardamomo Avelina
+  SKU: MP-ESP-7451
+  categoria_id: 11
+  unidad_medida_base_id: 3
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESP-7451-20L
+    unidad_compra: 3
+    precio_compra_divisa: 270.29
+    precio_compra_local: 10811.6
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESP-7451-12L
+    unidad_compra: 3
+    precio_compra_divisa: 170.28
+    precio_compra_local: 6811.2
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESP-7451-1L
+    unidad_compra: 3
+    precio_compra_divisa: 14.19
+    precio_compra_local: 567.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Mantequilla con Sal Alpina
+  SKU: MP-LAC-2401
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-2401-20L
+    unidad_compra: 3
+    precio_compra_divisa: 56.66
+    precio_compra_local: 2266.4
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-LAC-2401-12L
+    unidad_compra: 3
+    precio_compra_divisa: 35.7
+    precio_compra_local: 1428.0
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-LAC-2401-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.97
+    precio_compra_local: 118.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Glaseado de Chocolate Primicia
+  SKU: MP-DUL-9187
+  categoria_id: 12
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-DUL-9187-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.25
+    precio_compra_local: 50.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-9187-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.38
+    precio_compra_local: 95.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-DUL-9187-25K
+    unidad_compra: 1
+    precio_compra_divisa: 59.38
+    precio_compra_local: 2375.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Extracto de Limón Los Andes
+  SKU: MP-ESE-4027
+  categoria_id: 9
+  unidad_medida_base_id: 5
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESE-4027-20L
+    unidad_compra: 3
+    precio_compra_divisa: 573.21
+    precio_compra_local: 22928.4
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESE-4027-12L
+    unidad_compra: 3
+    precio_compra_divisa: 361.12
+    precio_compra_local: 14444.8
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESE-4027-1L
+    unidad_compra: 3
+    precio_compra_divisa: 30.09
+    precio_compra_local: 1203.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Masa Quebrada Primicia
+  SKU: MP-CON-7590
+  categoria_id: 8
+  unidad_medida_base_id: 3
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-CON-7590-1L
+    unidad_compra: 3
+    precio_compra_divisa: 7.72
+    precio_compra_local: 308.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-CON-7590-20L
+    unidad_compra: 3
+    precio_compra_divisa: 146.68
+    precio_compra_local: 5867.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-CON-7590-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 4.05
+    precio_compra_local: 162.0
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Jarabe de Glucosa Nestlé
+  SKU: MP-BEB-8332
+  categoria_id: 10
+  unidad_medida_base_id: 3
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-BEB-8332-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.52
+    precio_compra_local: 60.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-BEB-8332-20L
+    unidad_compra: 3
+    precio_compra_divisa: 28.88
+    precio_compra_local: 1155.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-BEB-8332-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.8
+    precio_compra_local: 32.0
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Queso Crema Alpina
+  SKU: MP-LAC-6832
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-LAC-6832-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.09
+    precio_compra_local: 83.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-6832-20L
+    unidad_compra: 3
+    precio_compra_divisa: 39.71
+    precio_compra_local: 1588.4
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-LAC-6832-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.1
+    precio_compra_local: 44.0
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Malta Concentrada Robin Hood
+  SKU: MP-BEB-8615
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-8615-500G
+    unidad_compra: 2
+    precio_compra_divisa: 2.2
+    precio_compra_local: 88.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-8615-1K
+    unidad_compra: 1
+    precio_compra_divisa: 4.18
+    precio_compra_local: 167.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-8615-25K
+    unidad_compra: 1
+    precio_compra_divisa: 104.5
+    precio_compra_local: 4180.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Base para Tartas Fleischmann
+  SKU: MP-CON-9492
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-CON-9492-6K
+    unidad_compra: 1
+    precio_compra_divisa: 36.63
+    precio_compra_local: 1465.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-9492-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.41
+    precio_compra_local: 256.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-9492-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.21
+    precio_compra_local: 128.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina de Maíz Blanco Imperial
+  SKU: MP-HAR-2614
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-2614-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.49
+    precio_compra_local: 19.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-2614-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.93
+    precio_compra_local: 37.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-2614-25K
+    unidad_compra: 1
+    precio_compra_divisa: 23.27
+    precio_compra_local: 930.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Leche Condensada Mavesa
+  SKU: MP-LAC-2332
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-2332-1K
+    unidad_compra: 1
+    precio_compra_divisa: 4.58
+    precio_compra_local: 183.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-LAC-2332-500G
+    unidad_compra: 2
+    precio_compra_divisa: 2.4
+    precio_compra_local: 96.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jarabe de Glucosa Campestre
+  SKU: MP-BEB-1417
+  categoria_id: 10
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-BEB-1417-45K
+    unidad_compra: 1
+    precio_compra_divisa: 148.94
+    precio_compra_local: 5957.6
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-1417-25K
+    unidad_compra: 1
+    precio_compra_divisa: 86.88
+    precio_compra_local: 3475.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-1417-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.48
+    precio_compra_local: 139.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Suero de Leche Mavesa
+  SKU: MP-LAC-3945
+  categoria_id: 2
+  unidad_medida_base_id: 5
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-LAC-3945-1L
+    unidad_compra: 3
+    precio_compra_divisa: 5.76
+    precio_compra_local: 230.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-3945-20L
+    unidad_compra: 3
+    precio_compra_divisa: 109.44
+    precio_compra_local: 4377.6
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-LAC-3945-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 3.02
+    precio_compra_local: 120.8
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Jalea de Membrillo Kraft
+  SKU: MP-MER-7781
+  categoria_id: 7
+  unidad_medida_base_id: 1
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-MER-7781-25K
+    unidad_compra: 1
+    precio_compra_divisa: 215.29
+    precio_compra_local: 8611.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-7781-1K
+    unidad_compra: 1
+    precio_compra_divisa: 9.04
+    precio_compra_local: 361.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-MER-7781-500G
+    unidad_compra: 2
+    precio_compra_divisa: 4.52
+    precio_compra_local: 180.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Moras Silvestres Alpina
+  SKU: MP-FRU-5150
+  categoria_id: 4
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (frutas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-FRU-5150-6K
+    unidad_compra: 1
+    precio_compra_divisa: 22.76
+    precio_compra_local: 910.4
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-FRU-5150-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.98
+    precio_compra_local: 159.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-FRU-5150-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.99
+    precio_compra_local: 79.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jengibre Fresco Nestlé
+  SKU: MP-HOR-9321
+  categoria_id: 5
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (hortalizas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-HOR-9321-20L
+    unidad_compra: 3
+    precio_compra_divisa: 27.98
+    precio_compra_local: 1119.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-HOR-9321-12L
+    unidad_compra: 3
+    precio_compra_divisa: 17.63
+    precio_compra_local: 705.2
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-HOR-9321-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.47
+    precio_compra_local: 58.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Vainilla Negra Puratos
+  SKU: MP-ESE-8199
+  categoria_id: 9
+  unidad_medida_base_id: 5
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESE-8199-20L
+    unidad_compra: 3
+    precio_compra_divisa: 488.76
+    precio_compra_local: 19550.4
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESE-8199-12L
+    unidad_compra: 3
+    precio_compra_divisa: 307.92
+    precio_compra_local: 12316.8
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESE-8199-1L
+    unidad_compra: 3
+    precio_compra_divisa: 25.66
+    precio_compra_local: 1026.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Cebolla en Polvo Fleischmann
+  SKU: MP-HOR-4366
+  categoria_id: 5
+  unidad_medida_base_id: 2
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (hortalizas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-HOR-4366-12L
+    unidad_compra: 3
+    precio_compra_divisa: 41.99
+    precio_compra_local: 1679.6
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-HOR-4366-1L
+    unidad_compra: 3
+    precio_compra_divisa: 3.67
+    precio_compra_local: 146.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-HOR-4366-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.84
+    precio_compra_local: 73.6
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Harina de Almendras Nestlé
+  SKU: MP-HAR-6376
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-6376-25K
+    unidad_compra: 1
+    precio_compra_divisa: 24.6
+    precio_compra_local: 984.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-6376-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.03
+    precio_compra_local: 41.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-HAR-6376-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.52
+    precio_compra_local: 20.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Mermelada de Guayaba Bakels
+  SKU: MP-MER-4564
+  categoria_id: 7
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-MER-4564-25K
+    unidad_compra: 1
+    precio_compra_divisa: 143.64
+    precio_compra_local: 5745.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-4564-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.03
+    precio_compra_local: 241.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-MER-4564-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.02
+    precio_compra_local: 120.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Azúcar Morena Kraft
+  SKU: MP-DUL-8757
+  categoria_id: 12
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-DUL-8757-1L
+    unidad_compra: 3
+    precio_compra_divisa: 4.65
+    precio_compra_local: 186.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-DUL-8757-20L
+    unidad_compra: 3
+    precio_compra_divisa: 88.35
+    precio_compra_local: 3534.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-DUL-8757-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 2.44
+    precio_compra_local: 97.6
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Leche Descremada Campestre
+  SKU: MP-LAC-2077
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-LAC-2077-25K
+    unidad_compra: 1
+    precio_compra_divisa: 81.88
+    precio_compra_local: 3275.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-2077-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.44
+    precio_compra_local: 137.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-LAC-2077-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.72
+    precio_compra_local: 68.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Nuez Moscada Bakels
+  SKU: MP-ESP-7084
+  categoria_id: 11
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-7084-1K
+    unidad_compra: 1
+    precio_compra_divisa: 19.49
+    precio_compra_local: 779.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESP-7084-500G
+    unidad_compra: 2
+    precio_compra_divisa: 10.23
+    precio_compra_local: 409.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Fruta Picada Puratos
+  SKU: MP-CON-4617
+  categoria_id: 8
+  unidad_medida_base_id: 3
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-CON-4617-1L
+    unidad_compra: 3
+    precio_compra_divisa: 6.77
+    precio_compra_local: 270.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-CON-4617-20L
+    unidad_compra: 3
+    precio_compra_divisa: 128.63
+    precio_compra_local: 5145.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-CON-4617-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 3.55
+    precio_compra_local: 142.0
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Levadura Fresca Mavesa
+  SKU: MP-ESP-8944
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-ESP-8944-6K
+    unidad_compra: 1
+    precio_compra_divisa: 128.48
+    precio_compra_local: 5139.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-8944-1K
+    unidad_compra: 1
+    precio_compra_divisa: 22.48
+    precio_compra_local: 899.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESP-8944-500G
+    unidad_compra: 2
+    precio_compra_divisa: 11.24
+    precio_compra_local: 449.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pulpa de Mora Harina P.A.N.
+  SKU: MP-CON-5128
+  categoria_id: 8
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-CON-5128-25K
+    unidad_compra: 1
+    precio_compra_divisa: 137.31
+    precio_compra_local: 5492.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-5128-1K
+    unidad_compra: 1
+    precio_compra_divisa: 5.77
+    precio_compra_local: 230.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-CON-5128-500G
+    unidad_compra: 2
+    precio_compra_divisa: 2.88
+    precio_compra_local: 115.2
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pasas de Corinto Kraft
+  SKU: MP-SEC-9035
+  categoria_id: 6
+  unidad_medida_base_id: 2
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-SEC-9035-45K
+    unidad_compra: 1
+    precio_compra_divisa: 793.65
+    precio_compra_local: 31746.0
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-SEC-9035-25K
+    unidad_compra: 1
+    precio_compra_divisa: 462.96
+    precio_compra_local: 18518.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-9035-1K
+    unidad_compra: 1
+    precio_compra_divisa: 18.52
+    precio_compra_local: 740.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jarabe de Maíz Avelina
+  SKU: MP-DUL-4264
+  categoria_id: 12
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-DUL-4264-45K
+    unidad_compra: 1
+    precio_compra_divisa: 61.18
+    precio_compra_local: 2447.2
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-DUL-4264-25K
+    unidad_compra: 1
+    precio_compra_divisa: 35.69
+    precio_compra_local: 1427.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-4264-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.43
+    precio_compra_local: 57.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Mermelada de Albaricoque Imperial
+  SKU: MP-MER-3225
+  categoria_id: 7
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-MER-3225-45K
+    unidad_compra: 1
+    precio_compra_divisa: 291.16
+    precio_compra_local: 11646.4
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-MER-3225-25K
+    unidad_compra: 1
+    precio_compra_divisa: 169.84
+    precio_compra_local: 6793.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-3225-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.79
+    precio_compra_local: 271.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Extracto de Naranja Campestre
+  SKU: MP-ESE-9217
+  categoria_id: 9
+  unidad_medida_base_id: 2
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-ESE-9217-6K
+    unidad_compra: 1
+    precio_compra_divisa: 169.63
+    precio_compra_local: 6785.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESE-9217-1K
+    unidad_compra: 1
+    precio_compra_divisa: 29.69
+    precio_compra_local: 1187.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESE-9217-500G
+    unidad_compra: 2
+    precio_compra_divisa: 14.84
+    precio_compra_local: 593.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Coco Rallado Puratos
+  SKU: MP-FRU-7019
+  categoria_id: 4
+  unidad_medida_base_id: 2
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (frutas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-FRU-7019-45K
+    unidad_compra: 1
+    precio_compra_divisa: 180.29
+    precio_compra_local: 7211.6
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-FRU-7019-25K
+    unidad_compra: 1
+    precio_compra_divisa: 105.17
+    precio_compra_local: 4206.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-FRU-7019-1K
+    unidad_compra: 1
+    precio_compra_divisa: 4.21
+    precio_compra_local: 168.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pulpa de Mora Bakels
+  SKU: MP-CON-4190
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-4190-1K
+    unidad_compra: 1
+    precio_compra_divisa: 8.03
+    precio_compra_local: 321.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-4190-500G
+    unidad_compra: 2
+    precio_compra_divisa: 4.22
+    precio_compra_local: 168.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Lluvia de Colores Puratos
+  SKU: MP-DUL-3602
+  categoria_id: 12
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-DUL-3602-25K
+    unidad_compra: 1
+    precio_compra_divisa: 33.39
+    precio_compra_local: 1335.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-3602-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.4
+    precio_compra_local: 56.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-DUL-3602-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.7
+    precio_compra_local: 28.0
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Canela Molida Harina P.A.N.
+  SKU: MP-ESP-3290
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-3290-1K
+    unidad_compra: 1
+    precio_compra_divisa: 22.2
+    precio_compra_local: 888.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESP-3290-500G
+    unidad_compra: 2
+    precio_compra_divisa: 11.65
+    precio_compra_local: 466.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jalea de Manzana Campestre
+  SKU: MP-MER-8305
+  categoria_id: 7
+  unidad_medida_base_id: 3
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-MER-8305-1L
+    unidad_compra: 3
+    precio_compra_divisa: 4.27
+    precio_compra_local: 170.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-MER-8305-20L
+    unidad_compra: 3
+    precio_compra_divisa: 81.13
+    precio_compra_local: 3245.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-MER-8305-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 2.24
+    precio_compra_local: 89.6
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Queso Crema Alpina Industrial
+  SKU: MP-LAC-7033
+  categoria_id: 2
+  unidad_medida_base_id: 5
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-7033-20L
+    unidad_compra: 3
+    precio_compra_divisa: 108.74
+    precio_compra_local: 4349.6
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-LAC-7033-12L
+    unidad_compra: 3
+    precio_compra_divisa: 68.51
+    precio_compra_local: 2740.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-LAC-7033-1L
+    unidad_compra: 3
+    precio_compra_divisa: 5.71
+    precio_compra_local: 228.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Fruta Picada Avelina
+  SKU: MP-CON-3216
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-CON-3216-6K
+    unidad_compra: 1
+    precio_compra_divisa: 43.33
+    precio_compra_local: 1733.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-3216-1K
+    unidad_compra: 1
+    precio_compra_divisa: 7.58
+    precio_compra_local: 303.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-3216-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.79
+    precio_compra_local: 151.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pimienta Dulce Los Andes
+  SKU: MP-ESP-5237
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESP-5237-1L
+    unidad_compra: 3
+    precio_compra_divisa: 22.92
+    precio_compra_local: 916.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESP-5237-20L
+    unidad_compra: 3
+    precio_compra_divisa: 435.48
+    precio_compra_local: 17419.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-ESP-5237-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 12.03
+    precio_compra_local: 481.2
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Masa Madre Deshidratada Puratos
+  SKU: MP-HAR-7087
+  categoria_id: 3
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-7087-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.87
+    precio_compra_local: 34.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-7087-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.65
+    precio_compra_local: 66.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-7087-25K
+    unidad_compra: 1
+    precio_compra_divisa: 41.32
+    precio_compra_local: 1652.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Agua Mineral 20L Robin Hood
+  SKU: MP-BEB-4903
+  categoria_id: 10
+  unidad_medida_base_id: 2
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-BEB-4903-45K
+    unidad_compra: 1
+    precio_compra_divisa: 147.88
+    precio_compra_local: 5915.2
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-4903-25K
+    unidad_compra: 1
+    precio_compra_divisa: 86.26
+    precio_compra_local: 3450.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-4903-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.45
+    precio_compra_local: 138.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Margarina Industrial Nestlé
+  SKU: MP-LAC-3546
+  categoria_id: 2
+  unidad_medida_base_id: 1
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-LAC-3546-25K
+    unidad_compra: 1
+    precio_compra_divisa: 84.04
+    precio_compra_local: 3361.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-3546-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.53
+    precio_compra_local: 141.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-LAC-3546-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.76
+    precio_compra_local: 70.4
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jalea de Membrillo Harina P.A.N.
+  SKU: MP-MER-4923
+  categoria_id: 7
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-MER-4923-1L
+    unidad_compra: 3
+    precio_compra_divisa: 3.7
+    precio_compra_local: 148.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-MER-4923-20L
+    unidad_compra: 3
+    precio_compra_divisa: 70.3
+    precio_compra_local: 2812.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-MER-4923-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.94
+    precio_compra_local: 77.6
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Lluvia de Colores Robin Hood
+  SKU: MP-DUL-9874
+  categoria_id: 12
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-9874-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.73
+    precio_compra_local: 269.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-DUL-9874-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.53
+    precio_compra_local: 141.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Extracto de Limón Fleischmann
+  SKU: MP-ESE-4817
+  categoria_id: 9
+  unidad_medida_base_id: 5
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESE-4817-20L
+    unidad_compra: 3
+    precio_compra_divisa: 723.44
+    precio_compra_local: 28937.6
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESE-4817-12L
+    unidad_compra: 3
+    precio_compra_divisa: 455.77
+    precio_compra_local: 18230.8
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESE-4817-1L
+    unidad_compra: 3
+    precio_compra_divisa: 37.98
+    precio_compra_local: 1519.2
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Frutos del Bosque Mix Los Andes
+  SKU: MP-CON-5058
+  categoria_id: 8
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-CON-5058-1L
+    unidad_compra: 3
+    precio_compra_divisa: 7.16
+    precio_compra_local: 286.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-CON-5058-20L
+    unidad_compra: 3
+    precio_compra_divisa: 136.04
+    precio_compra_local: 5441.6
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-CON-5058-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 3.76
+    precio_compra_local: 150.4
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Pulpa de Mango Mavesa
+  SKU: MP-CON-7988
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-CON-7988-45K
+    unidad_compra: 1
+    precio_compra_divisa: 297.3
+    precio_compra_local: 11892.0
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-CON-7988-25K
+    unidad_compra: 1
+    precio_compra_divisa: 173.43
+    precio_compra_local: 6937.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-7988-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.94
+    precio_compra_local: 277.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Fondant Alpina
+  SKU: MP-DUL-6120
+  categoria_id: 12
+  unidad_medida_base_id: 3
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-DUL-6120-20L
+    unidad_compra: 3
+    precio_compra_divisa: 141.95
+    precio_compra_local: 5678.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-DUL-6120-12L
+    unidad_compra: 3
+    precio_compra_divisa: 89.43
+    precio_compra_local: 3577.2
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-DUL-6120-1L
+    unidad_compra: 3
+    precio_compra_divisa: 7.45
+    precio_compra_local: 298.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Extracto de Naranja Harina P.A.N.
+  SKU: MP-ESE-2512
+  categoria_id: 9
+  unidad_medida_base_id: 5
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESE-2512-1K
+    unidad_compra: 1
+    precio_compra_divisa: 30.67
+    precio_compra_local: 1226.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESE-2512-500G
+    unidad_compra: 2
+    precio_compra_divisa: 16.1
+    precio_compra_local: 644.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Sirope de Chocolate Los Andes
+  SKU: MP-MER-7331
+  categoria_id: 7
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-MER-7331-6K
+    unidad_compra: 1
+    precio_compra_divisa: 34.56
+    precio_compra_local: 1382.4
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-7331-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.05
+    precio_compra_local: 242.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-MER-7331-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.02
+    precio_compra_local: 120.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Lluvia de Colores Mavesa
+  SKU: MP-DUL-5328
+  categoria_id: 12
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-DUL-5328-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.13
+    precio_compra_local: 45.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-5328-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.15
+    precio_compra_local: 86.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-DUL-5328-25K
+    unidad_compra: 1
+    precio_compra_divisa: 53.67
+    precio_compra_local: 2146.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Agua de Azahar Fleischmann
+  SKU: MP-BEB-9277
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-BEB-9277-12L
+    unidad_compra: 3
+    precio_compra_divisa: 18.71
+    precio_compra_local: 748.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-BEB-9277-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.64
+    precio_compra_local: 65.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-BEB-9277-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.82
+    precio_compra_local: 32.8
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Aroma de Panetón Campestre
+  SKU: MP-ESE-5470
+  categoria_id: 9
+  unidad_medida_base_id: 3
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESE-5470-12L
+    unidad_compra: 3
+    precio_compra_divisa: 182.76
+    precio_compra_local: 7310.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESE-5470-1L
+    unidad_compra: 3
+    precio_compra_divisa: 15.99
+    precio_compra_local: 639.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-ESE-5470-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 8.0
+    precio_compra_local: 320.0
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Harina de Maíz Amarillo Imperial
+  SKU: MP-HAR-9982
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-HAR-9982-6K
+    unidad_compra: 1
+    precio_compra_divisa: 7.02
+    precio_compra_local: 280.8
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-9982-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.23
+    precio_compra_local: 49.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-9982-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.61
+    precio_compra_local: 24.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Base para Tartas Alpina
+  SKU: MP-CON-9402
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-CON-9402-45K
+    unidad_compra: 1
+    precio_compra_divisa: 326.58
+    precio_compra_local: 13063.2
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-CON-9402-25K
+    unidad_compra: 1
+    precio_compra_divisa: 190.51
+    precio_compra_local: 7620.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-9402-1K
+    unidad_compra: 1
+    precio_compra_divisa: 7.62
+    precio_compra_local: 304.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Masa para Croissants Harina P.A.N.
+  SKU: MP-CON-6574
+  categoria_id: 8
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-6574-1K
+    unidad_compra: 1
+    precio_compra_divisa: 9.5
+    precio_compra_local: 380.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-6574-500G
+    unidad_compra: 2
+    precio_compra_divisa: 4.99
+    precio_compra_local: 199.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Cambur Maduro Mavesa
+  SKU: MP-FRU-8490
+  categoria_id: 4
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (frutas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-FRU-8490-45K
+    unidad_compra: 1
+    precio_compra_divisa: 110.72
+    precio_compra_local: 4428.8
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-FRU-8490-25K
+    unidad_compra: 1
+    precio_compra_divisa: 64.59
+    precio_compra_local: 2583.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-FRU-8490-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.58
+    precio_compra_local: 103.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Mantequilla con Sal Los Andes
+  SKU: MP-LAC-2181
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-LAC-2181-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.64
+    precio_compra_local: 65.6
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-2181-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.12
+    precio_compra_local: 124.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-LAC-2181-25K
+    unidad_compra: 1
+    precio_compra_divisa: 77.9
+    precio_compra_local: 3116.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pulpa de Mora Los Andes
+  SKU: MP-CON-7170
+  categoria_id: 8
+  unidad_medida_base_id: 5
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-7170-500G
+    unidad_compra: 2
+    precio_compra_divisa: 2.72
+    precio_compra_local: 108.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-7170-1K
+    unidad_compra: 1
+    precio_compra_divisa: 5.17
+    precio_compra_local: 206.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-CON-7170-25K
+    unidad_compra: 1
+    precio_compra_divisa: 129.2
+    precio_compra_local: 5168.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Yogurt Griego Primicia
+  SKU: MP-LAC-9150
+  categoria_id: 2
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-LAC-9150-45K
+    unidad_compra: 1
+    precio_compra_divisa: 106.69
+    precio_compra_local: 4267.6
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-LAC-9150-25K
+    unidad_compra: 1
+    precio_compra_divisa: 62.24
+    precio_compra_local: 2489.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-9150-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.49
+    precio_compra_local: 99.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Leche Descremada Campestre Industrial
+  SKU: MP-LAC-6776
+  categoria_id: 2
+  unidad_medida_base_id: 5
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (lácteos).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-6776-20L
+    unidad_compra: 3
+    precio_compra_divisa: 46.87
+    precio_compra_local: 1874.8
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-LAC-6776-12L
+    unidad_compra: 3
+    precio_compra_divisa: 29.53
+    precio_compra_local: 1181.2
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-LAC-6776-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.46
+    precio_compra_local: 98.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Vainilla Negra Fleischmann
+  SKU: MP-ESE-5293
+  categoria_id: 9
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-ESE-5293-45K
+    unidad_compra: 1
+    precio_compra_divisa: 824.04
+    precio_compra_local: 32961.6
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-ESE-5293-25K
+    unidad_compra: 1
+    precio_compra_divisa: 480.69
+    precio_compra_local: 19227.6
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESE-5293-1K
+    unidad_compra: 1
+    precio_compra_divisa: 19.23
+    precio_compra_local: 769.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina de Avena Nestlé
+  SKU: MP-HAR-6898
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-6898-25K
+    unidad_compra: 1
+    precio_compra_divisa: 43.93
+    precio_compra_local: 1757.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-6898-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.85
+    precio_compra_local: 74.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-HAR-6898-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.92
+    precio_compra_local: 36.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Extracto de Café Nestlé
+  SKU: MP-ESE-2119
+  categoria_id: 9
+  unidad_medida_base_id: 5
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-ESE-2119-12L
+    unidad_compra: 3
+    precio_compra_divisa: 292.5
+    precio_compra_local: 11700.0
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESE-2119-1L
+    unidad_compra: 3
+    precio_compra_divisa: 25.59
+    precio_compra_local: 1023.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-ESE-2119-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 12.8
+    precio_compra_local: 512.0
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Lluvia de Colores Fleischmann
+  SKU: MP-DUL-8471
+  categoria_id: 12
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-8471-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.61
+    precio_compra_local: 104.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-DUL-8471-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.37
+    precio_compra_local: 54.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Auyama Cocida Mavesa
+  SKU: MP-HOR-6617
+  categoria_id: 5
+  unidad_medida_base_id: 2
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (hortalizas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-HOR-6617-45K
+    unidad_compra: 1
+    precio_compra_divisa: 81.65
+    precio_compra_local: 3266.0
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HOR-6617-25K
+    unidad_compra: 1
+    precio_compra_divisa: 47.63
+    precio_compra_local: 1905.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HOR-6617-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.91
+    precio_compra_local: 76.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina Integral Fina Campestre
+  SKU: MP-HAR-6561
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-6561-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.54
+    precio_compra_local: 61.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-6561-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.81
+    precio_compra_local: 32.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina Integral Fina Alpina
+  SKU: MP-HAR-8639
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-HAR-8639-20L
+    unidad_compra: 3
+    precio_compra_divisa: 46.73
+    precio_compra_local: 1869.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-HAR-8639-12L
+    unidad_compra: 3
+    precio_compra_divisa: 29.44
+    precio_compra_local: 1177.6
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-HAR-8639-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.45
+    precio_compra_local: 98.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Canela Molida Fleischmann
+  SKU: MP-ESP-4724
+  categoria_id: 11
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (especias).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-ESP-4724-45K
+    unidad_compra: 1
+    precio_compra_divisa: 971.45
+    precio_compra_local: 38858.0
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-ESP-4724-25K
+    unidad_compra: 1
+    precio_compra_divisa: 566.68
+    precio_compra_local: 22667.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-4724-1K
+    unidad_compra: 1
+    precio_compra_divisa: 22.67
+    precio_compra_local: 906.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Lluvia de Chocolate Los Andes
+  SKU: MP-DUL-6593
+  categoria_id: 12
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-DUL-6593-1K
+    unidad_compra: 1
+    precio_compra_divisa: 5.92
+    precio_compra_local: 236.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-DUL-6593-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.11
+    precio_compra_local: 124.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Topping de Caramelo Kraft
+  SKU: MP-MER-4136
+  categoria_id: 7
+  unidad_medida_base_id: 3
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-MER-4136-12L
+    unidad_compra: 3
+    precio_compra_divisa: 104.66
+    precio_compra_local: 4186.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-MER-4136-1L
+    unidad_compra: 3
+    precio_compra_divisa: 9.16
+    precio_compra_local: 366.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-MER-4136-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 4.58
+    precio_compra_local: 183.2
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Zanahoria Rallada Mavesa
+  SKU: MP-HOR-4753
+  categoria_id: 5
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (hortalizas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HOR-4753-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.18
+    precio_compra_local: 47.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HOR-4753-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.24
+    precio_compra_local: 89.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HOR-4753-25K
+    unidad_compra: 1
+    precio_compra_divisa: 56.05
+    precio_compra_local: 2242.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Agua de Azahar Imperial
+  SKU: MP-BEB-7102
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-BEB-7102-12L
+    unidad_compra: 3
+    precio_compra_divisa: 32.54
+    precio_compra_local: 1301.6
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-BEB-7102-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.85
+    precio_compra_local: 114.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-BEB-7102-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.42
+    precio_compra_local: 56.8
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Harina de Avena Harina P.A.N.
+  SKU: MP-HAR-2898
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-2898-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.31
+    precio_compra_local: 52.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-2898-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.49
+    precio_compra_local: 99.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-2898-25K
+    unidad_compra: 1
+    precio_compra_divisa: 62.22
+    precio_compra_local: 2488.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jarabe de Maíz Nestlé
+  SKU: MP-DUL-5105
+  categoria_id: 12
+  unidad_medida_base_id: 3
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (dulces y golosinas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-DUL-5105-12L
+    unidad_compra: 3
+    precio_compra_divisa: 20.7
+    precio_compra_local: 828.0
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-DUL-5105-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.81
+    precio_compra_local: 72.4
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-DUL-5105-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.91
+    precio_compra_local: 36.4
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Auyama Cocida Harina P.A.N.
+  SKU: MP-HOR-7589
+  categoria_id: 5
+  unidad_medida_base_id: 2
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (hortalizas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HOR-7589-25K
+    unidad_compra: 1
+    precio_compra_divisa: 81.31
+    precio_compra_local: 3252.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HOR-7589-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.42
+    precio_compra_local: 136.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-HOR-7589-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.71
+    precio_compra_local: 68.4
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Cerezas Marrasquino Avelina
+  SKU: MP-FRU-9122
+  categoria_id: 4
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (frutas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-FRU-9122-20L
+    unidad_compra: 3
+    precio_compra_divisa: 82.52
+    precio_compra_local: 3300.8
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-FRU-9122-12L
+    unidad_compra: 3
+    precio_compra_divisa: 51.99
+    precio_compra_local: 2079.6
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-FRU-9122-1L
+    unidad_compra: 3
+    precio_compra_divisa: 4.33
+    precio_compra_local: 173.2
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Chispas de Chocolate 50% Avelina
+  SKU: MP-SEC-3350
+  categoria_id: 6
+  unidad_medida_base_id: 2
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-SEC-3350-1L
+    unidad_compra: 3
+    precio_compra_divisa: 17.85
+    precio_compra_local: 714.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-SEC-3350-20L
+    unidad_compra: 3
+    precio_compra_divisa: 339.15
+    precio_compra_local: 13566.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-SEC-3350-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 9.37
+    precio_compra_local: 374.8
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Pistachos Pelados Fleischmann
+  SKU: MP-SEC-1790
+  categoria_id: 6
+  unidad_medida_base_id: 2
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-SEC-1790-45K
+    unidad_compra: 1
+    precio_compra_divisa: 648.28
+    precio_compra_local: 25931.2
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-SEC-1790-25K
+    unidad_compra: 1
+    precio_compra_divisa: 378.16
+    precio_compra_local: 15126.4
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-1790-1K
+    unidad_compra: 1
+    precio_compra_divisa: 15.13
+    precio_compra_local: 605.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Esencia de Mantecado Robin Hood
+  SKU: MP-ESE-8864
+  categoria_id: 9
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESE-8864-500G
+    unidad_compra: 2
+    precio_compra_divisa: 19.2
+    precio_compra_local: 768.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESE-8864-1K
+    unidad_compra: 1
+    precio_compra_divisa: 36.48
+    precio_compra_local: 1459.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-ESE-8864-25K
+    unidad_compra: 1
+    precio_compra_divisa: 912.0
+    precio_compra_local: 36480.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pulpa de Mango Mavesa Estándar
+  SKU: MP-CON-4668
+  categoria_id: 8
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (congelados).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CON-4668-1K
+    unidad_compra: 1
+    precio_compra_divisa: 8.91
+    precio_compra_local: 356.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CON-4668-500G
+    unidad_compra: 2
+    precio_compra_divisa: 4.68
+    precio_compra_local: 187.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Fruta Confitada Imperial
+  SKU: MP-SEC-9250
+  categoria_id: 6
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-SEC-9250-45K
+    unidad_compra: 1
+    precio_compra_divisa: 773.27
+    precio_compra_local: 30930.8
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-SEC-9250-25K
+    unidad_compra: 1
+    precio_compra_divisa: 451.07
+    precio_compra_local: 18042.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-9250-1K
+    unidad_compra: 1
+    precio_compra_divisa: 18.04
+    precio_compra_local: 721.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Agua Destilada Harina P.A.N.
+  SKU: MP-BEB-9171
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 7500.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-9171-25K
+    unidad_compra: 1
+    precio_compra_divisa: 24.77
+    precio_compra_local: 990.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-9171-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.04
+    precio_compra_local: 41.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-BEB-9171-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.52
+    precio_compra_local: 20.8
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jugo de Limón Puro Los Andes
+  SKU: MP-BEB-1227
+  categoria_id: 10
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-1227-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.96
+    precio_compra_local: 78.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-1227-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.72
+    precio_compra_local: 148.8
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-BEB-1227-25K
+    unidad_compra: 1
+    precio_compra_divisa: 93.1
+    precio_compra_local: 3724.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Granola Artesanal Los Andes
+  SKU: MP-SEC-8246
+  categoria_id: 6
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-SEC-8246-500G
+    unidad_compra: 2
+    precio_compra_divisa: 7.48
+    precio_compra_local: 299.2
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-8246-1K
+    unidad_compra: 1
+    precio_compra_divisa: 14.21
+    precio_compra_local: 568.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-SEC-8246-25K
+    unidad_compra: 1
+    precio_compra_divisa: 355.3
+    precio_compra_local: 14212.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Manzanas Verdes Harina P.A.N.
+  SKU: MP-FRU-4724
+  categoria_id: 4
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (frutas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-FRU-4724-20L
+    unidad_compra: 3
+    precio_compra_divisa: 49.03
+    precio_compra_local: 1961.2
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-FRU-4724-12L
+    unidad_compra: 3
+    precio_compra_divisa: 30.89
+    precio_compra_local: 1235.6
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-FRU-4724-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.57
+    precio_compra_local: 102.8
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Agua de Azahar Robin Hood
+  SKU: MP-BEB-8597
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-BEB-8597-6K
+    unidad_compra: 1
+    precio_compra_divisa: 5.33
+    precio_compra_local: 213.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-8597-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.93
+    precio_compra_local: 37.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-8597-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.5
+    precio_compra_local: 20.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina de Maíz Amarillo Bakels
+  SKU: MP-HAR-5628
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 3600.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-HAR-5628-12L
+    unidad_compra: 3
+    precio_compra_divisa: 22.21
+    precio_compra_local: 888.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-HAR-5628-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.94
+    precio_compra_local: 77.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-HAR-5628-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.97
+    precio_compra_local: 38.8
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Malta Concentrada Bakels
+  SKU: MP-BEB-1961
+  categoria_id: 10
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-1961-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.89
+    precio_compra_local: 115.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-1961-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.52
+    precio_compra_local: 60.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Nueces Mariposa Primicia
+  SKU: MP-SEC-8641
+  categoria_id: 6
+  unidad_medida_base_id: 2
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-SEC-8641-6K
+    unidad_compra: 1
+    precio_compra_divisa: 80.83
+    precio_compra_local: 3233.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-8641-1K
+    unidad_compra: 1
+    precio_compra_divisa: 14.15
+    precio_compra_local: 566.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-SEC-8641-500G
+    unidad_compra: 2
+    precio_compra_divisa: 7.07
+    precio_compra_local: 282.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Masa Madre Deshidratada Imperial
+  SKU: MP-HAR-5695
+  categoria_id: 3
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-HAR-5695-6K
+    unidad_compra: 1
+    precio_compra_divisa: 10.83
+    precio_compra_local: 433.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-5695-1K
+    unidad_compra: 1
+    precio_compra_divisa: 1.9
+    precio_compra_local: 76.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-HAR-5695-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.95
+    precio_compra_local: 38.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pasas de Corinto Imperial
+  SKU: MP-SEC-4969
+  categoria_id: 6
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Insumo esencial para panadería (secos).
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-SEC-4969-1K
+    unidad_compra: 1
+    precio_compra_divisa: 13.09
+    precio_compra_local: 523.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-SEC-4969-500G
+    unidad_compra: 2
+    precio_compra_divisa: 6.87
+    precio_compra_local: 274.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Fécula de Maíz Campestre
+  SKU: MP-HAR-7480
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 6000.0
+  descripcion: Insumo esencial para panadería (harinas).
+  variantes:
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-HAR-7480-20L
+    unidad_compra: 3
+    precio_compra_divisa: 31.21
+    precio_compra_local: 1248.4
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Caja 12 Litros
+    SKU_variante: MP-HAR-7480-12L
+    unidad_compra: 3
+    precio_compra_divisa: 19.66
+    precio_compra_local: 786.4
+    nombre_empaque_estandar: Caja 12 Litros
+    cantidad_empaque_estandar: 12000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-HAR-7480-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.64
+    precio_compra_local: 65.6
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Mermelada de Guayaba Mavesa
+  SKU: MP-MER-5103
+  categoria_id: 7
+  unidad_medida_base_id: 1
+  punto_reorden: 13500.0
+  descripcion: Insumo esencial para panadería (mermeladas).
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-MER-5103-45K
+    unidad_compra: 1
+    precio_compra_divisa: 352.94
+    precio_compra_local: 14117.6
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-MER-5103-25K
+    unidad_compra: 1
+    precio_compra_divisa: 205.88
+    precio_compra_local: 8235.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-5103-1K
+    unidad_compra: 1
+    precio_compra_divisa: 8.24
+    precio_compra_local: 329.6
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jugo de Limón Puro Kraft
+  SKU: MP-BEB-2135
+  categoria_id: 10
+  unidad_medida_base_id: 1
+  punto_reorden: 1800.0
+  descripcion: Insumo esencial para panadería (bebidas).
+  variantes:
+  - nombre_variante: Caja 6kg
+    SKU_variante: MP-BEB-2135-6K
+    unidad_compra: 1
+    precio_compra_divisa: 16.18
+    precio_compra_local: 647.2
+    nombre_empaque_estandar: Caja 6kg
+    cantidad_empaque_estandar: 6000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-BEB-2135-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.83
+    precio_compra_local: 113.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-BEB-2135-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.42
+    precio_compra_local: 56.8
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Esencia de Almendra Puratos
+  SKU: MP-ESE-2813
+  categoria_id: 9
+  unidad_medida_base_id: 2
+  punto_reorden: 150.0
+  descripcion: Insumo esencial para panadería (esencias).
+  variantes:
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-ESE-2813-500G
+    unidad_compra: 2
+    precio_compra_divisa: 21.86
+    precio_compra_local: 874.4
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESE-2813-1K
+    unidad_compra: 1
+    precio_compra_divisa: 41.53
+    precio_compra_local: 1661.2
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-ESE-2813-25K
+    unidad_compra: 1
+    precio_compra_divisa: 1038.35
+    precio_compra_local: 41534.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Harina de Trigo Panadera
+  SKU: MP-HAR-0001
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 10000.0
+  descripcion: Harina de trigo de alta fuerza para pan.
+  variantes:
+  - nombre_variante: Saco 50kg
+    SKU_variante: MP-HAR-0001-50K
+    unidad_compra: 1
+    precio_compra_divisa: 25.0
+    precio_compra_local: 1000.0
+    nombre_empaque_estandar: Saco 50kg
+    cantidad_empaque_estandar: 50000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-0001-25K
+    unidad_compra: 1
+    precio_compra_divisa: 13.12
+    precio_compra_local: 524.8
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 1kg
+    SKU_variante: MP-HAR-0001-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.53
+    precio_compra_local: 21.2
+    nombre_empaque_estandar: Bolsa 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Agua Potable
+  SKU: MP-BEB-0001
+  categoria_id: 10
+  unidad_medida_base_id: 5
+  punto_reorden: 5000.0
+  descripcion: Agua para elaboración de pan.
+  variantes:
+  - nombre_variante: Garrafón 20L
+    SKU_variante: MP-BEB-0001-20L
+    unidad_compra: 3
+    precio_compra_divisa: 1.0
+    precio_compra_local: 40.0
+    nombre_empaque_estandar: Garrafón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-BEB-0001-1L
+    unidad_compra: 3
+    precio_compra_divisa: 0.5
+    precio_compra_local: 20.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Levadura Instantánea
+  SKU: MP-ESP-0001
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 500.0
+  descripcion: Levadura seca de acción rápida.
+  variantes:
+  - nombre_variante: Bloque 500g
+    SKU_variante: MP-ESP-0001-500G
+    unidad_compra: 2
+    precio_compra_divisa: 4.5
+    precio_compra_local: 180.0
+    nombre_empaque_estandar: Bloque 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bloque 2.5kg
+    SKU_variante: MP-ESP-0001-2.5K
+    unidad_compra: 1
+    precio_compra_divisa: 21.38
+    precio_compra_local: 855.2
+    nombre_empaque_estandar: Bloque 2.5kg
+    cantidad_empaque_estandar: 2500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Azúcar Blanca
+  SKU: MP-DUL-0001
+  categoria_id: 12
+  unidad_medida_base_id: 2
+  punto_reorden: 10000.0
+  descripcion: Azúcar refinada estándar.
+  variantes:
+  - nombre_variante: Saco 50kg
+    SKU_variante: MP-DUL-0001-50K
+    unidad_compra: 1
+    precio_compra_divisa: 42.0
+    precio_compra_local: 1680.0
+    nombre_empaque_estandar: Saco 50kg
+    cantidad_empaque_estandar: 50000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-DUL-0001-25K
+    unidad_compra: 1
+    precio_compra_divisa: 22.05
+    precio_compra_local: 882.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 1kg
+    SKU_variante: MP-DUL-0001-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.88
+    precio_compra_local: 35.2
+    nombre_empaque_estandar: Bolsa 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Sal Refinada
+  SKU: MP-ESP-0002
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 5000.0
+  descripcion: Sal de mesa fina.
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-ESP-0002-25K
+    unidad_compra: 1
+    precio_compra_divisa: 8.0
+    precio_compra_local: 320.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-ESP-0002-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.5
+    precio_compra_local: 20.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-ESP-0002-500G
+    unidad_compra: 2
+    precio_compra_divisa: 0.5
+    precio_compra_local: 20.0
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Mantequilla Sin Sal
+  SKU: MP-LAC-0001
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 2500.0
+  descripcion: Mantequilla pura para repostería.
+  variantes:
+  - nombre_variante: Bloque 2.5kg
+    SKU_variante: MP-LAC-0001-2.5K
+    unidad_compra: 1
+    precio_compra_divisa: 18.0
+    precio_compra_local: 720.0
+    nombre_empaque_estandar: Bloque 2.5kg
+    cantidad_empaque_estandar: 2500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bloque 500g
+    SKU_variante: MP-LAC-0001-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.78
+    precio_compra_local: 151.2
+    nombre_empaque_estandar: Bloque 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 250g
+    SKU_variante: MP-LAC-0001-250G
+    unidad_compra: 2
+    precio_compra_divisa: 1.89
+    precio_compra_local: 75.6
+    nombre_empaque_estandar: Paquete 250g
+    cantidad_empaque_estandar: 250.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Huevo Fresco
+  SKU: MP-LAC-0002
+  categoria_id: 2
+  unidad_medida_base_id: 6
+  punto_reorden: 90.0
+  descripcion: Huevo de gallina para panadería.
+  variantes:
+  - nombre_variante: Cartón 30ud
+    SKU_variante: MP-LAC-0002-30U
+    unidad_compra: 6
+    precio_compra_divisa: 4.5
+    precio_compra_local: 180.0
+    nombre_empaque_estandar: Cartón 30ud
+    cantidad_empaque_estandar: 30.0
+    unidad_medida_empaque_estandar: 6
+  - nombre_variante: Caja 180ud
+    SKU_variante: MP-LAC-0002-180U
+    unidad_compra: 6
+    precio_compra_divisa: 25.65
+    precio_compra_local: 1026.0
+    nombre_empaque_estandar: Caja 180ud
+    cantidad_empaque_estandar: 180.0
+    unidad_medida_empaque_estandar: 6
+  - nombre_variante: Docena 12ud
+    SKU_variante: MP-LAC-0002-12U
+    unidad_compra: 6
+    precio_compra_divisa: 1.89
+    precio_compra_local: 75.6
+    nombre_empaque_estandar: Docena 12ud
+    cantidad_empaque_estandar: 12.0
+    unidad_medida_empaque_estandar: 6
+- nombre: Leche en Polvo Completa
+  SKU: MP-LAC-0003
+  categoria_id: 2
+  unidad_medida_base_id: 2
+  punto_reorden: 5000.0
+  descripcion: Leche en polvo para panadería.
+  variantes:
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-LAC-0003-25K
+    unidad_compra: 1
+    precio_compra_divisa: 150.0
+    precio_compra_local: 6000.0
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-LAC-0003-1K
+    unidad_compra: 1
+    precio_compra_divisa: 6.3
+    precio_compra_local: 252.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-LAC-0003-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.15
+    precio_compra_local: 126.0
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Pasta de Guayaba
+  SKU: MP-MER-0001
+  categoria_id: 7
+  unidad_medida_base_id: 2
+  punto_reorden: 1000.0
+  descripcion: Pasta sólida de guayaba para rellenos.
+  variantes:
+  - nombre_variante: Caja 5kg
+    SKU_variante: MP-MER-0001-5K
+    unidad_compra: 1
+    precio_compra_divisa: 15.0
+    precio_compra_local: 600.0
+    nombre_empaque_estandar: Caja 5kg
+    cantidad_empaque_estandar: 5000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-MER-0001-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.15
+    precio_compra_local: 126.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Pote 500g
+    SKU_variante: MP-MER-0001-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.58
+    precio_compra_local: 63.2
+    nombre_empaque_estandar: Pote 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Jamón Ahumado
+  SKU: MP-CAR-0001
+  categoria_id: 6
+  unidad_medida_base_id: 1
+  punto_reorden: 1000.0
+  descripcion: Jamón ahumado de alta calidad para pan de jamón.
+  variantes:
+  - nombre_variante: Pieza 5kg
+    SKU_variante: MP-CAR-0001-5K
+    unidad_compra: 1
+    precio_compra_divisa: 35.0
+    precio_compra_local: 1400.0
+    nombre_empaque_estandar: Pieza 5kg
+    cantidad_empaque_estandar: 5000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CAR-0001-1K
+    unidad_compra: 1
+    precio_compra_divisa: 7.35
+    precio_compra_local: 294.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Tocineta Ahumada
+  SKU: MP-CAR-0002
+  categoria_id: 6
+  unidad_medida_base_id: 1
+  punto_reorden: 500.0
+  descripcion: Tocineta ahumada en tiras.
+  variantes:
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-CAR-0002-1K
+    unidad_compra: 1
+    precio_compra_divisa: 12.0
+    precio_compra_local: 480.0
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 500g
+    SKU_variante: MP-CAR-0002-500G
+    unidad_compra: 2
+    precio_compra_divisa: 6.3
+    precio_compra_local: 252.0
+    nombre_empaque_estandar: Paquete 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Aceitunas Rellenas
+  SKU: MP-VEG-0001
+  categoria_id: 5
+  unidad_medida_base_id: 1
+  punto_reorden: 300.0
+  descripcion: Aceitunas rellenas de pimentón.
+  variantes:
+  - nombre_variante: Frasco 1kg
+    SKU_variante: MP-VEG-0001-1K
+    unidad_compra: 1
+    precio_compra_divisa: 8.0
+    precio_compra_local: 320.0
+    nombre_empaque_estandar: Frasco 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-VEG-0001-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 4.2
+    precio_compra_local: 168.0
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Papelón
+  SKU: MP-DUL-0002
+  categoria_id: 12
+  unidad_medida_base_id: 1
+  punto_reorden: 200.0
+  descripcion: Papelón granulado o en bloque para melao.
+  variantes:
+  - nombre_variante: Bolsa 1kg
+    SKU_variante: MP-DUL-0002-1K
+    unidad_compra: 1
+    precio_compra_divisa: 2.5
+    precio_compra_local: 100.0
+    nombre_empaque_estandar: Bolsa 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-DUL-0002-500G
+    unidad_compra: 2
+    precio_compra_divisa: 1.31
+    precio_compra_local: 52.4
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Mostaza Preparada
+  SKU: MP-ESP-0003
+  categoria_id: 11
+  unidad_medida_base_id: 5
+  punto_reorden: 100.0
+  descripcion: Mostaza amarilla preparada.
+  variantes:
+  - nombre_variante: Frasco 500ml
+    SKU_variante: MP-ESP-0003-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 3.0
+    precio_compra_local: 120.0
+    nombre_empaque_estandar: Frasco 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESP-0003-1L
+    unidad_compra: 3
+    precio_compra_divisa: 5.7
+    precio_compra_local: 228.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Frasco 250ml
+    SKU_variante: MP-ESP-0003-250ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.58
+    precio_compra_local: 63.2
+    nombre_empaque_estandar: Frasco 250ml
+    cantidad_empaque_estandar: 250.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Cacao en Polvo
+  SKU: MP-DUL-0003
+  categoria_id: 12
+  unidad_medida_base_id: 2
+  punto_reorden: 500.0
+  descripcion: Cacao puro en polvo para repostería.
+  variantes:
+  - nombre_variante: Bolsa 1kg
+    SKU_variante: MP-DUL-0003-1K
+    unidad_compra: 1
+    precio_compra_divisa: 15.0
+    precio_compra_local: 600.0
+    nombre_empaque_estandar: Bolsa 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-DUL-0003-500G
+    unidad_compra: 2
+    precio_compra_divisa: 7.88
+    precio_compra_local: 315.2
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Polvo de Hornear
+  SKU: MP-ESP-0004
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 100.0
+  descripcion: Levadura química para repostería.
+  variantes:
+  - nombre_variante: Pote 500g
+    SKU_variante: MP-ESP-0004-500G
+    unidad_compra: 2
+    precio_compra_divisa: 3.5
+    precio_compra_local: 140.0
+    nombre_empaque_estandar: Pote 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Pote 250g
+    SKU_variante: MP-ESP-0004-250G
+    unidad_compra: 2
+    precio_compra_divisa: 1.84
+    precio_compra_local: 73.6
+    nombre_empaque_estandar: Pote 250g
+    cantidad_empaque_estandar: 250.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Bicarbonato de Sodio
+  SKU: MP-ESP-0005
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 100.0
+  descripcion: Agente leudante para repostería.
+  variantes:
+  - nombre_variante: Bolsa 500g
+    SKU_variante: MP-ESP-0005-500G
+    unidad_compra: 2
+    precio_compra_divisa: 2.0
+    precio_compra_local: 80.0
+    nombre_empaque_estandar: Bolsa 500g
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Bolsa 1kg
+    SKU_variante: MP-ESP-0005-1K
+    unidad_compra: 1
+    precio_compra_divisa: 3.8
+    precio_compra_local: 152.0
+    nombre_empaque_estandar: Bolsa 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Vinagre Blanco
+  SKU: MP-ESP-0006
+  categoria_id: 11
+  unidad_medida_base_id: 5
+  punto_reorden: 200.0
+  descripcion: Vinagre de alcohol para cocina.
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESP-0006-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.5
+    precio_compra_local: 60.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESP-0006-20L
+    unidad_compra: 3
+    precio_compra_divisa: 28.5
+    precio_compra_local: 1140.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-ESP-0006-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.79
+    precio_compra_local: 31.6
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Aceite de Girasol
+  SKU: MP-ESP-0007
+  categoria_id: 11
+  unidad_medida_base_id: 2
+  punto_reorden: 500.0
+  descripcion: Aceite vegetal refinado.
+  variantes:
+  - nombre_variante: Botella 1L
+    SKU_variante: MP-ESP-0007-1L
+    unidad_compra: 3
+    precio_compra_divisa: 2.5
+    precio_compra_local: 100.0
+    nombre_empaque_estandar: Botella 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-ESP-0007-20L
+    unidad_compra: 3
+    precio_compra_divisa: 47.5
+    precio_compra_local: 1900.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-ESP-0007-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 1.31
+    precio_compra_local: 52.4
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5
+- nombre: Harina de Trigo Todo Uso
+  SKU: MP-HAR-0002
+  categoria_id: 3
+  unidad_medida_base_id: 2
+  punto_reorden: 5000.0
+  descripcion: Harina de trigo versátil para repostería.
+  variantes:
+  - nombre_variante: Saco 45kg
+    SKU_variante: MP-HAR-0002-45K
+    unidad_compra: 1
+    precio_compra_divisa: 22.0
+    precio_compra_local: 880.0
+    nombre_empaque_estandar: Saco 45kg
+    cantidad_empaque_estandar: 45000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Saco 25kg
+    SKU_variante: MP-HAR-0002-25K
+    unidad_compra: 1
+    precio_compra_divisa: 12.83
+    precio_compra_local: 513.2
+    nombre_empaque_estandar: Saco 25kg
+    cantidad_empaque_estandar: 25000.0
+    unidad_medida_empaque_estandar: 2
+  - nombre_variante: Paquete 1kg
+    SKU_variante: MP-HAR-0002-1K
+    unidad_compra: 1
+    precio_compra_divisa: 0.51
+    precio_compra_local: 20.4
+    nombre_empaque_estandar: Paquete 1kg
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 2
+- nombre: Leche Líquida Completa
+  SKU: MP-LAC-0004
+  categoria_id: 2
+  unidad_medida_base_id: 5
+  punto_reorden: 500.0
+  descripcion: Leche pasteurizada líquida.
+  variantes:
+  - nombre_variante: Cartón 1L
+    SKU_variante: MP-LAC-0004-1L
+    unidad_compra: 3
+    precio_compra_divisa: 1.2
+    precio_compra_local: 48.0
+    nombre_empaque_estandar: Cartón 1L
+    cantidad_empaque_estandar: 1000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Bidón 20L
+    SKU_variante: MP-LAC-0004-20L
+    unidad_compra: 3
+    precio_compra_divisa: 22.8
+    precio_compra_local: 912.0
+    nombre_empaque_estandar: Bidón 20L
+    cantidad_empaque_estandar: 20000.0
+    unidad_medida_empaque_estandar: 5
+  - nombre_variante: Botella 500ml
+    SKU_variante: MP-LAC-0004-500ML
+    unidad_compra: 5
+    precio_compra_divisa: 0.63
+    precio_compra_local: 25.2
+    nombre_empaque_estandar: Botella 500ml
+    cantidad_empaque_estandar: 500.0
+    unidad_medida_empaque_estandar: 5

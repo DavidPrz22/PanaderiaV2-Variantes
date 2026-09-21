@@ -12,6 +12,7 @@ export const TIPO_MEDIDA = {
   UNIDAD: "Unidad",
   LONGITUD: "Longitud",
   OTRO: "Otro",
+  CANTIDAD: "Cantidad",
 } as const;
 
 export type TipoMedida = (typeof TIPO_MEDIDA)[keyof typeof TIPO_MEDIDA];

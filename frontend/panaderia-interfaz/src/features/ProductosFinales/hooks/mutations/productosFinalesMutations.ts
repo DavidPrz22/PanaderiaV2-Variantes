@@ -5,6 +5,7 @@ import {
   removeRecetaRelacionada,
   changeEstadoLoteProductosFinales,
   deleteLoteProductoElaborado,
+  uploadCSV,
 } from "../../api/api";
 import type { TProductoFinalSchema } from "../../schemas/schemas";
 
@@ -180,6 +181,21 @@ export const useDeleteLoteProductoElaboradoMutation = () => {
         description: "Hubo un error al eliminar el lote",
         variant: "destructive",
       });
+    },
+  });
+};
+
+export const useUploadCSVProductosFinalesMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: string) => uploadCSV(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: productosFinalesQueryOptions.queryKey,
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading CSV:", error);
     },
   });
 };

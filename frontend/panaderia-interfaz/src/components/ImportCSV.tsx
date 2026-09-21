@@ -26,8 +26,9 @@ type ImportCSVProps = {
 }, Error, string, unknown>, 
   isPending: boolean,
   csvContent: string,
+  fileType?: 'csv' | 'yaml',
 }
-export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent }: ImportCSVProps) => {
+export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent, fileType = 'csv' }: ImportCSVProps) => {
 
   const [selectedFile, setSelectedFile] = useState<FileObject | null>(null)
   const [open, setOpen] = useState(false)
@@ -44,11 +45,13 @@ export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent }
   }
 
   const handleDownloadTemplate = () => {
-    const blob = new Blob([csvContent], { type: "text/csv" })
+    const mimeType = fileType === 'yaml' ? 'text/yaml' : 'text/csv'
+    const extension = fileType === 'yaml' ? 'yaml' : 'csv'
+    const blob = new Blob([csvContent], { type: mimeType })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement("a")
     link.href = url
-    link.download = "Template-Import.csv"
+    link.download = `Template-Import.${extension}`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -73,12 +76,12 @@ export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent }
       <DialogTrigger asChild>
         <Button className="cursor-pointer gap-2 font-semibold bg-blue-800 hover:bg-blue-900" size={'lg'}>
           <UploadIcon className="size-4" />
-          Importar CSV
+          {fileType === 'yaml' ? 'Importar YAML' : 'Importar CSV'}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md ">
         <DialogHeader>
-          <DialogTitle>Importar archivo CSV</DialogTitle>
+          <DialogTitle>{fileType === 'yaml' ? 'Importar archivo YAML' : 'Importar archivo CSV'}</DialogTitle>
           <DialogDescription>{descripcion}</DialogDescription>
         </DialogHeader>
 
@@ -86,7 +89,7 @@ export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent }
 
           {/* File Input Area */}
           <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
-            <input type="file" accept=".csv" onChange={handleFileChange} className="hidden" id="csv-file-input" />
+            <input type="file" accept={fileType === 'yaml' ? '.yaml,.yml' : '.csv'} onChange={handleFileChange} className="hidden" id="csv-file-input" />
             <label htmlFor="csv-file-input" className="cursor-pointer flex flex-col items-center gap-2">
               <FileTextIcon className="size-10 text-muted-foreground" />
               {selectedFile ? (

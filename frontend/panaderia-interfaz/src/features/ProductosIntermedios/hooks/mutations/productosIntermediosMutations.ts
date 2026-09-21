@@ -5,6 +5,7 @@ import {
   deleteProductoIntermedio,
   changeEstadoLoteProductosIntermedios,
   deleteLoteProductoElaborado,
+  uploadCSV,
 } from "../../api/api";
 import { getRecetasSearch } from "@/features/Recetas/api/api";
 import type { TProductosIntermediosSchema } from "../../schemas/schema";
@@ -221,6 +222,21 @@ export const useDeleteLoteProductoIntermedioMutation = (
         description: error.message,
         variant: "destructive",
       });
+    },
+  });
+};
+
+export const useUploadCSVProductosIntermediosMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: string) => uploadCSV(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: productosIntermediosQueryOptions.queryKey,
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading CSV:", error);
     },
   });
 };
