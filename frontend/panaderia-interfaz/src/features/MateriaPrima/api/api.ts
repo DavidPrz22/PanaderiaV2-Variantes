@@ -7,7 +7,7 @@ import {
 
 import type { TLoteMateriaPrimaSchema, TMateriaPrimaSchema } from "../schemas/schemas";
 
-import { type TLoteMateriaPrima, LoteMateriaPrimaSchema, type TMateriaPrima, MateriaPrimaSchema, MateriaPrimaPaginationSchema, type TMateriaPrimaPagination } from "../schemas/zod-types";
+import { type TMateriaPrima, MateriaPrimaSchema, MateriaPrimaPaginationSchema, type TMateriaPrimaPagination } from "../schemas/zod-types";
 
 
 

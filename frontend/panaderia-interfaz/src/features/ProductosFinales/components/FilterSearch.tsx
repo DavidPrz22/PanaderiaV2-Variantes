@@ -7,6 +7,7 @@ import { useProductosFinalesContext } from "@/context/ProductosFinalesContext";
 import { PackageX, TrendingDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
+import DownloadSampleDataButton from "@/components/DownloadSampleDataButton";
 
 export default function FilterSearch() {
   const { setShowProductoForm, bajoStockFilter, setBajoStockFilter, agotadosFilter, setAgotadosFilter } = useProductosFinalesContext();
@@ -32,6 +33,7 @@ export default function FilterSearch() {
           <PackageX />
           Agotados
         </Button>
+        <DownloadSampleDataButton filePath="/DataProductosElaborados_Final.csv" fileName="DataProductosElaborados_Final.csv" />
         <FilterButton />
         {hasAddPermission && (
           <NewButton

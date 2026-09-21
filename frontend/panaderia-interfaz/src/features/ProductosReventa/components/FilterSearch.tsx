@@ -8,7 +8,8 @@ import { PackageX, TrendingDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
 import { ImportCSV } from "@/components/ImportCSV";
-import { useUploadCSVProductosReventaMuatation } from '@/features/ProductosReventa/hooks/mutations/productosReventaMutations'
+import { useUploadCSVProductosReventaMuatation } from '@/features/ProductosReventa/hooks/mutations/productosReventaMutations';
+import DownloadSampleDataButton from "@/components/DownloadSampleDataButton";
 
 export default function FilterSearch() {
   const { setShowProductosReventaForm, bajoStockFilter, setBajoStockFilter, agotadosFilter, setAgotadosFilter } = useProductosReventaContext();
@@ -37,7 +38,7 @@ export default function FilterSearch() {
           <PackageX />
           Agotados
         </Button>
-
+        <DownloadSampleDataButton filePath="/DataProductosReventa.csv" fileName="DataProductosReventa.csv" />
         {hasAddPermission && (
           <ImportCSV
             descripcion="Selecciona un archivo CSV para importar los datos de los productos de reventa"

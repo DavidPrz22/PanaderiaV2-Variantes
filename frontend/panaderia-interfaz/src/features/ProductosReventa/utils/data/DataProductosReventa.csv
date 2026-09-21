@@ -1,0 +1,101 @@
+nombre_producto,descripcion,SKU,categoria_id,marca,unidad_base_inventario_id,unidad_venta_id,factor_conversion,precio_venta_usd,precio_compra_usd,perecedero,punto_reorden
+Queso Mozzarella Barra Kraft,Venta directa (charcutería).,PR-CHA-8265,3,Kraft,1,2,1000.0,15.38,10.62,TRUE,7.25
+Miel Porción 20g Bimbo,Venta directa (productos complementarios).,PR-PRO-5101,5,Bimbo,5,5,1.0,8.73,5.31,TRUE,31.91
+Rosquitas Queso 80g Nestlé,Venta directa (snacks).,PR-SNA-1375,2,Nestlé,5,5,1.0,1.21,0.81,FALSE,28.18
+Café en Granos 500g Oscar Mayer,Venta directa (productos complementarios).,PR-PRO-3818,5,Oscar Mayer,5,5,1.0,12.3,8.62,FALSE,7.41
+Termo Aluminio 500ml Polar,Venta directa (otros).,PR-OTR-1340,6,Polar,5,5,1.0,14.79,9.15,FALSE,44.3
+Queso Mozzarella Barra Kellogg's,Venta directa (charcutería).,PR-CHA-7599,3,Kellogg's,1,2,1000.0,16.19,9.04,FALSE,49.4
+Bolsa de Hielo 5kg Kellogg's,Venta directa (productos complementarios).,PR-PRO-9727,5,Kellogg's,5,5,1.0,2.09,1.25,TRUE,45.33
+Tocineta Ahumada Nestlé,Venta directa (charcutería).,PR-CHA-9285,3,Nestlé,1,2,1000.0,8.69,5.44,FALSE,47.24
+Chocolate de Leche 40g PepsiCo,Venta directa (confitería).,PR-CON-2603,4,PepsiCo,5,5,1.0,5.76,3.81,FALSE,23.5
+Cigarros Pack 20 Polar,Venta directa (otros).,PR-OTR-9677,6,Polar,5,5,1.0,2.92,1.89,TRUE,27.24
+Periódico El Universal Plumrose,Venta directa (otros).,PR-OTR-7364,6,Plumrose,5,5,1.0,17.51,12.08,TRUE,5.83
+Gatorade Mandarina 600ml Nestlé,Venta directa (bebidas).,PR-BEB-4414,1,Nestlé,5,5,1.0,2.07,1.32,FALSE,40.11
+Fósforos Caja Grande PepsiCo,Venta directa (otros).,PR-OTR-5060,6,PepsiCo,5,5,1.0,17.3,11.48,FALSE,34.42
+Chicles Menta 5u Alpina,Venta directa (confitería).,PR-CON-2761,4,Alpina,5,5,1.0,3.9,2.64,FALSE,31.66
+Papas Saladas 150g Bimbo,Venta directa (snacks).,PR-SNA-2970,2,Bimbo,5,5,1.0,1.44,0.97,FALSE,37.44
+Tostones Ajo 100g Kellogg's,Venta directa (snacks).,PR-SNA-6145,2,Kellogg's,5,5,1.0,3.6,2.36,TRUE,22.04
+Chocolate Blanco 40g Kraft,Venta directa (confitería).,PR-CON-9399,4,Kraft,5,5,1.0,1.18,0.73,FALSE,16.11
+Café en Granos 500g Kraft,Venta directa (productos complementarios).,PR-PRO-9832,5,Kraft,5,5,1.0,5.52,3.28,TRUE,25.77
+Soda Klis 1L Polar,Venta directa (bebidas).,PR-BEB-1362,1,Polar,5,5,1.0,2.08,1.43,TRUE,41.35
+Bolsas de Pan 50u Polar,Venta directa (productos complementarios).,PR-PRO-6998,5,Polar,5,5,1.0,7.07,3.97,FALSE,40.73
+Jamón Cocido Estándar Plumrose,Venta directa (charcutería).,PR-CHA-7365,3,Plumrose,1,2,1000.0,7.97,4.39,FALSE,45.26
+Jamón de Pavo Light Kraft,Venta directa (charcutería).,PR-CHA-1509,3,Kraft,1,2,1000.0,12.16,7.86,FALSE,29.74
+Pitillos Papel 50u Polar,Venta directa (productos complementarios).,PR-PRO-5411,5,Polar,5,5,1.0,13.35,9.22,TRUE,45.43
+Café en Granos 500g Plumrose,Venta directa (productos complementarios).,PR-PRO-5919,5,Plumrose,5,5,1.0,13.78,7.63,TRUE,42.06
+Chicles Menta 5u Plumrose,Venta directa (confitería).,PR-CON-7143,4,Plumrose,5,5,1.0,4.45,2.76,FALSE,47.31
+Salami Génova Nestlé,Venta directa (charcutería).,PR-CHA-3994,3,Nestlé,1,2,1000.0,11.73,7.06,TRUE,17.67
+Bombón Avellana Kraft,Venta directa (confitería).,PR-CON-7260,4,Kraft,5,5,1.0,1.11,0.75,TRUE,27.03
+Masmelo Relleno fresa PepsiCo,Venta directa (confitería).,PR-CON-8874,4,PepsiCo,5,5,1.0,1.13,0.78,FALSE,15.03
+Periódico El Universal Coca-Cola,Venta directa (otros).,PR-OTR-3594,6,Coca-Cola,5,5,1.0,14.12,9.76,TRUE,45.97
+Revista Cocina Bimbo,Venta directa (otros).,PR-OTR-1381,6,Bimbo,5,5,1.0,0.61,0.35,FALSE,38.25
+Revista Cocina PepsiCo,Venta directa (otros).,PR-OTR-4515,6,PepsiCo,5,5,1.0,11.36,7.91,FALSE,26.54
+Té Durazno 500ml Oscar Mayer,Venta directa (bebidas).,PR-BEB-5399,1,Oscar Mayer,5,5,1.0,1.15,0.67,FALSE,9.13
+Queso Edam Plumrose,Venta directa (charcutería).,PR-CHA-4496,3,Plumrose,1,2,1000.0,9.57,5.83,FALSE,17.53
+Bolsas de Pan 50u PepsiCo,Venta directa (productos complementarios).,PR-PRO-2770,5,PepsiCo,5,5,1.0,9.25,6.41,FALSE,16.63
+Galletas Avena & Miel Coca-Cola,Venta directa (snacks).,PR-SNA-2309,2,Coca-Cola,5,5,1.0,2.39,1.36,FALSE,9.95
+Energizante 473ml Kellogg's,Venta directa (bebidas).,PR-BEB-7548,1,Kellogg's,5,5,1.0,1.06,0.65,TRUE,38.82
+Pepsi 1.5L Kraft,Venta directa (bebidas).,PR-BEB-2509,1,Kraft,5,5,1.0,2.69,1.78,FALSE,37.01
+Papel Aluminio 10m Polar,Venta directa (productos complementarios).,PR-PRO-8602,5,Polar,5,5,1.0,9.34,6.52,TRUE,45.74
+Queso Mozzarella Barra Alpina,Venta directa (charcutería).,PR-CHA-7030,3,Alpina,1,2,1000.0,13.32,8.49,FALSE,49.84
+Jamón de Pavo Light Plumrose,Venta directa (charcutería).,PR-CHA-6277,3,Plumrose,1,2,1000.0,7.21,4.34,TRUE,23.46
+Queso Gouda Polar,Venta directa (charcutería).,PR-CHA-1097,3,Polar,1,2,1000.0,19.27,11.91,FALSE,42.76
+Chicles Menta 5u Kraft,Venta directa (confitería).,PR-CON-5404,4,Kraft,5,5,1.0,4.42,3.15,TRUE,25.53
+Café en Granos 500g PepsiCo,Venta directa (productos complementarios).,PR-PRO-1057,5,PepsiCo,5,5,1.0,2.56,1.8,FALSE,23.87
+Papas Saladas 150g PepsiCo,Venta directa (snacks).,PR-SNA-7420,2,PepsiCo,5,5,1.0,3.54,2.54,TRUE,6.03
+Rosquitas Queso 80g PepsiCo,Venta directa (snacks).,PR-SNA-8301,2,PepsiCo,5,5,1.0,1.04,0.72,TRUE,44.51
+Pretzels Sal 150g Bimbo,Venta directa (snacks).,PR-SNA-9391,2,Bimbo,5,5,1.0,2.2,1.3,TRUE,42.68
+Tocineta Ahumada Coca-Cola,Venta directa (charcutería).,PR-CHA-2883,3,Coca-Cola,1,2,1000.0,7.38,4.43,TRUE,19.92
+Ginger Ale Kellogg's,Venta directa (bebidas).,PR-BEB-9287,1,Kellogg's,5,5,1.0,1.29,0.75,FALSE,26.69
+Gatorade Mandarina 600ml Alpina,Venta directa (bebidas).,PR-BEB-5235,1,Alpina,5,5,1.0,3.63,2.53,TRUE,19.19
+Encendedor Slim Plumrose,Venta directa (otros).,PR-OTR-6682,6,Plumrose,5,5,1.0,12.13,7.59,FALSE,5.93
+Periódico El Universal Alpina,Venta directa (otros).,PR-OTR-2796,6,Alpina,5,5,1.0,17.7,12.66,TRUE,35.47
+Maní Tostado 50g Alpina,Venta directa (snacks).,PR-SNA-6443,2,Alpina,5,5,1.0,1.56,0.92,FALSE,29.55
+Malta Regional 250ml PepsiCo,Venta directa (bebidas).,PR-BEB-9157,1,PepsiCo,5,5,1.0,3.29,2.24,TRUE,24.93
+Platanitos Dulce 100g Nestlé,Venta directa (snacks).,PR-SNA-1893,2,Nestlé,5,5,1.0,3.01,1.81,FALSE,44.16
+Doritos Picante 200g Kraft,Venta directa (snacks).,PR-SNA-1486,2,Kraft,5,5,1.0,1.38,0.85,TRUE,33.56
+Soda Klis 1L Coca-Cola,Venta directa (bebidas).,PR-BEB-6793,1,Coca-Cola,5,5,1.0,4.35,2.69,FALSE,8.59
+Galletas Avena & Miel Bimbo,Venta directa (snacks).,PR-SNA-3709,2,Bimbo,5,5,1.0,2.74,1.84,TRUE,14.49
+Termo Aluminio 500ml Kraft,Venta directa (otros).,PR-OTR-8109,6,Kraft,5,5,1.0,1.32,0.85,FALSE,8.41
+Queso Edam Polar,Venta directa (charcutería).,PR-CHA-4161,3,Polar,1,2,1000.0,12.6,6.97,TRUE,6.33
+Queso Blanco Palmita Alpina,Venta directa (charcutería).,PR-CHA-4729,3,Alpina,1,2,1000.0,14.6,9.78,FALSE,13.23
+Chispetas Caramelo 50g Plumrose,Venta directa (snacks).,PR-SNA-9331,2,Plumrose,5,5,1.0,1.97,1.24,FALSE,49.9
+Pitillos Papel 50u Nestlé,Venta directa (productos complementarios).,PR-PRO-5426,5,Nestlé,5,5,1.0,6.82,4.83,TRUE,6.76
+Jugo Pera 1L Polar,Venta directa (bebidas).,PR-BEB-9666,1,Polar,5,5,1.0,1.61,1.14,TRUE,39.42
+Vasos 16oz 25u Kellogg's,Venta directa (productos complementarios).,PR-PRO-1190,5,Kellogg's,5,5,1.0,2.66,1.78,TRUE,26.95
+Oreo Chocolate 4u Coca-Cola,Venta directa (confitería).,PR-CON-2365,4,Coca-Cola,5,5,1.0,3.55,2.2,TRUE,12.06
+Agua Mineral 500ml Polar,Venta directa (bebidas).,PR-BEB-3047,1,Polar,5,5,1.0,1.25,0.81,TRUE,23.13
+Maní Tostado 50g Oscar Mayer,Venta directa (snacks).,PR-SNA-5159,2,Oscar Mayer,5,5,1.0,1.9,1.31,FALSE,27.6
+Periódico El Nacional Bimbo,Venta directa (otros).,PR-OTR-3421,6,Bimbo,5,5,1.0,8.71,6.01,TRUE,40.7
+Bolsas de Pan 50u Coca-Cola,Venta directa (productos complementarios).,PR-PRO-8747,5,Coca-Cola,5,5,1.0,10.27,7.06,FALSE,5.78
+Cigarros Pack 20 Plumrose,Venta directa (otros).,PR-OTR-9234,6,Plumrose,5,5,1.0,7.23,4.13,FALSE,26.06
+Azúcar Sobres 100u Plumrose,Venta directa (productos complementarios).,PR-PRO-1116,5,Plumrose,5,5,1.0,12.36,8.19,FALSE,46.59
+Chorizo Español Bimbo,Venta directa (charcutería).,PR-CHA-3932,3,Bimbo,1,2,1000.0,16.19,9.25,TRUE,31.41
+Vasos 8oz 50u Kellogg's,Venta directa (productos complementarios).,PR-PRO-1445,5,Kellogg's,5,5,1.0,9.33,5.49,FALSE,42.71
+Jamón de Espalda Alpina,Venta directa (charcutería).,PR-CHA-2421,3,Alpina,1,2,1000.0,10.57,6.16,FALSE,15.88
+Tenedores Plásticos 25u Alpina,Venta directa (productos complementarios).,PR-PRO-2950,5,Alpina,5,5,1.0,8.66,4.96,FALSE,43.64
+Ginger Ale PepsiCo,Venta directa (bebidas).,PR-BEB-9227,1,PepsiCo,5,5,1.0,2.54,1.7,FALSE,21.97
+Bolsa de Hielo 5kg Kraft,Venta directa (productos complementarios).,PR-PRO-4713,5,Kraft,5,5,1.0,10.17,6.5,FALSE,25.53
+Periódico El Nacional Coca-Cola,Venta directa (otros).,PR-OTR-5307,6,Coca-Cola,5,5,1.0,13.29,7.56,FALSE,18.73
+Jamón de Espalda Coca-Cola,Venta directa (charcutería).,PR-CHA-9077,3,Coca-Cola,1,2,1000.0,8.11,4.58,FALSE,22.5
+Gatorade Mandarina 600ml Kraft,Venta directa (bebidas).,PR-BEB-5865,1,Kraft,5,5,1.0,1.68,1.01,TRUE,19.8
+Bolsas de Pan 50u Nestlé,Venta directa (productos complementarios).,PR-PRO-5730,5,Nestlé,5,5,1.0,3.05,1.88,FALSE,36.97
+Cigarros Pack 10 Plumrose,Venta directa (otros).,PR-OTR-3497,6,Plumrose,5,5,1.0,2.75,1.66,TRUE,16.59
+Vasos 16oz 25u Oscar Mayer,Venta directa (productos complementarios).,PR-PRO-7544,5,Oscar Mayer,5,5,1.0,13.06,8.01,TRUE,24.74
+Nachos Sal 150g Oscar Mayer,Venta directa (snacks).,PR-SNA-7895,2,Oscar Mayer,5,5,1.0,1.35,0.9,TRUE,43.09
+Tenedores Plásticos 25u Coca-Cola,Venta directa (productos complementarios).,PR-PRO-1171,5,Coca-Cola,5,5,1.0,9.68,6.32,FALSE,28.73
+Termo Aluminio 500ml Kellogg's,Venta directa (otros).,PR-OTR-7702,6,Kellogg's,5,5,1.0,12.34,8.66,TRUE,25.91
+Pitillos Papel 50u Alpina,Venta directa (productos complementarios).,PR-PRO-5943,5,Alpina,5,5,1.0,4.77,2.85,FALSE,6.8
+Caramelos de Miel 10u Alpina,Venta directa (confitería).,PR-CON-1144,4,Alpina,5,5,1.0,4.89,3.4,FALSE,43.93
+Doritos Picante 200g Plumrose,Venta directa (snacks).,PR-SNA-1089,2,Plumrose,5,5,1.0,2.08,1.2,TRUE,15.1
+Queso Blanco Palmita Oscar Mayer,Venta directa (charcutería).,PR-CHA-3407,3,Oscar Mayer,1,2,1000.0,10.0,5.73,TRUE,28.81
+Tenedores Plásticos 25u Polar,Venta directa (productos complementarios).,PR-PRO-7282,5,Polar,5,5,1.0,9.01,5.32,TRUE,44.46
+Masmelo Relleno fresa Alpina,Venta directa (confitería).,PR-CON-4872,4,Alpina,5,5,1.0,3.56,2.52,FALSE,36.84
+Periódico El Nacional Alpina,Venta directa (otros).,PR-OTR-6849,6,Alpina,5,5,1.0,5.65,3.41,FALSE,9.51
+Malta Regional 250ml Oscar Mayer,Venta directa (bebidas).,PR-BEB-2741,1,Oscar Mayer,5,5,1.0,3.85,2.19,FALSE,6.87
+Periódico El Universal Oscar Mayer,Venta directa (otros).,PR-OTR-4433,6,Oscar Mayer,5,5,1.0,3.58,2.35,TRUE,16.34
+Cigarros Pack 20 Coca-Cola,Venta directa (otros).,PR-OTR-2983,6,Coca-Cola,5,5,1.0,10.42,6.6,FALSE,42.67
+Pilas AAA 4pk Alpina,Venta directa (otros).,PR-OTR-9575,6,Alpina,5,5,1.0,16.74,10.42,TRUE,31.11
+Café en Granos 500g Nestlé,Venta directa (productos complementarios).,PR-PRO-4231,5,Nestlé,5,5,1.0,4.8,2.82,FALSE,7.64
+Jamón Ahumado Polar,Venta directa (charcutería).,PR-CHA-2351,3,Polar,1,2,1000.0,16.71,11.07,TRUE,16.41
+Chicles Tutti-Frutti 5u Nestlé,Venta directa (confitería).,PR-CON-7631,4,Nestlé,5,5,1.0,5.42,3.25,TRUE,27.9

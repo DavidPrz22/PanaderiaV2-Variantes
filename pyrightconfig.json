@@ -1,8 +1,0 @@
-{
-    "extraPaths": [
-        "backend/djangobackend",
-        "backend/djangobackend/apps"
-    ],
-    "venvPath": ".",
-    "venv": "env"
-}

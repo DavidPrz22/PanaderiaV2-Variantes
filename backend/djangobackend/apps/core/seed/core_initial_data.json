@@ -1,0 +1,482 @@
+[
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 1,
+        "fields": {
+            "nombre_completo": "Kilogramo",
+            "abreviatura": "kg",
+            "descripcion": "Medida para medir productos en kilogramos",
+            "tipo_medida": "Peso"
+        }
+    },
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 2,
+        "fields": {
+            "nombre_completo": "Gramo",
+            "abreviatura": "g",
+            "descripcion": "Unidad de masa, milésima parte de un kilogramo.",
+            "tipo_medida": "Peso"
+        }
+    },
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 3,
+        "fields": {
+            "nombre_completo": "Litro",
+            "abreviatura": "L",
+            "descripcion": "Unidad de capacidad o volumen.",
+            "tipo_medida": "Volumen"
+        }
+    },
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 4,
+        "fields": {
+            "nombre_completo": "Miligramo",
+            "abreviatura": "mg",
+            "descripcion": "Unidad de masa, millonésima parte de un kilogramo.",
+            "tipo_medida": "Peso"
+        }
+    },
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 5,
+        "fields": {
+            "nombre_completo": "Mililitro",
+            "abreviatura": "ml",
+            "descripcion": "Unidad de volumen, milésima parte de un litro.",
+            "tipo_medida": "Volumen"
+        }
+    },
+    {
+        "model": "core.unidadesdemedida",
+        "pk": 6,
+        "fields": {
+            "nombre_completo": "Unidad",
+            "abreviatura": "ud",
+            "descripcion": "Medida para contar productos individualmente.",
+            "tipo_medida": "Cantidad"
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 2,
+        "fields": {
+            "nombre_categoria": "Lácteos",
+            "descripcion": "Productos lacteos"
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 3,
+        "fields": {
+            "nombre_categoria": "Harinas",
+            "descripcion": "Productos molidos de granos como trigo, maíz, etc."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 4,
+        "fields": {
+            "nombre_categoria": "Frutas",
+            "descripcion": "Frutas frescas y de temporada."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 5,
+        "fields": {
+            "nombre_categoria": "Hortalizas",
+            "descripcion": "Verduras y legumbres frescas."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 6,
+        "fields": {
+            "nombre_categoria": "Secos",
+            "descripcion": "Frutos secos, granos y semillas."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 7,
+        "fields": {
+            "nombre_categoria": "Mermeladas",
+            "descripcion": "Conservas dulces de frutas."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 8,
+        "fields": {
+            "nombre_categoria": "Congelados",
+            "descripcion": "Productos alimenticios conservados mediante congelación."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 9,
+        "fields": {
+            "nombre_categoria": "Esencias",
+            "descripcion": "'Extractos y concentrados para dar sabor."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 10,
+        "fields": {
+            "nombre_categoria": "Bebidas",
+            "descripcion": "Bebidas con y sin alcohol."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 11,
+        "fields": {
+            "nombre_categoria": "Especias",
+            "descripcion": "Condimentos y especias para sazonar."
+        }
+    },
+    {
+        "model": "core.categoriasmateriaprima",
+        "pk": 12,
+        "fields": {
+            "nombre_categoria": "Dulces y Golosinas",
+            "descripcion": "Dulces usados en la elaboración de productos"
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 1,
+        "fields": {
+            "nombre_categoria": "Bases Secas",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 2,
+        "fields": {
+            "nombre_categoria": "Masas",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 3,
+        "fields": {
+            "nombre_categoria": "Rellenos",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 4,
+        "fields": {
+            "nombre_categoria": "Jarabes",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 5,
+        "fields": {
+            "nombre_categoria": "Batidos",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 6,
+        "fields": {
+            "nombre_categoria": "Cremas",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 7,
+        "fields": {
+            "nombre_categoria": "Mezclas",
+            "descripcion": null,
+            "es_intermediario": true
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 8,
+        "fields": {
+            "nombre_categoria": "Bebidas",
+            "descripcion": null,
+            "es_intermediario": false
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 9,
+        "fields": {
+            "nombre_categoria": "Galletas y Respostería",
+            "descripcion": null,
+            "es_intermediario": false
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 10,
+        "fields": {
+            "nombre_categoria": "Panes Artesanales",
+            "descripcion": null,
+            "es_intermediario": false
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 11,
+        "fields": {
+            "nombre_categoria": "Repostería Salada",
+            "descripcion": null,
+            "es_intermediario": false
+        }
+    },
+    {
+        "model": "core.categoriasproductoselaborados",
+        "pk": 12,
+        "fields": {
+            "nombre_categoria": "Pasatelería Dulce",
+            "descripcion": null,
+            "es_intermediario": false
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 1,
+        "fields": {
+            "nombre_categoria": "Bebidas",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 2,
+        "fields": {
+            "nombre_categoria": "Snacks",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 3,
+        "fields": {
+            "nombre_categoria": "Charcutería",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 4,
+        "fields": {
+            "nombre_categoria": "Confitería",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 5,
+        "fields": {
+            "nombre_categoria": "Productos Complementarios",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.categoriasproductosreventa",
+        "pk": 6,
+        "fields": {
+            "nombre_categoria": "Otros",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.metodosdepago",
+        "pk": 1,
+        "fields": {
+            "nombre_metodo": "Efectivo",
+            "requiere_referencia": false
+        }
+    },
+    {
+        "model": "core.metodosdepago",
+        "pk": 2,
+        "fields": {
+            "nombre_metodo": "Tarjeta",
+            "requiere_referencia": true
+        }
+    },
+    {
+        "model": "core.metodosdepago",
+        "pk": 3,
+        "fields": {
+            "nombre_metodo": "Pago Móvil",
+            "requiere_referencia": true
+        }
+    },
+    {
+        "model": "core.metodosdepago",
+        "pk": 4,
+        "fields": {
+            "nombre_metodo": "Transferencia",
+            "requiere_referencia": true
+        }
+    },
+    {
+        "model": "core.estadosordenventa",
+        "pk": 1,
+        "fields": {
+            "nombre_estado": "Pendiente",
+            "descripcion": "Orden pendiente de confirmación"
+        }
+    },
+    {
+        "model": "core.estadosordenventa",
+        "pk": 2,
+        "fields": {
+            "nombre_estado": "En Proceso",
+            "descripcion": "Orden en proceso de preparación"
+        }
+    },
+    {
+        "model": "core.estadosordenventa",
+        "pk": 3,
+        "fields": {
+            "nombre_estado": "Completado",
+            "descripcion": "Orden completada y entregada"
+        }
+    },
+    {
+        "model": "core.estadosordenventa",
+        "pk": 4,
+        "fields": {
+            "nombre_estado": "Cancelado",
+            "descripcion": "Orden cancelada"
+        }
+    },
+    {
+        "model": "core.estadosordencompra",
+        "pk": 1,
+        "fields": {
+            "nombre_estado": "Borrador",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.estadosordencompra",
+        "pk": 2,
+        "fields": {
+            "nombre_estado": "Enviada",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.estadosordencompra",
+        "pk": 3,
+        "fields": {
+            "nombre_estado": "Recibida Parcial",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.estadosordencompra",
+        "pk": 4,
+        "fields": {
+            "nombre_estado": "Recibida Completa",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.estadosordencompra",
+        "pk": 5,
+        "fields": {
+            "nombre_estado": "Cancelada",
+            "descripcion": null
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 1,
+        "fields": {
+            "unidad_origen": 2,
+            "unidad_destino": 4,
+            "factor_conversion": "1000.000000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 2,
+        "fields": {
+            "unidad_origen": 4,
+            "unidad_destino": 2,
+            "factor_conversion": "0.001000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 3,
+        "fields": {
+            "unidad_origen": 4,
+            "unidad_destino": 1,
+            "factor_conversion": "0.000001"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 4,
+        "fields": {
+            "unidad_origen": 1,
+            "unidad_destino": 4,
+            "factor_conversion": "1000000.000000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 5,
+        "fields": {
+            "unidad_origen": 2,
+            "unidad_destino": 1,
+            "factor_conversion": "0.001000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 6,
+        "fields": {
+            "unidad_origen": 1,
+            "unidad_destino": 2,
+            "factor_conversion": "1000.000000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 7,
+        "fields": {
+            "unidad_origen": 3,
+            "unidad_destino": 5,
+            "factor_conversion": "1000.000000"
+        }
+    },
+    {
+        "model": "core.conversionesunidades",
+        "pk": 8,
+        "fields": {
+            "unidad_origen": 5,
+            "unidad_destino": 3,
+            "factor_conversion": "0.001000"
+        }
+    }
+]

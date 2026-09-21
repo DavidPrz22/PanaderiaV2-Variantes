@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from apps.inventario.models import ProductosElaborados, MateriasPrimas, LotesMateriasPrimas, LotesProductosElaborados, ProductosElaboradosVariantes
 from apps.core.models import UnidadesDeMedida
@@ -22,7 +24,7 @@ class RecetasDetalles(models.Model):
     receta = models.ForeignKey(Recetas, on_delete=models.CASCADE, null=True, blank=True, related_name='componentes')
     componente_materia_prima = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
     componente_producto_intermedio = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, related_name='receta_componente_producto_intermedio', null=True, blank=True)
-    cantidad = models.DecimalField(max_digits=10, decimal_places=3, default=0.00)
+    cantidad = models.DecimalField(max_digits=10, decimal_places=3, default=Decimal('0.00'))
 
     def __str__(self):
         if self.componente_materia_prima:
@@ -73,8 +75,8 @@ class DetalleProduccionConsumos(models.Model):
     materia_prima_consumida = models.ForeignKey(MateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
     producto_intermedio_consumido = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False)
-    costo_consumo_divisa = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=0)
-    costo_consumo_local = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=0)
+    costo_consumo_divisa = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=Decimal('0.00'))
+    costo_consumo_local = models.DecimalField(max_digits=10, decimal_places=3, null=False, blank=False, default=Decimal('0.00'))
 
 
     def __str__(self):
@@ -95,8 +97,8 @@ class DetalleProduccionLote(models.Model):
     lote_materia_prima = models.ForeignKey(LotesMateriasPrimas, on_delete=models.CASCADE, null=True, blank=True)
     lote_producto_intermedio = models.ForeignKey(LotesProductosElaborados, on_delete=models.CASCADE, null=True, blank=True)
     cantidad_consumida = models.DecimalField(max_digits=10, decimal_places=3)
-    costo_parcial_divisa = models.DecimalField(max_digits=10, decimal_places=3, default=0)
-    costo_parcial_local = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    costo_parcial_divisa = models.DecimalField(max_digits=10, decimal_places=3, default=Decimal('0.00'))
+    costo_parcial_local = models.DecimalField(max_digits=10, decimal_places=3, default=Decimal('0.00'))
 
     class Meta:
         constraints = [
@@ -113,11 +115,11 @@ class DetalleProduccionLote(models.Model):
 class DefinicionTransformacion(models.Model):
     nombre = models.CharField(max_length=255, null=False, blank=False)
     producto_elaborado_entrada = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_entrada')
-    cantidad_entrada = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    cantidad_entrada = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=Decimal('0.00'))
     unidad_medida_entrada = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_entrada')
     producto_elaborado_salida = models.ForeignKey(ProductosElaboradosVariantes, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_como_salida')
     unidad_medida_salida = models.ForeignKey(UnidadesDeMedida, on_delete=models.CASCADE, null=False, blank=False, related_name='transformaciones_unidad_salida')
-    cantidad_salida = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    cantidad_salida = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=Decimal('0.00'))
     usuario_creacion = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=False)
@@ -127,11 +129,11 @@ class DefinicionTransformacion(models.Model):
 
 class LogTransformacion(models.Model):
     definicion_transformacion = models.ForeignKey(DefinicionTransformacion, on_delete=models.CASCADE)
-    cantidad_producto_entrada_efectiva = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0) # Cantidad del producto de entrada que realmente se transformó en este evento (ej: se transformaron 2 tortas enteras).
-    cantidad_producto_salida_total_generado = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0) # Cantidad total del producto de salida generada en este evento (ej: si se transformaron 2 tortas y cada una produce 8 porciones, aquí sería 16)
-    costo_unitario_entrada_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    costo_total_entrada_calculado_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0) # Calculado: cantidad_producto_entrada_efectiva * costo_unitario_entrada_al_momento.
-    costo_unitario_salida_calculado_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0) # - Calculado: costo_total_entrada_calculado / cantidad_producto_salida_total_generado. Este es el costo de cada unidad de porción generada.
+    cantidad_producto_entrada_efectiva = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=Decimal('0.00')) # Cantidad del producto de entrada que realmente se transformó en este evento (ej: se transformaron 2 tortas enteras).
+    cantidad_producto_salida_total_generado = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=Decimal('0.00')) # Cantidad total del producto de salida generada en este evento (ej: si se transformaron 2 tortas y cada una produce 8 porciones, aquí sería 16)
+    costo_unitario_entrada_usd = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    costo_total_entrada_calculado_usd = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00')) # Calculado: cantidad_producto_entrada_efectiva * costo_unitario_entrada_al_momento.
+    costo_unitario_salida_calculado_usd = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00')) # - Calculado: costo_total_entrada_calculado / cantidad_producto_salida_total_generado. Este es el costo de cada unidad de porción generada.
     usuario_creacion = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     notas = models.TextField(null=True, blank=True)
