@@ -113,11 +113,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+tmpFrontend = os.getenv('FRONTEND_URL')
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your Vite frontend
-    "http://localhost:5174",  # Your Vite frontend
-    "http://localhost:5556",  # Your Vite frontend
-    "http://localhost:3000",  # React default port
+    origin for origin in [
+        tmpFrontend,
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5556",
+        "http://localhost:3000",
+    ] if origin
 ]
 
 CORS_ALLOW_CREDENTIALS = True
