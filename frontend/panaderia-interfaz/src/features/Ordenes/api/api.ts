@@ -13,7 +13,7 @@ import type { TOrderSchema } from "../schema/schema";
 
 export const getClientes = async (): Promise<Cliente[]> => {
   try {
-    const response = await apiClient.get("/api/clientes/");
+    const response = await apiClient.get("/api/ventas/clientes/");
     return response.data;
   } catch (error) {
     console.error("Error fetching clientes:", error);
@@ -23,7 +23,7 @@ export const getClientes = async (): Promise<Cliente[]> => {
 
 export const getMetodosDePago = async (): Promise<MetodoPago[]> => {
   try {
-    const response = await apiClient.get("/api/metodos-de-pago/");
+    const response = await apiClient.get("/api/core/metodos-de-pago/");
     return response.data;
   } catch (error) {
     console.error("Error fetching metodos de pago:", error);
@@ -33,7 +33,7 @@ export const getMetodosDePago = async (): Promise<MetodoPago[]> => {
 
 export const getAllEstadosOrdenVenta = async (): Promise<EstadoOrden[]> => {
   try {
-    const response = await apiClient.get("/api/estados-orden-venta/");
+    const response = await apiClient.get("/api/core/estados-orden-venta/");
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -45,7 +45,7 @@ export const getAllEstadosOrdenVenta = async (): Promise<EstadoOrden[]> => {
 export const getEstadosOrdenRegistro = async (): Promise<EstadoOrden[]> => {
   try {
     const response = await apiClient.get(
-      "/api/estados-orden-venta/get-estados-registro/",
+      "/api/core/estados-orden-venta/get-estados-registro/",
     );
     console.log(response.data);
     return response.data;
@@ -59,7 +59,7 @@ export const getOrdenProductosSearch = async (
   search: string,
 ): Promise<OrdenProductosSearch> => {
   try {
-    const response = await apiClient.get("/api/productos-pedidos-search/", {
+    const response = await apiClient.get("/api/inventario/productos-pedidos-search/", {
       params: {
         search,
       },
@@ -95,7 +95,7 @@ export const BCVRate = async (): Promise<BCVRateType> => {
 
 export const createOrden = async (data: TOrderSchema) => {
   try {
-    const response = await apiClient.post("/api/ordenes/", data);
+    const response = await apiClient.post("/api/ventas/ordenes/", data);
     return response.data;
   } catch (error) {
     console.error("Error creating orden:", error);
@@ -105,7 +105,7 @@ export const createOrden = async (data: TOrderSchema) => {
 
 export const updateOrden = async (id: number, data: TOrderSchema) => {
   try {
-    const response = await apiClient.put(`/api/ordenes/${id}/`, data);
+    const response = await apiClient.put(`/api/ventas/ordenes/${id}/`, data);
     return response.data;
   } catch (error) {
     console.error("Error updating orden:", error);
@@ -119,7 +119,7 @@ export const getOrdenes = async ({
   pageParam?: string | null;
 } = {}): Promise<OrdenesPagination> => {
   try {
-    const url = pageParam || "/api/ordenes-lista/";
+    const url = pageParam || "/api/ventas/ordenes-lista/";
     const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
@@ -130,7 +130,7 @@ export const getOrdenes = async ({
 
 export const cancelOrden = async (id: number): Promise<CancelOrdenResponse> => {
   try {
-    const response = await apiClient.put(`/api/ordenes/${id}/cancel/`);
+    const response = await apiClient.put(`/api/ventas/ordenes/${id}/cancel/`);
     return response.data;
   } catch (error) {
     console.error("Error canceling orden:", error);
@@ -140,7 +140,7 @@ export const cancelOrden = async (id: number): Promise<CancelOrdenResponse> => {
 export const getOrdenesDetalles = async (id: number): Promise<Orden> => {
   try {
     const response = await apiClient.get(
-      `/api/ordenes/${id}/get_orden_detalles/`,
+      `/api/ventas/ordenes/${id}/get_orden_detalles/`,
     );
     console.log(response.data);
     return response.data;
@@ -153,7 +153,7 @@ export const getOrdenesDetalles = async (id: number): Promise<Orden> => {
 export const updateOrdenStatus = async (id: number, estado: string) => {
   try {
     const response = await apiClient.put(
-      `/api/ordenes/${id}/update_status/?estado=${estado}`,
+      `/api/ventas/ordenes/${id}/update_status/?estado=${estado}`,
     );
     return response.data;
   } catch (error) {
@@ -168,7 +168,7 @@ export const registerPaymentReference = async (
 ) => {
   try {
     const response = await apiClient.put(
-      `/api/ordenes/${id}/register_payment_reference/`,
+      `/api/ventas/ordenes/${id}/register_payment_reference/`,
       { referencia_pago },
     );
     return response.data;
@@ -179,6 +179,6 @@ export const registerPaymentReference = async (
 };
 
 export const deleteOrden = async (id: number): Promise<{ message: string }> => {
-  const response = await apiClient.delete(`/api/ordenes/${id}/`);
+  const response = await apiClient.delete(`/api/ventas/ordenes/${id}/`);
   return response.data;
 };

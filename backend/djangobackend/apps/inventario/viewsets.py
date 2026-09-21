@@ -347,56 +347,60 @@ class ProductosElaboradosViewSet(viewsets.ModelViewSet):
     serializer_class = ProductosElaboradosSerializer
     permission_classes = [IsStaffOrVendedorReadOnly]
 
-    @action(detail=False, methods=['post'], url_path='register-csv')
-    def register_csv(self, request):
+    @action(detail=False, methods=['post'], url_path='register-yaml')
+    def register_yaml(self, request):
         import base64
-        import csv
-        import io
+        import yaml
 
         try:
-            serializer = RegisterCSVSerializer(data=request.data)
+            serializer = RegisterYAMLSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             
             file = serializer.validated_data['file']
             decoded_file = base64.b64decode(file)
-            text_stream = io.TextIOWrapper(io.BytesIO(decoded_file), encoding='utf-8')
+            yaml_data = yaml.safe_load(decoded_file.decode('utf-8'))
 
-            reader = csv.DictReader(text_stream)
-            rows = list(reader)
-            
             productos_elaborados = []
-            for pe in rows:
-                es_intermediario = pe.get('es_intermediario', 'False').upper() == 'TRUE'
-                
+            variantes_data_map = []
+            for pe in yaml_data:
+                es_intermediario = pe.get('es_intermediario', False)
                 producto = ProductosElaborados(
                     nombre_producto=pe['nombre_producto'],
                     descripcion=pe.get('descripcion') or None,
-                    unidad_produccion_id=pe.get('unidad_produccion_id') or None,
-                    unidad_venta_id=pe.get('unidad_venta_id') or None,
-                    categoria_id=pe.get('categoria_id') or None,
+                    unidad_produccion_id=pe.get('unidad_produccion') or None,
+                    unidad_venta_id=pe.get('unidad_venta') or None if not es_intermediario else None,
+                    categoria_id=pe.get('categoria') or None,
                     es_intermediario=es_intermediario,
                     tipo_medida_fisica=pe.get('tipo_medida_fisica', 'PESO'),
-                    vendible_por_medida_real=pe.get('vendible_por_medida_real', 'False').upper() == 'TRUE',
+                    vendible_por_medida_real=pe.get('vendible_por_medida_real') if not es_intermediario else None,
+                    usado_en_transformaciones=pe.get('usado_en_transformaciones', False),
                 )
                 productos_elaborados.append(producto)
+                variantes_data_map.append(pe.get('variantes', []))
 
             productos_creados = ProductosElaborados.objects.bulk_create(productos_elaborados)
             
-            variantes = []
-            for idx, pe in enumerate(rows):
-                producto = productos_creados[idx]
-                variante = ProductosElaboradosVariantes(
-                    producto_elaborado=producto,
-                    nombre_variante=producto.nombre_producto,
-                    SKU=pe.get('SKU') or None,
-                    precio_venta_divisa=pe.get('precio_venta_usd') or None,
-                    punto_reorden=pe.get('punto_reorden') or None,
-                    atributo='UNIDAD',
-                    is_vendible=True,
-                )
-                variantes.append(variante)
+            variantes_bucket = []
+            for idx, producto in enumerate(productos_creados):
+                variantes_data = variantes_data_map[idx]
+                if variantes_data:
+                    for variante in variantes_data:
+                        variantes_bucket.append(
+                            ProductosElaboradosVariantes(
+                                producto_elaborado=producto,
+                                nombre_variante=variante.get('nombre_variante'),
+                                SKU=variante.get('SKU'),
+                                descripcion=variante.get('descripcion'),
+                                precio_venta_divisa=variante.get('precio_venta_divisa'),
+                                precio_venta_local=variante.get('precio_venta_local'),
+                                punto_reorden=variante.get('punto_reorden'),
+                                atributo=variante.get('atributo', 'CANTIDAD'),
+                                is_vendible=variante.get('is_vendible', True),
+                            )
+                        )
 
-            ProductosElaboradosVariantes.objects.bulk_create(variantes)
+            if variantes_bucket:
+                ProductosElaboradosVariantes.objects.bulk_create(variantes_bucket)
 
             return Response({'message': "Productos elaborados registrados exitosamente"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -915,40 +919,62 @@ class ProductosReventaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsStaffOrVendedorReadOnly]
     pagination_class = StandardResultsSetPagination
 
-    @action(detail=False, methods=['post'], url_path='register-csv')
-    def register_csv(self, request):
+    @action(detail=False, methods=['post'], url_path='register-yaml')
+    def register_yaml(self, request):
         import base64
-        import csv
-        import io
+        import yaml
 
         try:
-            serializer = RegisterCSVSerializer(data=request.data)
+            serializer = RegisterYAMLSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             
             file = serializer.validated_data['file']
             decoded_file = base64.b64decode(file)
-            text_stream = io.TextIOWrapper(io.BytesIO(decoded_file), encoding='utf-8')
+            yaml_data = yaml.safe_load(decoded_file.decode('utf-8'))
 
-            reader = csv.DictReader(text_stream)
             productos_reventa = []
-            for pr in reader:
+            variantes_data_map = []
+            for pr in yaml_data:
                 pr_created = ProductosReventa(
                     nombre_producto=pr['nombre_producto'],
-                    SKU=pr['SKU'],
-                    precio_compra_usd=pr.get('precio_compra_usd') or None,
-                    precio_venta_usd=pr['precio_venta_usd'],
-                    punto_reorden=pr.get('punto_reorden'),
-                    unidad_base_inventario_id=pr.get('unidad_base_inventario_id'),
-                    unidad_venta_id=pr.get('unidad_venta_id'),
-                    categoria_id=pr.get('categoria_id'),
-                    factor_conversion=pr.get('factor_conversion', 1.0),
+                    descripcion=pr.get('descripcion'),
+                    categoria_id=pr.get('categoria'),
                     marca=pr.get('marca') or None,
-                    perecedero=pr.get('perecedero', 'FALSE').upper() == 'TRUE',
-                    descripcion=pr.get('descripcion')
+                    proveedor_preferido_id=pr.get('proveedor_preferido') or None,
+                    unidad_medida_base_id=pr.get('unidad_base_inventario') or None,
+                    unidad_venta_id=pr.get('unidad_venta') or None,
+                    factor_conversion=pr.get('factor_conversion', 1.0),
+                    es_perecedero=pr.get('es_perecedero', False),
                 )
                 productos_reventa.append(pr_created)
+                variantes_data_map.append(pr.get('variantes', []))
 
-            ProductosReventa.objects.bulk_create(productos_reventa)
+            productos_creados = ProductosReventa.objects.bulk_create(productos_reventa)
+            
+            variantes_bucket = []
+            for idx, producto in enumerate(productos_creados):
+                variantes_data = variantes_data_map[idx]
+                if variantes_data:
+                    for variante in variantes_data:
+                        variantes_bucket.append(
+                            ProductosReventaVariantes(
+                                producto_reventa=producto,
+                                nombre_variante=variante.get('nombre_variante'),
+                                SKU=variante.get('SKU'),
+                                descripcion=variante.get('descripcion'),
+                                precio_venta_divisa=variante.get('precio_venta_divisa'),
+                                precio_venta_local=variante.get('precio_venta_local'),
+                                costo_divisa=variante.get('costo_divisa'),
+                                costo_local=variante.get('costo_local'),
+                                punto_reorden=variante.get('punto_reorden'),
+                                atributo=variante.get('atributo', 'CANTIDAD'),
+                                is_vendible=variante.get('is_vendible', True),
+                            )
+                        )
+            
+            if variantes_bucket:
+                ProductosReventaVariantes.objects.bulk_create(variantes_bucket)
+            
             return Response({'message': "Productos de Reventa registrados exitosamente"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

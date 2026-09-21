@@ -76,12 +76,14 @@ export const deleteProductosReventa = async (id: number) => {
 };
 
 export const getLotesProductosReventa = async ({
+  pageParam,
   producto_reventa_id,
 }: {
+  pageParam?: string | null;
   producto_reventa_id?: number;
 } = {}): Promise<LoteProductoReventaPagination> => {
   try {
-    const url = `/api/inventario/lotes-productos-reventa/?producto_reventa=${producto_reventa_id}`;
+    const url = pageParam || `/api/inventario/lotes-productos-reventa/?producto_reventa=${producto_reventa_id}`;
     const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
@@ -133,12 +135,12 @@ export const changeEstadoLoteProductosReventa = async (id: number) => {
 };
 
 
-export const uploadCSV = async (file: string) => {
+export const uploadYAML = async (file: string) => {
   try {
-    const response = await apiClient.post(`/api/productosreventa/register-csv/`, { file: file });
+    const response = await apiClient.post(`/api/inventario/productosreventa/register-yaml/`, { file: file });
     return response.data;
   } catch (error) {
-    console.error("Error uploading CSV:", error);
+    console.error("Error uploading YAML:", error);
     throw error;
   }
 }

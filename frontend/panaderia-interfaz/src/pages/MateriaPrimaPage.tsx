@@ -33,12 +33,7 @@ function MateriaPrimaPageContent() {
 
           {showMateriaprimaForm && (
             <CreateMateriaPrimaPanel
-              isOpen={showMateriaprimaForm}
               onClose={() => setShowMateriaprimaForm(false)}
-              onSave={(data) => {
-                console.log("Saving...", data);
-                setShowMateriaprimaForm(false);
-              }}
               fullScreen={true}
             />
           )}

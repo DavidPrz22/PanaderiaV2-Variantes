@@ -658,7 +658,7 @@ class ProductosReventaVariantesSerializer(serializers.ModelSerializer):
 
 class ProductosReventaListSerializer(serializers.ModelSerializer):
     unidad_venta_nombre = serializers.CharField(source='unidad_venta.nombre_completo', read_only=True)
-    unidad_base_inventario_nombre = serializers.CharField(source='unidad_base_inventario.nombre_completo', read_only=True)
+    unidad_base_inventario_nombre = serializers.CharField(source='unidad_medida_base.nombre_completo', read_only=True)
     categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
 
     class Meta:
@@ -809,12 +809,12 @@ class ProductosReventaDetallesSerializer(serializers.ModelSerializer):
         }
     ))
     def get_unidad_base_inventario(self, obj):
-        if not obj.unidad_base_inventario:
+        if not obj.unidad_medida_base:
             return None
         return {
-            'id': obj.unidad_base_inventario.id,
-            'nombre_completo': obj.unidad_base_inventario.nombre_completo,
-            'abreviatura': obj.unidad_base_inventario.abreviatura,
+            'id': obj.unidad_medida_base.id,
+            'nombre_completo': obj.unidad_medida_base.nombre_completo,
+            'abreviatura': obj.unidad_medida_base.abreviatura,
         }
 
     @extend_schema_field(inline_serializer(

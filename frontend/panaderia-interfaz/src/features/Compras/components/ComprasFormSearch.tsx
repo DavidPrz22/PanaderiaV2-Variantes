@@ -86,7 +86,7 @@ export function ComprasFormSearch({
                       value === dataValue.nombre ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  {dataValue.SKU} - {dataValue.nombre}
+                  {dataValue.nombre}
                 </CommandItem>
               ))}
             </CommandGroup>

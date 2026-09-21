@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { CarritoItem, TipoProducto } from "../features/PuntoDeVenta/types/types";
-import type { PaymentMethod, SplitPayment } from "@/features/PuntoDeVenta/componentes/POSCheckout";
+import type { PaymentMethod, SplitPayment } from "@/features/PuntoDeVenta/componentes/POSCheckout/shared/checkout-types";
 
 type POSContextType = {
     POSEnabled: boolean;

@@ -15,8 +15,6 @@ export default function PIFiltersPanel() {
     setSelectedUnidadesProduccion,
     selectedCategoriasIntermedio,
     setSelectedCategoriasIntermedio,
-    unidadesMedida,
-    categoriasProductoIntermedio,
     setProductosIntermediosSearchTerm,
   } = useProductosIntermediosContext();
   const { data: productosIntermedios } = useGetProductosIntermedios();
@@ -29,21 +27,17 @@ export default function PIFiltersPanel() {
 
   const opcionesUnidades = useMemo(() => {
     const fromProductos = allProductos
-      .map((p: ProductoIntermedioItem) => p.unidad_produccion_producto)
+      .map((p) => (p as unknown as ProductoIntermedioItem).unidad_produccion_producto)
       .filter(Boolean);
-    const fromContext = (unidadesMedida || []).map((u) => u.nombre_completo);
-    return Array.from(new Set([...fromProductos, ...fromContext])).sort();
-  }, [allProductos, unidadesMedida]);
+    return Array.from(new Set(fromProductos)).sort();
+  }, [allProductos]);
 
   const opcionesCategorias = useMemo(() => {
     const fromProductos = allProductos
-      .map((p: ProductoIntermedioItem) => p.categoria_nombre)
+      .map((p) => (p as unknown as ProductoIntermedioItem).categoria_nombre)
       .filter(Boolean);
-    const fromContext = (categoriasProductoIntermedio || []).map(
-      (c) => c.nombre_categoria,
-    );
-    return Array.from(new Set([...fromProductos, ...fromContext])).sort();
-  }, [allProductos, categoriasProductoIntermedio]);
+    return Array.from(new Set(fromProductos)).sort();
+  }, [allProductos]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

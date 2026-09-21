@@ -1,224 +1,182 @@
 import os
-import re
 from decimal import Decimal
+from pathlib import Path
+import yaml
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from apps.produccion.models import Recetas, RecetasDetalles
-from apps.inventario.models import ProductosElaborados, MateriasPrimas
+from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
+from apps.inventario.models import MateriasPrimas, ProductosElaboradosVariantes
 
 
 class Command(BaseCommand):
-    help = 'Register recipes from Recetas.md file'
+    help = 'Register recipes from YAML BOM file'
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--md-path',
+            '--yaml-path',
             type=str,
-            default='recetasnew.md',
-            help='Path to the Recetas.md file (default: Recetas.md in project root)'
+            default='apps/produccion/seed/DataRecetas_BOM.yaml',
+            help='Path to the YAML BOM file'
         )
 
     def handle(self, *args, **options):
-        md_path = options['md_path']
-        
-        # If relative path, resolve from project root
-        if not os.path.isabs(md_path):
-            # Get project root (from commands dir: go up 7 levels)
-            current_file = os.path.abspath(__file__)
-            base_dir = os.path.dirname(current_file)
-            for _ in range(6):
-                base_dir = os.path.dirname(base_dir)
-            md_path = os.path.join(base_dir, md_path)
-        
-        if not os.path.exists(md_path):
-            self.stdout.write(self.style.ERROR(f'Markdown file not found: {md_path}'))
+        yaml_path = options['yaml_path']
+
+        if not os.path.isabs(yaml_path):
+            base_dir = Path(settings.BASE_DIR)
+            yaml_path = base_dir / yaml_path
+
+        if not os.path.exists(yaml_path):
+            self.stdout.write(self.style.ERROR(f'YAML file not found: {yaml_path}'))
             return
-        
-        self.stdout.write(self.style.NOTICE(f'Reading recipes from: {md_path}'))
-        
+
+        self.stdout.write(self.style.NOTICE(f'Reading recipes from: {yaml_path}'))
+
         try:
-            with open(md_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # Parse recipes
-            recipes = self.parse_recipes(content)
-            
-            # Import recipes
+            with open(yaml_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+
+            recetas_data = data.get('recetas', [])
+            self.stdout.write(self.style.NOTICE(f'Found {len(recetas_data)} recipes in YAML'))
+
             with transaction.atomic():
                 created_count = 0
                 skipped_count = 0
-                
-                for recipe_data in recipes:
+                recetas_creadas = {}
+
+                for receta_data in recetas_data:
+                    sku_receta = receta_data['sku_receta']
+                    variante_sku = receta_data['producto_asociado']['variante_vinculada_sku']
+                    nombre_receta = receta_data.get('nombre_receta', '')
+                    rendimiento = receta_data.get('rendimiento', {}).get('cantidad')
+                    notas = receta_data.get('notas', '')
+
                     try:
-                        # Check if recipe already exists
-                        if Recetas.objects.filter(producto_elaborado__SKU=recipe_data['sku']).exists():
+                        if Recetas.objects.filter(producto_elaborado_variante__SKU=variante_sku).exists():
                             self.stdout.write(self.style.WARNING(
-                                f'Recipe for {recipe_data["sku"]} already exists, skipping'
+                                f'Recipe for variant {variante_sku} already exists, skipping'
                             ))
                             skipped_count += 1
                             continue
-                        
-                        # Get the product
+
                         try:
-                            producto = ProductosElaborados.objects.get(SKU=recipe_data['sku'])
-                        except ProductosElaborados.DoesNotExist:
+                            variante = ProductosElaboradosVariantes.objects.get(SKU=variante_sku)
+                        except ProductosElaboradosVariantes.DoesNotExist:
                             self.stdout.write(self.style.ERROR(
-                                f'Product {recipe_data["sku"]} not found, skipping recipe'
+                                f'Variant {variante_sku} not found, skipping recipe {sku_receta}'
                             ))
                             skipped_count += 1
                             continue
-                        
-                        # Create recipe
+
                         receta = Recetas.objects.create(
-                            nombre=f"Receta {producto.nombre_producto}",
-                            producto_elaborado=producto,
-                            notas=f"Rendimiento: {recipe_data['rendimiento']}"
+                            nombre=nombre_receta,
+                            producto_elaborado_variante=variante,
+                            rendimiento=Decimal(str(rendimiento)) if rendimiento else None,
+                            notas=notas[:250] if notas else '',
                         )
-                        
-                        # Create recipe details
-                        for ingrediente in recipe_data['ingredientes']:
-                            tipo = ingrediente['tipo']
-                            cantidad = Decimal(str(ingrediente['cantidad']))
-                            
-                            if tipo == 'MP':
-                                # Materia Prima
-                                sku = ingrediente['sku']
+
+                        recetas_creadas[sku_receta] = receta
+
+                        componentes = receta_data.get('componentes', [])
+                        componentes_count = 0
+
+                        for componente in componentes:
+                            tipo = componente['tipo']
+                            cantidad = Decimal(str(componente['cantidad']))
+
+                            if tipo == 'MateriaPrima':
+                                sku_componente = componente['sku_componente']
                                 try:
-                                    materia_prima = MateriasPrimas.objects.get(SKU=sku)
+                                    materia_prima = MateriasPrimas.objects.get(SKU=sku_componente)
                                     RecetasDetalles.objects.create(
                                         receta=receta,
                                         componente_materia_prima=materia_prima,
-                                        cantidad=cantidad
+                                        cantidad=cantidad,
                                     )
+                                    componentes_count += 1
                                 except MateriasPrimas.DoesNotExist:
                                     self.stdout.write(self.style.WARNING(
-                                        f'Materia Prima {sku} not found for recipe {recipe_data["sku"]}'
+                                        f'Materia Prima {sku_componente} not found for recipe {sku_receta}'
                                     ))
-                            elif tipo == 'PI':
-                                # Producto Intermedio
-                                sku = ingrediente['sku']
+                            elif tipo == 'ProductoIntermedio':
+                                sku_variante = componente.get('sku_variante_intermedio')
+                                if not sku_variante:
+                                    self.stdout.write(self.style.WARNING(
+                                        f'ProductoIntermedio {componente["sku_componente"]} has no sku_variante_intermedio in recipe {sku_receta}'
+                                    ))
+                                    continue
                                 try:
-                                    producto_intermedio = ProductosElaborados.objects.get(
-                                        SKU=sku,
-                                        es_intermediario=True
-                                    )
+                                    variante_intermedio = ProductosElaboradosVariantes.objects.get(SKU=sku_variante)
                                     RecetasDetalles.objects.create(
                                         receta=receta,
-                                        componente_producto_intermedio=producto_intermedio,
-                                        cantidad=cantidad
+                                        componente_producto_intermedio=variante_intermedio,
+                                        cantidad=cantidad,
                                     )
-                                except ProductosElaborados.DoesNotExist:
+                                    componentes_count += 1
+                                except ProductosElaboradosVariantes.DoesNotExist:
                                     self.stdout.write(self.style.WARNING(
-                                        f'Producto Intermedio {sku} not found for recipe {recipe_data["sku"]}'
+                                        f'Producto Intermedio variant {sku_variante} not found for recipe {sku_receta}'
                                     ))
-                        
+
                         created_count += 1
                         self.stdout.write(self.style.SUCCESS(
-                            f'Created recipe for {recipe_data["sku"]} with {len(recipe_data["ingredientes"])} ingredients'
+                            f'Created recipe {sku_receta} ({variante_sku}) with {componentes_count} components'
                         ))
-                        
+
                     except Exception as e:
                         self.stdout.write(self.style.ERROR(
-                            f'Error creating recipe for {recipe_data.get("sku", "unknown")}: {str(e)}'
+                            f'Error creating recipe for {sku_receta}: {str(e)}'
                         ))
                         skipped_count += 1
                         continue
-                
-                # Summary
+
+                for receta_data in recetas_data:
+                    sku_receta = receta_data['sku_receta']
+                    recetas_rel = receta_data.get('recetas_relacionadas', [])
+
+                    if not recetas_rel or sku_receta not in recetas_creadas:
+                        continue
+
+                    receta_principal = recetas_creadas[sku_receta]
+
+                    for rel in recetas_rel:
+                        sub_sku = rel.get('receta_subreceta_sku')
+                        sub_variante_sku = rel.get('sku_variante')
+
+                        try:
+                            subreceta = Recetas.objects.filter(producto_elaborado_variante__SKU=sub_variante_sku).first()
+                            if subreceta:
+                                RelacionesRecetas.objects.create(
+                                    receta_principal=receta_principal,
+                                    subreceta=subreceta,
+                                )
+                            else:
+                                self.stdout.write(self.style.WARNING(
+                                    f'Sub-recipe variant {sub_variante_sku} not found for relation in {sku_receta}'
+                                ))
+                        except Exception as e:
+                            self.stdout.write(self.style.WARNING(
+                                f'Error creating relation {sku_receta} -> {sub_sku}: {str(e)}'
+                            ))
+
                 self.stdout.write(self.style.SUCCESS(f'\n=== Summary ==='))
                 self.stdout.write(self.style.SUCCESS(f'Recipes created: {created_count}'))
                 self.stdout.write(self.style.WARNING(f'Recipes skipped: {skipped_count}'))
-                
-                # Verification
+
                 total_recipes = Recetas.objects.count()
                 intermediate_recipes = Recetas.objects.filter(
-                    producto_elaborado__es_intermediario=True
+                    producto_elaborado_variante__producto_elaborado__es_intermediario=True
                 ).count()
                 final_recipes = Recetas.objects.filter(
-                    producto_elaborado__es_intermediario=False
+                    producto_elaborado_variante__producto_elaborado__es_intermediario=False
                 ).count()
-                
+
                 self.stdout.write(self.style.SUCCESS(f'\n=== Verification ==='))
                 self.stdout.write(self.style.SUCCESS(f'Total recipes in DB: {total_recipes}'))
                 self.stdout.write(self.style.SUCCESS(f'Intermediate product recipes: {intermediate_recipes}'))
                 self.stdout.write(self.style.SUCCESS(f'Final product recipes: {final_recipes}'))
-                
+
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error: {str(e)}'))
             raise
-
-    def parse_recipes(self, content):
-        """Parse recipes from markdown content"""
-        recipes = []
-        
-        # Split by recipe sections (### headers)
-        recipe_sections = re.split(r'\n### (PE-(?:INT|FIN)-\d+):', content)
-        
-        # Skip the first element (intro text)
-        for i in range(1, len(recipe_sections), 2):
-            if i + 1 >= len(recipe_sections):
-                break
-                
-            sku = recipe_sections[i].strip()
-            recipe_content = recipe_sections[i + 1]
-            
-            # Extract recipe name (first line after SKU)
-            lines = recipe_content.strip().split('\n')
-            nombre = lines[0].strip() if lines else ''
-            
-            # Extract rendimiento
-            rendimiento_match = re.search(r'\*\*Rendimiento\*\*:\s*(.+)', recipe_content)
-            rendimiento = rendimiento_match.group(1).strip() if rendimiento_match else ''
-            
-            # Extract ingredients table
-            ingredientes = []
-            
-            # Find the table (starts with | Ingrediente |)
-            table_match = re.search(
-                r'\| Ingrediente \| Tipo \| Cantidad \| Unidad \|.*?\n\|[-\s|]+\n((?:\|.+\n)+)',
-                recipe_content,
-                re.MULTILINE
-            )
-            
-            if table_match:
-                table_rows = table_match.group(1).strip().split('\n')
-                
-                for row in table_rows:
-                    # Parse table row
-                    cells = [cell.strip() for cell in row.split('|')[1:-1]]  # Skip first and last empty cells
-                    
-                    if len(cells) >= 4:
-                        ingrediente_text = cells[0]
-                        tipo = cells[1]
-                        cantidad_str = cells[2]
-                        unidad = cells[3]
-                        
-                        # Extract SKU from ingrediente text (in parentheses)
-                        sku_match = re.search(r'\(([A-Z]+-[A-Z]+-\d+)\)', ingrediente_text)
-                        if sku_match:
-                            ingrediente_sku = sku_match.group(1)
-                            
-                            # Parse cantidad
-                            try:
-                                cantidad = float(cantidad_str)
-                                
-                                ingredientes.append({
-                                    'sku': ingrediente_sku,
-                                    'tipo': tipo,
-                                    'cantidad': cantidad,
-                                    'unidad': unidad
-                                })
-                            except ValueError:
-                                self.stdout.write(self.style.WARNING(
-                                    f'Could not parse cantidad "{cantidad_str}" for {sku}'
-                                ))
-            
-            if ingredientes:  # Only add recipe if it has ingredients
-                recipes.append({
-                    'sku': sku,
-                    'nombre': nombre,
-                    'rendimiento': rendimiento,
-                    'ingredientes': ingredientes
-                })
-        
-        return recipes

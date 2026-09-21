@@ -9,13 +9,13 @@ import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
 import DownloadSampleDataButton from "@/components/DownloadSampleDataButton";
 import { ImportCSV } from "@/components/ImportCSV";
-import { useUploadCSVProductosFinalesMutation } from "../hooks/mutations/productosFinalesMutations";
+import { useUploadYAMLProductosFinalesMutation } from "../hooks/mutations/productosFinalesMutations";
 
 export default function FilterSearch() {
   const { setShowProductoForm, bajoStockFilter, setBajoStockFilter, agotadosFilter, setAgotadosFilter } = useProductosFinalesContext();
   const { user } = useAuth();
   const hasAddPermission = userHasPermission(user!, 'productos_elaborados', 'add');
-  const { mutateAsync, isPending } = useUploadCSVProductosFinalesMutation();
+  const { mutateAsync, isPending } = useUploadYAMLProductosFinalesMutation();
 
   const toggleBajoStock = () => {
     setBajoStockFilter(!bajoStockFilter);
@@ -36,13 +36,31 @@ export default function FilterSearch() {
           <PackageX />
           Agotados
         </Button>
-        <DownloadSampleDataButton filePath="/DataProductosElaborados_Final.csv" fileName="DataProductosElaborados_Final.csv" />
+        <DownloadSampleDataButton filePath="/DataProductosElaborados_Final.yaml" fileName="DataProductosElaborados_Final.yaml" label="Ejemplo YAML" />
         {hasAddPermission && (
           <ImportCSV 
-            descripcion="Selecciona un archivo CSV para importar los datos de los productos finales"
+            descripcion="Selecciona un archivo YAML para importar los datos de los productos finales"
             uploadFunction={mutateAsync}
             isPending={isPending}
-            csvContent={"nombre_producto,SKU,descripcion,unidad_produccion_id,unidad_venta_id,precio_venta_usd,punto_reorden,categoria_id,es_intermediario,tipo_medida_fisica,vendible_por_medida_real\n"}
+            fileType="yaml"
+            csvContent={`- nombre_producto: ""
+  descripcion: ""
+  categoria: null
+  unidad_produccion: null
+  unidad_venta: null
+  tipo_medida_fisica: UNIDAD
+  vendible_por_medida_real: false
+  es_intermediario: false
+  usado_en_transformaciones: false
+  variantes:
+    - nombre_variante: ""
+      SKU: ""
+      descripcion: ""
+      atributo: Cantidad
+      precio_venta_divisa: 0
+      precio_venta_local: 0
+      punto_reorden: 0
+`}
           />
         )}
         <FilterButton />

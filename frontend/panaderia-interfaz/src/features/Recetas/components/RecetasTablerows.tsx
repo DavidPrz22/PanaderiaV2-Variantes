@@ -1,7 +1,7 @@
 import { RecetaTablerow } from "./RecetaTablerow";
-import type { recetaItem } from "../types/types";
+import type { RecetaItem } from "../types/types";
 
-export const RecetasTablerows = ({ data }: { data: recetaItem[] }) => {
+export const RecetasTablerows = ({ data }: { data: RecetaItem[] }) => {
   data = data.sort((a, b) => a.id - b.id);
   return (
     <>

@@ -20,7 +20,7 @@ export const ProductionWarning = () => {
       <div className="pl-6 mt-2">
         <strong>Componentes con stock insuficiente:</strong>
         {insufficientStock.map((item) => (
-          <div key={item.id}>
+          <div key={item.componente_id}>
             {item.nombre} - {item.stock} {item.unidad_medida}
           </div>
         ))}

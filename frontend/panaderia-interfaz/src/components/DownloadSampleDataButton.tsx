@@ -12,7 +12,7 @@ interface DownloadSampleDataButtonProps {
 export const DownloadSampleDataButton: React.FC<DownloadSampleDataButtonProps> = ( {
   filePath,
   fileName,
-  label = 'Ejemplo CSV',
+  label = 'Ejemplo YAML',
   className,
 }) => {
   const handleDownload = () => {

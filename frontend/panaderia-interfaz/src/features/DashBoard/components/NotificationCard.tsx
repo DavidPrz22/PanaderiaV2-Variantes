@@ -1,4 +1,4 @@
-import { Clock, Package, TruckIcon, X } from "lucide-react";
+import { Clock, Package, TruckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Notificacion } from "../types/types";
 import { NOTIFICACIONES_TIPOS, PRIORIDAD_TIPOS } from "../utils/constants";

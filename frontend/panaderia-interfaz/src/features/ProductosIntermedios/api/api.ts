@@ -128,12 +128,12 @@ export const deleteLoteProductoElaborado = async (id: number) => {
   }
 };
 
-export const uploadCSV = async (file: string) => {
+export const uploadYAML = async (file: string) => {
   try {
-    const response = await apiClient.post(`/api/inventario/productoselaborados/register-csv/`, { file: file });
+    const response = await apiClient.post(`/api/inventario/productos-elaborados/register-yaml/`, { file: file });
     return response.data;
   } catch (error) {
-    console.error("Error uploading CSV:", error);
+    console.error("Error uploading YAML:", error);
     throw error;
   }
 };

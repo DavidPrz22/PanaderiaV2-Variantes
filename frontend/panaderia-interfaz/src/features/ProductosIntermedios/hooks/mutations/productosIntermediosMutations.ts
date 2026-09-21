@@ -5,7 +5,7 @@ import {
   deleteProductoIntermedio,
   changeEstadoLoteProductosIntermedios,
   deleteLoteProductoElaborado,
-  uploadCSV,
+  uploadYAML,
 } from "../../api/api";
 import { getRecetasSearch } from "@/features/Recetas/api/api";
 import type { TProductosIntermediosSchema } from "../../schemas/schema";
@@ -226,17 +226,17 @@ export const useDeleteLoteProductoIntermedioMutation = (
   });
 };
 
-export const useUploadCSVProductosIntermediosMutation = () => {
+export const useUploadYAMLProductosIntermediosMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (file: string) => uploadCSV(file),
+    mutationFn: (file: string) => uploadYAML(file),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: productosIntermediosQueryOptions.queryKey,
       });
     },
     onError: (error) => {
-      console.error("Error uploading CSV:", error);
+      console.error("Error uploading YAML:", error);
     },
   });
 };

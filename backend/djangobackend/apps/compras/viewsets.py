@@ -337,7 +337,7 @@ class ComprasViewSet(viewsets.ModelViewSet):
                         pr_map[oc_detalle.variante_producto_reventa.id] = oc_detalle.variante_producto_reventa
                         
                         # Convert purchase unit to base inventory unit if different
-                        base_unit_id = oc_detalle.variante_producto_reventa.producto_reventa.unidad_base_inventario_id
+                        base_unit_id = oc_detalle.variante_producto_reventa.producto_reventa.unidad_medida_base_id
                         purchase_unit_id = oc_detalle.variante_producto_reventa.unidad_medida_compra_id
                         cantidad_lote = lote_data.get('cantidad_inventario', lote_data['cantidad'])
                         

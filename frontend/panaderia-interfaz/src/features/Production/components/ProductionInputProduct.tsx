@@ -1,6 +1,6 @@
 import { SearchIconDark } from "@/assets/DashboardAssets";
 import { ProductSearchContainer } from "./ProductionSearchContainer";
-import { useProductSearchQuery } from "../hooks/queries/ProductionQueries";
+import { useProductSearchQueries } from "../hooks/queries/ProductionQueries";
 import { useProductionContext } from "@/context/ProductionContext";
 import { useState } from "react";
 import ProductionXicon from "./ProductionXicon";
@@ -10,7 +10,9 @@ export const ProductionInputProduct = ({
   title,
   setValue,
 }: { title: string } & watchSetvalueTypeProduction) => {
-  const [{ data: finales }, { data: intermedios }] = useProductSearchQuery();
+  const [{ data: finalesData }, { data: intermediosData }] = useProductSearchQueries();
+  const finales = finalesData?.productos;
+  const intermedios = intermediosData?.productos;
 
   const {
     productSearchRef,
@@ -41,7 +43,7 @@ export const ProductionInputProduct = ({
   };
 
   const handleOnSelection = (id: number) => {
-    if (setValue) setValue("productoId", id);
+    if (setValue) setValue("producto_variante_id", id);
     setSelected(true);
   };
 

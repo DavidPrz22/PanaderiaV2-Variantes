@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_DIR="backups"
 DB_FILE="db.sqlite3"
-PYTHON_EXEC="../../env/bin/python"
+PYTHON_EXEC="../venv/bin/python"
 
 mkdir -p $BACKUP_DIR
 

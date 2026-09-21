@@ -1,0 +1,4365 @@
+metadata:
+  version: '1.0'
+  descripcion: Bill of Materials (BOM) y Recetas vinculadas para Productos Intermedios
+    y Finales
+  total_recetas: 102
+  total_intermedios: 51
+  total_finales: 51
+recetas:
+- sku_receta: PE-INT-001
+  nombre_receta: Receta Masa Hojaldre Clásica
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa Hojaldre Clásica
+    sku_base: PE-INT-001
+    variante_vinculada_sku: PE-INT-001-STD
+    todas_las_variantes:
+    - PE-INT-001-STD
+    - PE-INT-001-MED
+    - PE-INT-001-IND
+  rendimiento:
+    cantidad: 10000.0
+    descripcion: 10000g (Batch para 10kg)
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 5000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 10000g (Batch para 10kg). Generado automáticamente desde Recetas.md
+    y catálogo de productos.'
+- sku_receta: PE-INT-002
+  nombre_receta: Receta Crema Pastelera Vainilla
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema Pastelera Vainilla
+    sku_base: PE-INT-002
+    variante_vinculada_sku: PE-INT-002-CUB
+    todas_las_variantes:
+    - PE-INT-002-CUB
+    - PE-INT-002-MNG
+    - PE-INT-002-RES
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 50.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1150.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-003
+  nombre_receta: Receta Almíbar Simple
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar Simple
+    sku_base: PE-INT-003
+    variante_vinculada_sku: PE-INT-003-GAR
+    todas_las_variantes:
+    - PE-INT-003-GAR
+    - PE-INT-003-BOT
+    - PE-INT-003-BID
+  rendimiento:
+    cantidad: 4000.0
+    descripcion: 4000ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4000ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-004
+  nombre_receta: Receta Relleno de Carne Molida
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Carne Molida
+    sku_base: PE-INT-004
+    variante_vinculada_sku: PE-INT-004-CUB
+    todas_las_variantes:
+    - PE-INT-004-CUB
+    - PE-INT-004-MNG
+    - PE-INT-004-CTN
+  rendimiento:
+    cantidad: 6000.0
+    descripcion: 6000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1150.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 6000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-005
+  nombre_receta: Receta Masa de Pan Blanco
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan Blanco
+    sku_base: PE-INT-005
+    variante_vinculada_sku: PE-INT-005-STD
+    todas_las_variantes:
+    - PE-INT-005-STD
+    - PE-INT-005-MED
+    - PE-INT-005-IND
+  rendimiento:
+    cantidad: 10000.0
+    descripcion: 10000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 6000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 3200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 150.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 350.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 10000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-006
+  nombre_receta: Receta Crema Chantilly
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema Chantilly
+    sku_base: PE-INT-006
+    variante_vinculada_sku: PE-INT-006-CUB
+    todas_las_variantes:
+    - PE-INT-006-CUB
+    - PE-INT-006-MNG
+    - PE-INT-006-RES
+  rendimiento:
+    cantidad: 4000.0
+    descripcion: 4000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 30.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 470.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-007
+  nombre_receta: Receta Merengue Italiano
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Merengue Italiano
+    sku_base: PE-INT-007
+    variante_vinculada_sku: PE-INT-007-STD
+    todas_las_variantes:
+    - PE-INT-007-STD
+    - PE-INT-007-MED
+    - PE-INT-007-IND
+  rendimiento:
+    cantidad: 3000.0
+    descripcion: 3000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-4027
+    nombre_componente: Extracto de Limón Los Andes
+    cantidad: 20.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 480.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-008
+  nombre_receta: Receta Ganache de Chocolate
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Ganache de Chocolate
+    sku_base: PE-INT-008
+    variante_vinculada_sku: PE-INT-008-CUB
+    todas_las_variantes:
+    - PE-INT-008-CUB
+    - PE-INT-008-MNG
+    - PE-INT-008-RES
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-009
+  nombre_receta: Receta Masa de Bizcocho Vainilla
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Bizcocho Vainilla
+    sku_base: PE-INT-009
+    variante_vinculada_sku: PE-INT-009-STD
+    todas_las_variantes:
+    - PE-INT-009-STD
+    - PE-INT-009-MED
+    - PE-INT-009-IND
+  rendimiento:
+    cantidad: 8000.0
+    descripcion: 8000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 50.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 450.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-010
+  nombre_receta: Receta Relleno de Pollo Guisado
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Pollo Guisado
+    sku_base: PE-INT-010
+    variante_vinculada_sku: PE-INT-010-CUB
+    todas_las_variantes:
+    - PE-INT-010-CUB
+    - PE-INT-010-MNG
+    - PE-INT-010-CTN
+  rendimiento:
+    cantidad: 5500.0
+    descripcion: 5500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 80.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1220.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-011
+  nombre_receta: Receta Almíbar de Frutas Rojas
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar de Frutas Rojas
+    sku_base: PE-INT-011
+    variante_vinculada_sku: PE-INT-011-GAR
+    todas_las_variantes:
+    - PE-INT-011-GAR
+    - PE-INT-011-BOT
+    - PE-INT-011-BID
+  rendimiento:
+    cantidad: 3000.0
+    descripcion: 3000ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-CON-2738
+    nombre_componente: Pulpa de Mora Campestre
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3000ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-012
+  nombre_receta: Receta Base de Tarta Dulce
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Base de Tarta Dulce
+    sku_base: PE-INT-012
+    variante_vinculada_sku: PE-INT-012-STD
+    todas_las_variantes:
+    - PE-INT-012-STD
+    - PE-INT-012-MED
+    - PE-INT-012-IND
+  rendimiento:
+    cantidad: 8000.0
+    descripcion: 8000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 4500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 30.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 170.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-013
+  nombre_receta: Receta Crema de Limón
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Limón
+    sku_base: PE-INT-013
+    variante_vinculada_sku: PE-INT-013-CUB
+    todas_las_variantes:
+    - PE-INT-013-CUB
+    - PE-INT-013-MNG
+    - PE-INT-013-RES
+  rendimiento:
+    cantidad: 4000.0
+    descripcion: 4000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-1227
+    nombre_componente: Jugo de Limón Puro Los Andes
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-4027
+    nombre_componente: Extracto de Limón Los Andes
+    cantidad: 20.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 480.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-014
+  nombre_receta: Receta Masa de Pan Integral
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan Integral
+    sku_base: PE-INT-014
+    variante_vinculada_sku: PE-INT-014-STD
+    todas_las_variantes:
+    - PE-INT-014-STD
+    - PE-INT-014-MED
+    - PE-INT-014-IND
+  rendimiento:
+    cantidad: 9000.0
+    descripcion: 9000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 5000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6898
+    nombre_componente: Harina de Avena Nestlé
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 120.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 380.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 9000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-015
+  nombre_receta: Receta Relleno de Queso y Jamón
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Queso y Jamón
+    sku_base: PE-INT-015
+    variante_vinculada_sku: PE-INT-015-CUB
+    todas_las_variantes:
+    - PE-INT-015-CUB
+    - PE-INT-015-MNG
+    - PE-INT-015-CTN
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 1750.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-016
+  nombre_receta: Receta Glaseado Real
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Glaseado Real
+    sku_base: PE-INT-016
+    variante_vinculada_sku: PE-INT-016-STD
+    todas_las_variantes:
+    - PE-INT-016-STD
+    - PE-INT-016-MED
+    - PE-INT-016-IND
+  rendimiento:
+    cantidad: 3000.0
+    descripcion: 3000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-4027
+    nombre_componente: Extracto de Limón Los Andes
+    cantidad: 20.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 180.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-017
+  nombre_receta: Receta Masa de Galletas Mantequilla
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Galletas Mantequilla
+    sku_base: PE-INT-017
+    variante_vinculada_sku: PE-INT-017-STD
+    todas_las_variantes:
+    - PE-INT-017-STD
+    - PE-INT-017-MED
+    - PE-INT-017-IND
+  rendimiento:
+    cantidad: 7000.0
+    descripcion: 7000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 30.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 170.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 7000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-018
+  nombre_receta: Receta Crema de Café
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Café
+    sku_base: PE-INT-018
+    variante_vinculada_sku: PE-INT-018-CUB
+    todas_las_variantes:
+    - PE-INT-018-CUB
+    - PE-INT-018-MNG
+    - PE-INT-018-RES
+  rendimiento:
+    cantidad: 4500.0
+    descripcion: 4500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2119
+    nombre_componente: Extracto de Café Nestlé
+    cantidad: 300.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 700.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-019
+  nombre_receta: Receta Almíbar de Naranja
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar de Naranja
+    sku_base: PE-INT-019
+    variante_vinculada_sku: PE-INT-019-GAR
+    todas_las_variantes:
+    - PE-INT-019-GAR
+    - PE-INT-019-BOT
+    - PE-INT-019-BID
+  rendimiento:
+    cantidad: 3500.0
+    descripcion: 3500ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-9217
+    nombre_componente: Extracto de Naranja Campestre
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3500ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-020
+  nombre_receta: Receta Masa de Pan de Maíz
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan de Maíz
+    sku_base: PE-INT-020
+    variante_vinculada_sku: PE-INT-020-STD
+    todas_las_variantes:
+    - PE-INT-020-STD
+    - PE-INT-020-MED
+    - PE-INT-020-IND
+  rendimiento:
+    cantidad: 8000.0
+    descripcion: 8000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-021
+  nombre_receta: Receta Relleno de Atún
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Atún
+    sku_base: PE-INT-021
+    variante_vinculada_sku: PE-INT-021-CUB
+    todas_las_variantes:
+    - PE-INT-021-CUB
+    - PE-INT-021-MNG
+    - PE-INT-021-CTN
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1250.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-022
+  nombre_receta: Receta Crema de Chocolate Blanco
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Chocolate Blanco
+    sku_base: PE-INT-022
+    variante_vinculada_sku: PE-INT-022-CUB
+    todas_las_variantes:
+    - PE-INT-022-CUB
+    - PE-INT-022-MNG
+    - PE-INT-022-RES
+  rendimiento:
+    cantidad: 4500.0
+    descripcion: 4500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-023
+  nombre_receta: Receta Base de Galleta Triturada
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Base de Galleta Triturada
+    sku_base: PE-INT-023
+    variante_vinculada_sku: PE-INT-023-STD
+    todas_las_variantes:
+    - PE-INT-023-STD
+    - PE-INT-023-MED
+    - PE-INT-023-IND
+  rendimiento:
+    cantidad: 6000.0
+    descripcion: 6000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 6000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-024
+  nombre_receta: Receta Masa de Bizcocho Chocolate
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Bizcocho Chocolate
+    sku_base: PE-INT-024
+    variante_vinculada_sku: PE-INT-024-STD
+    todas_las_variantes:
+    - PE-INT-024-STD
+    - PE-INT-024-MED
+    - PE-INT-024-IND
+  rendimiento:
+    cantidad: 8500.0
+    descripcion: 8500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-025
+  nombre_receta: Receta Relleno de Vegetales Salteados
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Vegetales Salteados
+    sku_base: PE-INT-025
+    variante_vinculada_sku: PE-INT-025-CUB
+    todas_las_variantes:
+    - PE-INT-025-CUB
+    - PE-INT-025-MNG
+    - PE-INT-025-CTN
+  rendimiento:
+    cantidad: 4500.0
+    descripcion: 4500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-6617
+    nombre_componente: Auyama Cocida Mavesa
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-026
+  nombre_receta: Receta Crema de Dulce de Leche
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Dulce de Leche
+    sku_base: PE-INT-026
+    variante_vinculada_sku: PE-INT-026-CUB
+    todas_las_variantes:
+    - PE-INT-026-CUB
+    - PE-INT-026-MNG
+    - PE-INT-026-RES
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 30.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 170.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-027
+  nombre_receta: Receta Almíbar de Chocolate
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar de Chocolate
+    sku_base: PE-INT-027
+    variante_vinculada_sku: PE-INT-027-GAR
+    todas_las_variantes:
+    - PE-INT-027-GAR
+    - PE-INT-027-BOT
+    - PE-INT-027-BID
+  rendimiento:
+    cantidad: 3500.0
+    descripcion: 3500ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3500ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-028
+  nombre_receta: Receta Masa de Pan de Avena
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan de Avena
+    sku_base: PE-INT-028
+    variante_vinculada_sku: PE-INT-028-STD
+    todas_las_variantes:
+    - PE-INT-028-STD
+    - PE-INT-028-MED
+    - PE-INT-028-IND
+  rendimiento:
+    cantidad: 9500.0
+    descripcion: 9500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6898
+    nombre_componente: Harina de Avena Nestlé
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 150.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 350.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 9500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-029
+  nombre_receta: Receta Relleno de Jamón y Queso Crema
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Jamón y Queso Crema
+    sku_base: PE-INT-029
+    variante_vinculada_sku: PE-INT-029-CUB
+    todas_las_variantes:
+    - PE-INT-029-CUB
+    - PE-INT-029-MNG
+    - PE-INT-029-CTN
+  rendimiento:
+    cantidad: 5500.0
+    descripcion: 5500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 80.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 1620.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-030
+  nombre_receta: Receta Crema de Fresa
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Fresa
+    sku_base: PE-INT-030
+    variante_vinculada_sku: PE-INT-030-CUB
+    todas_las_variantes:
+    - PE-INT-030-CUB
+    - PE-INT-030-MNG
+    - PE-INT-030-RES
+  rendimiento:
+    cantidad: 4200.0
+    descripcion: 4200g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-CON-2738
+    nombre_componente: Pulpa de Mora Campestre
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4200g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-031
+  nombre_receta: Receta Base de Hojaldre Salado
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Base de Hojaldre Salado
+    sku_base: PE-INT-031
+    variante_vinculada_sku: PE-INT-031-STD
+    todas_las_variantes:
+    - PE-INT-031-STD
+    - PE-INT-031-MED
+    - PE-INT-031-IND
+  rendimiento:
+    cantidad: 9000.0
+    descripcion: 9000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 5000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 3000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 900.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 9000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-032
+  nombre_receta: Receta Glaseado de Chocolate
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Glaseado de Chocolate
+    sku_base: PE-INT-032
+    variante_vinculada_sku: PE-INT-032-STD
+    todas_las_variantes:
+    - PE-INT-032-STD
+    - PE-INT-032-MED
+    - PE-INT-032-IND
+  rendimiento:
+    cantidad: 4000.0
+    descripcion: 4000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-033
+  nombre_receta: Receta Masa de Bizcocho Zanahoria
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Bizcocho Zanahoria
+    sku_base: PE-INT-033
+    variante_vinculada_sku: PE-INT-033-STD
+    todas_las_variantes:
+    - PE-INT-033-STD
+    - PE-INT-033-MED
+    - PE-INT-033-IND
+  rendimiento:
+    cantidad: 8800.0
+    descripcion: 8800g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-3290
+    nombre_componente: Canela Molida Harina P.A.N.
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8800g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-034
+  nombre_receta: Receta Relleno de Carne Mechada
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Carne Mechada
+    sku_base: PE-INT-034
+    variante_vinculada_sku: PE-INT-034-CUB
+    todas_las_variantes:
+    - PE-INT-034-CUB
+    - PE-INT-034-MNG
+    - PE-INT-034-CTN
+  rendimiento:
+    cantidad: 6000.0
+    descripcion: 6000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4753
+    nombre_componente: Zanahoria Rallada Mavesa
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 6000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-035
+  nombre_receta: Receta Crema de Moka
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Moka
+    sku_base: PE-INT-035
+    variante_vinculada_sku: PE-INT-035-CUB
+    todas_las_variantes:
+    - PE-INT-035-CUB
+    - PE-INT-035-MNG
+    - PE-INT-035-RES
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2119
+    nombre_componente: Extracto de Café Nestlé
+    cantidad: 250.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1250.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-036
+  nombre_receta: Receta Almíbar de Limón
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar de Limón
+    sku_base: PE-INT-036
+    variante_vinculada_sku: PE-INT-036-GAR
+    todas_las_variantes:
+    - PE-INT-036-GAR
+    - PE-INT-036-BOT
+    - PE-INT-036-BID
+  rendimiento:
+    cantidad: 3200.0
+    descripcion: 3200ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-1227
+    nombre_componente: Jugo de Limón Puro Los Andes
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 900.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3200ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-037
+  nombre_receta: Receta Masa de Pan de Bono
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan de Bono
+    sku_base: PE-INT-037
+    variante_vinculada_sku: PE-INT-037-STD
+    todas_las_variantes:
+    - PE-INT-037-STD
+    - PE-INT-037-MED
+    - PE-INT-037-IND
+  rendimiento:
+    cantidad: 8000.0
+    descripcion: 8000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 8000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-038
+  nombre_receta: Receta Relleno de Espinaca y Queso
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Espinaca y Queso
+    sku_base: PE-INT-038
+    variante_vinculada_sku: PE-INT-038-CUB
+    todas_las_variantes:
+    - PE-INT-038-CUB
+    - PE-INT-038-MNG
+    - PE-INT-038-CTN
+  rendimiento:
+    cantidad: 5000.0
+    descripcion: 5000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-039
+  nombre_receta: Receta Crema de Pistacho
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Pistacho
+    sku_base: PE-INT-039
+    variante_vinculada_sku: PE-INT-039-CUB
+    todas_las_variantes:
+    - PE-INT-039-CUB
+    - PE-INT-039-MNG
+    - PE-INT-039-RES
+  rendimiento:
+    cantidad: 5500.0
+    descripcion: 5500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-1790
+    nombre_componente: Pistachos Pelados Fleischmann
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-040
+  nombre_receta: Receta Base de Tarta Salada
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Base de Tarta Salada
+    sku_base: PE-INT-040
+    variante_vinculada_sku: PE-INT-040-STD
+    todas_las_variantes:
+    - PE-INT-040-STD
+    - PE-INT-040-MED
+    - PE-INT-040-IND
+  rendimiento:
+    cantidad: 7500.0
+    descripcion: 7500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 4500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 7500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-041
+  nombre_receta: Receta Merengue Francés
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Merengue Francés
+    sku_base: PE-INT-041
+    variante_vinculada_sku: PE-INT-041-STD
+    todas_las_variantes:
+    - PE-INT-041-STD
+    - PE-INT-041-MED
+    - PE-INT-041-IND
+  rendimiento:
+    cantidad: 2500.0
+    descripcion: 2500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-4027
+    nombre_componente: Extracto de Limón Los Andes
+    cantidad: 20.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-7480
+    nombre_componente: Fécula de Maíz Campestre
+    cantidad: 480.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 2500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-042
+  nombre_receta: Receta Masa de Galletas Chocolate
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Galletas Chocolate
+    sku_base: PE-INT-042
+    variante_vinculada_sku: PE-INT-042-STD
+    todas_las_variantes:
+    - PE-INT-042-STD
+    - PE-INT-042-MED
+    - PE-INT-042-IND
+  rendimiento:
+    cantidad: 7500.0
+    descripcion: 7500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 7500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-043
+  nombre_receta: Receta Relleno de Champiñones
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Champiñones
+    sku_base: PE-INT-043
+    variante_vinculada_sku: PE-INT-043-CUB
+    todas_las_variantes:
+    - PE-INT-043-CUB
+    - PE-INT-043-MNG
+    - PE-INT-043-CTN
+  rendimiento:
+    cantidad: 5200.0
+    descripcion: 5200g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 2600.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5200g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-044
+  nombre_receta: Receta Crema de Coco
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Coco
+    sku_base: PE-INT-044
+    variante_vinculada_sku: PE-INT-044-CUB
+    todas_las_variantes:
+    - PE-INT-044-CUB
+    - PE-INT-044-MNG
+    - PE-INT-044-RES
+  rendimiento:
+    cantidad: 4500.0
+    descripcion: 4500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-FRU-7019
+    nombre_componente: Coco Rallado Puratos
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-045
+  nombre_receta: Receta Almíbar de Café
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Almíbar de Café
+    sku_base: PE-INT-045
+    variante_vinculada_sku: PE-INT-045-GAR
+    todas_las_variantes:
+    - PE-INT-045-GAR
+    - PE-INT-045-BOT
+    - PE-INT-045-BID
+  rendimiento:
+    cantidad: 3500.0
+    descripcion: 3500ml
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2119
+    nombre_componente: Extracto de Café Nestlé
+    cantidad: 400.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1600.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3500ml. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-046
+  nombre_receta: Receta Masa de Pan de Centeno
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa de Pan de Centeno
+    sku_base: PE-INT-046
+    variante_vinculada_sku: PE-INT-046-STD
+    todas_las_variantes:
+    - PE-INT-046-STD
+    - PE-INT-046-MED
+    - PE-INT-046-IND
+  rendimiento:
+    cantidad: 9000.0
+    descripcion: 9000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 5500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6898
+    nombre_componente: Harina de Avena Nestlé
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-8944
+    nombre_componente: Levadura Fresca Mavesa
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 9000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-047
+  nombre_receta: Receta Relleno de Pavo y Arándanos
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Relleno de Pavo y Arándanos
+    sku_base: PE-INT-047
+    variante_vinculada_sku: PE-INT-047-CUB
+    todas_las_variantes:
+    - PE-INT-047-CUB
+    - PE-INT-047-MNG
+    - PE-INT-047-CTN
+  rendimiento:
+    cantidad: 5500.0
+    descripcion: 5500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-MER-4564
+    nombre_componente: Mermelada de Guayaba Bakels
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-9982
+    nombre_componente: Harina de Maíz Amarillo Imperial
+    cantidad: 3500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-4903
+    nombre_componente: Agua Mineral 20L Robin Hood
+    cantidad: 700.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 5500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-048
+  nombre_receta: Receta Crema de Caramelo
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Crema de Caramelo
+    sku_base: PE-INT-048
+    variante_vinculada_sku: PE-INT-048-CUB
+    todas_las_variantes:
+    - PE-INT-048-CUB
+    - PE-INT-048-MNG
+    - PE-INT-048-RES
+  rendimiento:
+    cantidad: 4500.0
+    descripcion: 4500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2332
+    nombre_componente: Leche Condensada Mavesa
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 4500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-049
+  nombre_receta: Receta Base de Brownie
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Base de Brownie
+    sku_base: PE-INT-049
+    variante_vinculada_sku: PE-INT-049-STD
+    todas_las_variantes:
+    - PE-INT-049-STD
+    - PE-INT-049-MED
+    - PE-INT-049-IND
+  rendimiento:
+    cantidad: 7000.0
+    descripcion: 7000g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 2000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 7000g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-050
+  nombre_receta: Receta Glaseado de Vainilla
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Glaseado de Vainilla
+    sku_base: PE-INT-050
+    variante_vinculada_sku: PE-INT-050-STD
+    todas_las_variantes:
+    - PE-INT-050-STD
+    - PE-INT-050-MED
+    - PE-INT-050-IND
+  rendimiento:
+    cantidad: 3500.0
+    descripcion: 3500g
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 2500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 700.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-8199
+    nombre_componente: Vainilla Negra Puratos
+    cantidad: 50.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 250.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 3500g. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-INT-051
+  nombre_receta: Receta Masa Pan de Guayaba
+  tipo_producto: PRODUCTO_INTERMEDIO
+  producto_asociado:
+    nombre_producto: Masa Pan de Guayaba
+    sku_base: PE-INT-051
+    variante_vinculada_sku: PE-INT-051-STD
+    todas_las_variantes:
+    - PE-INT-051-STD
+    - PE-INT-051-MED
+    - PE-INT-051-IND
+  rendimiento:
+    cantidad: 11200.0
+    descripcion: 11200g (Batch para 20 panes)
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-0001
+    nombre_componente: Harina de Trigo Panadera
+    cantidad: 5680.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-BEB-0001
+    nombre_componente: Agua Potable
+    cantidad: 3300.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-0001
+    nombre_componente: Levadura Instantánea
+    cantidad: 120.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-0001
+    nombre_componente: Azúcar Blanca
+    cantidad: 560.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-0002
+    nombre_componente: Sal Refinada
+    cantidad: 120.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-0001
+    nombre_componente: Mantequilla Sin Sal
+    cantidad: 560.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-0003
+    nombre_componente: Leche en Polvo Completa
+    cantidad: 280.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-0002
+    nombre_componente: Huevo Fresco
+    cantidad: 10.0
+    unidad: ud
+    unidad_medida_id: 6
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 11200g (Batch para 20 panes). Generado automáticamente desde
+    Recetas.md y catálogo de productos.'
+- sku_receta: PE-FIN-001
+  nombre_receta: Receta Croissant de Chocolate
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant de Chocolate
+    sku_base: PE-FIN-001
+    variante_vinculada_sku: PE-FIN-001-IND
+    todas_las_variantes:
+    - PE-FIN-001-IND
+    - PE-FIN-001-PK2
+    - PE-FIN-001-CJ4
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-008
+    sku_variante_intermedio: PE-INT-008-CUB
+    nombre_componente: Ganache de Chocolate
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-2298
+    nombre_componente: Lluvia de Chocolate Bakels
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-008
+    nombre_producto: Ganache de Chocolate
+    sku_variante: PE-INT-008-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-002
+  nombre_receta: Receta Tarta de Limón
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Limón
+    sku_base: PE-FIN-002
+    variante_vinculada_sku: PE-FIN-002-IND
+    todas_las_variantes:
+    - PE-FIN-002-IND
+    - PE-FIN-002-MED
+    - PE-FIN-002-GRA
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-012
+    sku_variante_intermedio: PE-INT-012-STD
+    nombre_componente: Base de Tarta Dulce
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-013
+    sku_variante_intermedio: PE-INT-013-CUB
+    nombre_componente: Crema de Limón
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-007
+    sku_variante_intermedio: PE-INT-007-STD
+    nombre_componente: Merengue Italiano
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-012
+    nombre_producto: Base de Tarta Dulce
+    sku_variante: PE-INT-012-STD
+  - receta_subreceta_sku: PE-INT-013
+    nombre_producto: Crema de Limón
+    sku_variante: PE-INT-013-CUB
+  - receta_subreceta_sku: PE-INT-007
+    nombre_producto: Merengue Italiano
+    sku_variante: PE-INT-007-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-003
+  nombre_receta: Receta Pan Gallego Artesanal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Gallego Artesanal
+    sku_base: PE-FIN-003
+    variante_vinculada_sku: PE-FIN-003-EST
+    todas_las_variantes:
+    - PE-FIN-003-EST
+    - PE-FIN-003-FAM
+    - PE-FIN-003-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-005
+    sku_variante_intermedio: PE-INT-005-STD
+    nombre_componente: Masa de Pan Blanco
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-005
+    nombre_producto: Masa de Pan Blanco
+    sku_variante: PE-INT-005-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-004
+  nombre_receta: Receta Empanada de Carne
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Carne
+    sku_base: PE-FIN-004
+    variante_vinculada_sku: PE-FIN-004-IND
+    todas_las_variantes:
+    - PE-FIN-004-IND
+    - PE-FIN-004-CMB
+    - PE-FIN-004-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-004
+    sku_variante_intermedio: PE-INT-004-CUB
+    nombre_componente: Relleno de Carne Molida
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-004
+    nombre_producto: Relleno de Carne Molida
+    sku_variante: PE-INT-004-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-005
+  nombre_receta: Receta Canilla de Crema
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Canilla de Crema
+    sku_base: PE-FIN-005
+    variante_vinculada_sku: PE-FIN-005-IND
+    todas_las_variantes:
+    - PE-FIN-005-IND
+    - PE-FIN-005-PK2
+    - PE-FIN-005-CJ4
+  rendimiento:
+    cantidad: 12.0
+    descripcion: 12 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 900.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-002
+    sku_variante_intermedio: PE-INT-002-CUB
+    nombre_componente: Crema Pastelera Vainilla
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-002
+    nombre_producto: Crema Pastelera Vainilla
+    sku_variante: PE-INT-002-CUB
+  notas: 'Rendimiento: 12 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-006
+  nombre_receta: Receta Torta Selva Negra XL
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Torta Selva Negra XL
+    sku_base: PE-FIN-006
+    variante_vinculada_sku: PE-FIN-006-IND
+    todas_las_variantes:
+    - PE-FIN-006-IND
+    - PE-FIN-006-MED
+    - PE-FIN-006-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta (8 porciones)
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-024
+    sku_variante_intermedio: PE-INT-024-STD
+    nombre_componente: Masa de Bizcocho Chocolate
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-008
+    sku_variante_intermedio: PE-INT-008-CUB
+    nombre_componente: Ganache de Chocolate
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-006
+    sku_variante_intermedio: PE-INT-006-CUB
+    nombre_componente: Crema Chantilly
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-027
+    sku_variante_intermedio: PE-INT-027-GAR
+    nombre_componente: Almíbar de Chocolate
+    cantidad: 200.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-FRU-9122
+    nombre_componente: Cerezas Marrasquino Avelina
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-024
+    nombre_producto: Masa de Bizcocho Chocolate
+    sku_variante: PE-INT-024-STD
+  - receta_subreceta_sku: PE-INT-008
+    nombre_producto: Ganache de Chocolate
+    sku_variante: PE-INT-008-CUB
+  - receta_subreceta_sku: PE-INT-006
+    nombre_producto: Crema Chantilly
+    sku_variante: PE-INT-006-CUB
+  - receta_subreceta_sku: PE-INT-027
+    nombre_producto: Almíbar de Chocolate
+    sku_variante: PE-INT-027-GAR
+  notas: 'Rendimiento: 1 torta (8 porciones). Generado automáticamente desde Recetas.md
+    y catálogo de productos.'
+- sku_receta: PE-FIN-007
+  nombre_receta: Receta Pastelito de Pollo
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastelito de Pollo
+    sku_base: PE-FIN-007
+    variante_vinculada_sku: PE-FIN-007-IND
+    todas_las_variantes:
+    - PE-FIN-007-IND
+    - PE-FIN-007-PK3
+    - PE-FIN-007-BD6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-010
+    sku_variante_intermedio: PE-INT-010-CUB
+    nombre_componente: Relleno de Pollo Guisado
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-010
+    nombre_producto: Relleno de Pollo Guisado
+    sku_variante: PE-INT-010-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-008
+  nombre_receta: Receta Galletas de Mantequilla
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Galletas de Mantequilla
+    sku_base: PE-FIN-008
+    variante_vinculada_sku: PE-FIN-008-PK6
+    todas_las_variantes:
+    - PE-FIN-008-PK6
+    - PE-FIN-008-PK12
+    - PE-FIN-008-LT24
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 paquetes (60 galletas)
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-017
+    sku_variante_intermedio: PE-INT-017-STD
+    nombre_componente: Masa de Galletas Mantequilla
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-017
+    nombre_producto: Masa de Galletas Mantequilla
+    sku_variante: PE-INT-017-STD
+  notas: 'Rendimiento: 10 paquetes (60 galletas). Generado automáticamente desde Recetas.md
+    y catálogo de productos.'
+- sku_receta: PE-FIN-009
+  nombre_receta: Receta Pan Integral de Semillas
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Integral de Semillas
+    sku_base: PE-FIN-009
+    variante_vinculada_sku: PE-FIN-009-EST
+    todas_las_variantes:
+    - PE-FIN-009-EST
+    - PE-FIN-009-FAM
+    - PE-FIN-009-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-014
+    sku_variante_intermedio: PE-INT-014-STD
+    nombre_componente: Masa de Pan Integral
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-8246
+    nombre_componente: Granola Artesanal Los Andes
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-014
+    nombre_producto: Masa de Pan Integral
+    sku_variante: PE-INT-014-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-010
+  nombre_receta: Receta Pastelito de Queso y Jamón
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastelito de Queso y Jamón
+    sku_base: PE-FIN-010
+    variante_vinculada_sku: PE-FIN-010-IND
+    todas_las_variantes:
+    - PE-FIN-010-IND
+    - PE-FIN-010-PK3
+    - PE-FIN-010-BD6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-015
+    sku_variante_intermedio: PE-INT-015-CUB
+    nombre_componente: Relleno de Queso y Jamón
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-015
+    nombre_producto: Relleno de Queso y Jamón
+    sku_variante: PE-INT-015-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-011
+  nombre_receta: Receta Tarta de Fresa
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Fresa
+    sku_base: PE-FIN-011
+    variante_vinculada_sku: PE-FIN-011-IND
+    todas_las_variantes:
+    - PE-FIN-011-IND
+    - PE-FIN-011-MED
+    - PE-FIN-011-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-009
+    sku_variante_intermedio: PE-INT-009-STD
+    nombre_componente: Masa de Bizcocho Vainilla
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-006
+    sku_variante_intermedio: PE-INT-006-CUB
+    nombre_componente: Crema Chantilly
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-030
+    sku_variante_intermedio: PE-INT-030-CUB
+    nombre_componente: Crema de Fresa
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-003
+    sku_variante_intermedio: PE-INT-003-GAR
+    nombre_componente: Almíbar Simple
+    cantidad: 200.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-CON-2738
+    nombre_componente: Pulpa de Mora Campestre
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-009
+    nombre_producto: Masa de Bizcocho Vainilla
+    sku_variante: PE-INT-009-STD
+  - receta_subreceta_sku: PE-INT-006
+    nombre_producto: Crema Chantilly
+    sku_variante: PE-INT-006-CUB
+  - receta_subreceta_sku: PE-INT-030
+    nombre_producto: Crema de Fresa
+    sku_variante: PE-INT-030-CUB
+  - receta_subreceta_sku: PE-INT-003
+    nombre_producto: Almíbar Simple
+    sku_variante: PE-INT-003-GAR
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-012
+  nombre_receta: Receta Croissant Simple
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant Simple
+    sku_base: PE-FIN-012
+    variante_vinculada_sku: PE-FIN-012-IND
+    todas_las_variantes:
+    - PE-FIN-012-IND
+    - PE-FIN-012-PK2
+    - PE-FIN-012-CJ4
+  rendimiento:
+    cantidad: 12.0
+    descripcion: 12 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  notas: 'Rendimiento: 12 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-013
+  nombre_receta: Receta Empanada de Atún
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Atún
+    sku_base: PE-FIN-013
+    variante_vinculada_sku: PE-FIN-013-IND
+    todas_las_variantes:
+    - PE-FIN-013-IND
+    - PE-FIN-013-CMB
+    - PE-FIN-013-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-021
+    sku_variante_intermedio: PE-INT-021-CUB
+    nombre_componente: Relleno de Atún
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-021
+    nombre_producto: Relleno de Atún
+    sku_variante: PE-INT-021-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-014
+  nombre_receta: Receta Pan de Maíz Dulce
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan de Maíz Dulce
+    sku_base: PE-FIN-014
+    variante_vinculada_sku: PE-FIN-014-EST
+    todas_las_variantes:
+    - PE-FIN-014-EST
+    - PE-FIN-014-FAM
+    - PE-FIN-014-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-020
+    sku_variante_intermedio: PE-INT-020-STD
+    nombre_componente: Masa de Pan de Maíz
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 150.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-020
+    nombre_producto: Masa de Pan de Maíz
+    sku_variante: PE-INT-020-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-015
+  nombre_receta: Receta Galletas de Chocolate
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Galletas de Chocolate
+    sku_base: PE-FIN-015
+    variante_vinculada_sku: PE-FIN-015-PK6
+    todas_las_variantes:
+    - PE-FIN-015-PK6
+    - PE-FIN-015-PK12
+    - PE-FIN-015-LT24
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 paquetes
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-042
+    sku_variante_intermedio: PE-INT-042-STD
+    nombre_componente: Masa de Galletas Chocolate
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-3350
+    nombre_componente: Chispas de Chocolate 50% Avelina
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-042
+    nombre_producto: Masa de Galletas Chocolate
+    sku_variante: PE-INT-042-STD
+  notas: 'Rendimiento: 10 paquetes. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-016
+  nombre_receta: Receta Pastel de Zanahoria
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastel de Zanahoria
+    sku_base: PE-FIN-016
+    variante_vinculada_sku: PE-FIN-016-IND
+    todas_las_variantes:
+    - PE-FIN-016-IND
+    - PE-FIN-016-MED
+    - PE-FIN-016-GRA
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-033
+    sku_variante_intermedio: PE-INT-033-STD
+    nombre_componente: Masa de Bizcocho Zanahoria
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-002
+    sku_variante_intermedio: PE-INT-002-CUB
+    nombre_componente: Crema Pastelera Vainilla
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-8641
+    nombre_componente: Nueces Mariposa Primicia
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-033
+    nombre_producto: Masa de Bizcocho Zanahoria
+    sku_variante: PE-INT-033-STD
+  - receta_subreceta_sku: PE-INT-002
+    nombre_producto: Crema Pastelera Vainilla
+    sku_variante: PE-INT-002-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-017
+  nombre_receta: Receta Empanada Vegetariana
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada Vegetariana
+    sku_base: PE-FIN-017
+    variante_vinculada_sku: PE-FIN-017-IND
+    todas_las_variantes:
+    - PE-FIN-017-IND
+    - PE-FIN-017-CMB
+    - PE-FIN-017-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-025
+    sku_variante_intermedio: PE-INT-025-CUB
+    nombre_componente: Relleno de Vegetales Salteados
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-025
+    nombre_producto: Relleno de Vegetales Salteados
+    sku_variante: PE-INT-025-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-018
+  nombre_receta: Receta Pan de Avena y Miel
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan de Avena y Miel
+    sku_base: PE-FIN-018
+    variante_vinculada_sku: PE-FIN-018-EST
+    todas_las_variantes:
+    - PE-FIN-018-EST
+    - PE-FIN-018-FAM
+    - PE-FIN-018-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-028
+    sku_variante_intermedio: PE-INT-028-STD
+    nombre_componente: Masa de Pan de Avena
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-028
+    nombre_producto: Masa de Pan de Avena
+    sku_variante: PE-INT-028-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-019
+  nombre_receta: Receta Tarta de Chocolate
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Chocolate
+    sku_base: PE-FIN-019
+    variante_vinculada_sku: PE-FIN-019-IND
+    todas_las_variantes:
+    - PE-FIN-019-IND
+    - PE-FIN-019-MED
+    - PE-FIN-019-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-024
+    sku_variante_intermedio: PE-INT-024-STD
+    nombre_componente: Masa de Bizcocho Chocolate
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-008
+    sku_variante_intermedio: PE-INT-008-CUB
+    nombre_componente: Ganache de Chocolate
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-032
+    sku_variante_intermedio: PE-INT-032-STD
+    nombre_componente: Glaseado de Chocolate
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-027
+    sku_variante_intermedio: PE-INT-027-GAR
+    nombre_componente: Almíbar de Chocolate
+    cantidad: 150.0
+    unidad: ml
+    unidad_medida_id: 5
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-024
+    nombre_producto: Masa de Bizcocho Chocolate
+    sku_variante: PE-INT-024-STD
+  - receta_subreceta_sku: PE-INT-008
+    nombre_producto: Ganache de Chocolate
+    sku_variante: PE-INT-008-CUB
+  - receta_subreceta_sku: PE-INT-032
+    nombre_producto: Glaseado de Chocolate
+    sku_variante: PE-INT-032-STD
+  - receta_subreceta_sku: PE-INT-027
+    nombre_producto: Almíbar de Chocolate
+    sku_variante: PE-INT-027-GAR
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-020
+  nombre_receta: Receta Pastelito de Carne Mechada
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastelito de Carne Mechada
+    sku_base: PE-FIN-020
+    variante_vinculada_sku: PE-FIN-020-IND
+    todas_las_variantes:
+    - PE-FIN-020-IND
+    - PE-FIN-020-PK3
+    - PE-FIN-020-BD6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-034
+    sku_variante_intermedio: PE-INT-034-CUB
+    nombre_componente: Relleno de Carne Mechada
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-034
+    nombre_producto: Relleno de Carne Mechada
+    sku_variante: PE-INT-034-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-021
+  nombre_receta: Receta Café Latte Artesanal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Café Latte Artesanal
+    sku_base: PE-FIN-021
+    variante_vinculada_sku: PE-FIN-021-REG
+    todas_las_variantes:
+    - PE-FIN-021-REG
+    - PE-FIN-021-GRA
+    - PE-FIN-021-FAM
+  rendimiento:
+    cantidad: 2000.0
+    descripcion: 2000ml (aprox 8 porciones)
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2119
+    nombre_componente: Extracto de Café Nestlé
+    cantidad: 400.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 2000ml (aprox 8 porciones). Generado automáticamente desde
+    Recetas.md y catálogo de productos.'
+- sku_receta: PE-FIN-022
+  nombre_receta: Receta Croissant de Jamón y Queso
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant de Jamón y Queso
+    sku_base: PE-FIN-022
+    variante_vinculada_sku: PE-FIN-022-IND
+    todas_las_variantes:
+    - PE-FIN-022-IND
+    - PE-FIN-022-PK3
+    - PE-FIN-022-BD6
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-031
+    sku_variante_intermedio: PE-INT-031-STD
+    nombre_componente: Base de Hojaldre Salado
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-015
+    sku_variante_intermedio: PE-INT-015-CUB
+    nombre_componente: Relleno de Queso y Jamón
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-031
+    nombre_producto: Base de Hojaldre Salado
+    sku_variante: PE-INT-031-STD
+  - receta_subreceta_sku: PE-INT-015
+    nombre_producto: Relleno de Queso y Jamón
+    sku_variante: PE-INT-015-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-023
+  nombre_receta: Receta Galletas Decoradas Navideñas
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Galletas Decoradas Navideñas
+    sku_base: PE-FIN-023
+    variante_vinculada_sku: PE-FIN-023-PK6
+    todas_las_variantes:
+    - PE-FIN-023-PK6
+    - PE-FIN-023-PK12
+    - PE-FIN-023-LT24
+  rendimiento:
+    cantidad: 15.0
+    descripcion: 15 paquetes
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-017
+    sku_variante_intermedio: PE-INT-017-STD
+    nombre_componente: Masa de Galletas Mantequilla
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-016
+    sku_variante_intermedio: PE-INT-016-STD
+    nombre_componente: Glaseado Real
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-3602
+    nombre_componente: Lluvia de Colores Puratos
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-017
+    nombre_producto: Masa de Galletas Mantequilla
+    sku_variante: PE-INT-017-STD
+  - receta_subreceta_sku: PE-INT-016
+    nombre_producto: Glaseado Real
+    sku_variante: PE-INT-016-STD
+  notas: 'Rendimiento: 15 paquetes. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-024
+  nombre_receta: Receta Pan de Centeno Artesanal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan de Centeno Artesanal
+    sku_base: PE-FIN-024
+    variante_vinculada_sku: PE-FIN-024-EST
+    todas_las_variantes:
+    - PE-FIN-024-EST
+    - PE-FIN-024-FAM
+    - PE-FIN-024-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-046
+    sku_variante_intermedio: PE-INT-046-STD
+    nombre_componente: Masa de Pan de Centeno
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6561
+    nombre_componente: Harina Integral Fina Campestre
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-046
+    nombre_producto: Masa de Pan de Centeno
+    sku_variante: PE-INT-046-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-025
+  nombre_receta: Receta Empanada de Espinaca y Queso
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Espinaca y Queso
+    sku_base: PE-FIN-025
+    variante_vinculada_sku: PE-FIN-025-IND
+    todas_las_variantes:
+    - PE-FIN-025-IND
+    - PE-FIN-025-CMB
+    - PE-FIN-025-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-038
+    sku_variante_intermedio: PE-INT-038-CUB
+    nombre_componente: Relleno de Espinaca y Queso
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-038
+    nombre_producto: Relleno de Espinaca y Queso
+    sku_variante: PE-INT-038-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-026
+  nombre_receta: Receta Tarta de Dulce de Leche
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Dulce de Leche
+    sku_base: PE-FIN-026
+    variante_vinculada_sku: PE-FIN-026-IND
+    todas_las_variantes:
+    - PE-FIN-026-IND
+    - PE-FIN-026-MED
+    - PE-FIN-026-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-009
+    sku_variante_intermedio: PE-INT-009-STD
+    nombre_componente: Masa de Bizcocho Vainilla
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-026
+    sku_variante_intermedio: PE-INT-026-CUB
+    nombre_componente: Crema de Dulce de Leche
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-007
+    sku_variante_intermedio: PE-INT-007-STD
+    nombre_componente: Merengue Italiano
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-003
+    sku_variante_intermedio: PE-INT-003-GAR
+    nombre_componente: Almíbar Simple
+    cantidad: 200.0
+    unidad: ml
+    unidad_medida_id: 5
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-009
+    nombre_producto: Masa de Bizcocho Vainilla
+    sku_variante: PE-INT-009-STD
+  - receta_subreceta_sku: PE-INT-026
+    nombre_producto: Crema de Dulce de Leche
+    sku_variante: PE-INT-026-CUB
+  - receta_subreceta_sku: PE-INT-007
+    nombre_producto: Merengue Italiano
+    sku_variante: PE-INT-007-STD
+  - receta_subreceta_sku: PE-INT-003
+    nombre_producto: Almíbar Simple
+    sku_variante: PE-INT-003-GAR
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-027
+  nombre_receta: Receta Pastelito de Champiñones
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastelito de Champiñones
+    sku_base: PE-FIN-027
+    variante_vinculada_sku: PE-FIN-027-IND
+    todas_las_variantes:
+    - PE-FIN-027-IND
+    - PE-FIN-027-PK3
+    - PE-FIN-027-BD6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-031
+    sku_variante_intermedio: PE-INT-031-STD
+    nombre_componente: Base de Hojaldre Salado
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-043
+    sku_variante_intermedio: PE-INT-043-CUB
+    nombre_componente: Relleno de Champiñones
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-031
+    nombre_producto: Base de Hojaldre Salado
+    sku_variante: PE-INT-031-STD
+  - receta_subreceta_sku: PE-INT-043
+    nombre_producto: Relleno de Champiñones
+    sku_variante: PE-INT-043-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-028
+  nombre_receta: Receta Pan de Bono
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan de Bono
+    sku_base: PE-FIN-028
+    variante_vinculada_sku: PE-FIN-028-PK4
+    todas_las_variantes:
+    - PE-FIN-028-PK4
+    - PE-FIN-028-PK8
+    - PE-FIN-028-DC12
+  rendimiento:
+    cantidad: 15.0
+    descripcion: 15 paquetes
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-037
+    sku_variante_intermedio: PE-INT-037-STD
+    nombre_componente: Masa de Pan de Bono
+    cantidad: 1500.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-037
+    nombre_producto: Masa de Pan de Bono
+    sku_variante: PE-INT-037-STD
+  notas: 'Rendimiento: 15 paquetes. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-029
+  nombre_receta: Receta Brownie de Chocolate
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Brownie de Chocolate
+    sku_base: PE-FIN-029
+    variante_vinculada_sku: PE-FIN-029-IND
+    todas_las_variantes:
+    - PE-FIN-029-IND
+    - PE-FIN-029-CJ4
+    - PE-FIN-029-BD8
+  rendimiento:
+    cantidad: 12.0
+    descripcion: 12 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-049
+    sku_variante_intermedio: PE-INT-049-STD
+    nombre_componente: Base de Brownie
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-8641
+    nombre_componente: Nueces Mariposa Primicia
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-3350
+    nombre_componente: Chispas de Chocolate 50% Avelina
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-049
+    nombre_producto: Base de Brownie
+    sku_variante: PE-INT-049-STD
+  notas: 'Rendimiento: 12 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-030
+  nombre_receta: Receta Croissant de Almendras
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant de Almendras
+    sku_base: PE-FIN-030
+    variante_vinculada_sku: PE-FIN-030-IND
+    todas_las_variantes:
+    - PE-FIN-030-IND
+    - PE-FIN-030-PK2
+    - PE-FIN-030-CJ4
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6376
+    nombre_componente: Harina de Almendras Nestlé
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 150.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2813
+    nombre_componente: Esencia de Almendra Puratos
+    cantidad: 30.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-031
+  nombre_receta: Receta Tarta de Coco
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Coco
+    sku_base: PE-FIN-031
+    variante_vinculada_sku: PE-FIN-031-IND
+    todas_las_variantes:
+    - PE-FIN-031-IND
+    - PE-FIN-031-MED
+    - PE-FIN-031-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-023
+    sku_variante_intermedio: PE-INT-023-STD
+    nombre_componente: Base de Galleta Triturada
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-044
+    sku_variante_intermedio: PE-INT-044-CUB
+    nombre_componente: Crema de Coco
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-FRU-7019
+    nombre_componente: Coco Rallado Puratos
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-023
+    nombre_producto: Base de Galleta Triturada
+    sku_variante: PE-INT-023-STD
+  - receta_subreceta_sku: PE-INT-044
+    nombre_producto: Crema de Coco
+    sku_variante: PE-INT-044-CUB
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-032
+  nombre_receta: Receta Empanada de Pavo y Arándanos
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Pavo y Arándanos
+    sku_base: PE-FIN-032
+    variante_vinculada_sku: PE-FIN-032-IND
+    todas_las_variantes:
+    - PE-FIN-032-IND
+    - PE-FIN-032-CMB
+    - PE-FIN-032-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-047
+    sku_variante_intermedio: PE-INT-047-CUB
+    nombre_componente: Relleno de Pavo y Arándanos
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-047
+    nombre_producto: Relleno de Pavo y Arándanos
+    sku_variante: PE-INT-047-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-033
+  nombre_receta: Receta Pan Artesanal Multicereal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Artesanal Multicereal
+    sku_base: PE-FIN-033
+    variante_vinculada_sku: PE-FIN-033-EST
+    todas_las_variantes:
+    - PE-FIN-033-EST
+    - PE-FIN-033-FAM
+    - PE-FIN-033-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-014
+    sku_variante_intermedio: PE-INT-014-STD
+    nombre_componente: Masa de Pan Integral
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-8246
+    nombre_componente: Granola Artesanal Los Andes
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6898
+    nombre_componente: Harina de Avena Nestlé
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-014
+    nombre_producto: Masa de Pan Integral
+    sku_variante: PE-INT-014-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-034
+  nombre_receta: Receta Galletas de Avena
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Galletas de Avena
+    sku_base: PE-FIN-034
+    variante_vinculada_sku: PE-FIN-034-PK6
+    todas_las_variantes:
+    - PE-FIN-034-PK6
+    - PE-FIN-034-PK12
+    - PE-FIN-034-LT24
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 paquetes
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-017
+    sku_variante_intermedio: PE-INT-017-STD
+    nombre_componente: Masa de Galletas Mantequilla
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6898
+    nombre_componente: Harina de Avena Nestlé
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-9035
+    nombre_componente: Pasas de Corinto Kraft
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-017
+    nombre_producto: Masa de Galletas Mantequilla
+    sku_variante: PE-INT-017-STD
+  notas: 'Rendimiento: 10 paquetes. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-035
+  nombre_receta: Receta Pastel de Café
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastel de Café
+    sku_base: PE-FIN-035
+    variante_vinculada_sku: PE-FIN-035-IND
+    todas_las_variantes:
+    - PE-FIN-035-IND
+    - PE-FIN-035-MED
+    - PE-FIN-035-GRA
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-009
+    sku_variante_intermedio: PE-INT-009-STD
+    nombre_componente: Masa de Bizcocho Vainilla
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-018
+    sku_variante_intermedio: PE-INT-018-CUB
+    nombre_componente: Crema de Café
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-045
+    sku_variante_intermedio: PE-INT-045-GAR
+    nombre_componente: Almíbar de Café
+    cantidad: 150.0
+    unidad: ml
+    unidad_medida_id: 5
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-009
+    nombre_producto: Masa de Bizcocho Vainilla
+    sku_variante: PE-INT-009-STD
+  - receta_subreceta_sku: PE-INT-018
+    nombre_producto: Crema de Café
+    sku_variante: PE-INT-018-CUB
+  - receta_subreceta_sku: PE-INT-045
+    nombre_producto: Almíbar de Café
+    sku_variante: PE-INT-045-GAR
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-036
+  nombre_receta: Receta Quiche de Vegetales
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Quiche de Vegetales
+    sku_base: PE-FIN-036
+    variante_vinculada_sku: PE-FIN-036-IND
+    todas_las_variantes:
+    - PE-FIN-036-IND
+    - PE-FIN-036-ENT
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-040
+    sku_variante_intermedio: PE-INT-040-STD
+    nombre_componente: Base de Tarta Salada
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-025
+    sku_variante_intermedio: PE-INT-025-CUB
+    nombre_componente: Relleno de Vegetales Salteados
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-040
+    nombre_producto: Base de Tarta Salada
+    sku_variante: PE-INT-040-STD
+  - receta_subreceta_sku: PE-INT-025
+    nombre_producto: Relleno de Vegetales Salteados
+    sku_variante: PE-INT-025-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-037
+  nombre_receta: Receta Tarta de Pistacho
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Pistacho
+    sku_base: PE-FIN-037
+    variante_vinculada_sku: PE-FIN-037-IND
+    todas_las_variantes:
+    - PE-FIN-037-IND
+    - PE-FIN-037-MED
+    - PE-FIN-037-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-012
+    sku_variante_intermedio: PE-INT-012-STD
+    nombre_componente: Base de Tarta Dulce
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-039
+    sku_variante_intermedio: PE-INT-039-CUB
+    nombre_componente: Crema de Pistacho
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-1790
+    nombre_componente: Pistachos Pelados Fleischmann
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-012
+    nombre_producto: Base de Tarta Dulce
+    sku_variante: PE-INT-012-STD
+  - receta_subreceta_sku: PE-INT-039
+    nombre_producto: Crema de Pistacho
+    sku_variante: PE-INT-039-CUB
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-038
+  nombre_receta: Receta Croissant de Dulce de Leche
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant de Dulce de Leche
+    sku_base: PE-FIN-038
+    variante_vinculada_sku: PE-FIN-038-IND
+    todas_las_variantes:
+    - PE-FIN-038-IND
+    - PE-FIN-038-PK2
+    - PE-FIN-038-CJ4
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-026
+    sku_variante_intermedio: PE-INT-026-CUB
+    nombre_componente: Crema de Dulce de Leche
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-026
+    nombre_producto: Crema de Dulce de Leche
+    sku_variante: PE-INT-026-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-039
+  nombre_receta: Receta Pan Rústico de Aceitunas
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Rústico de Aceitunas
+    sku_base: PE-FIN-039
+    variante_vinculada_sku: PE-FIN-039-EST
+    todas_las_variantes:
+    - PE-FIN-039-EST
+    - PE-FIN-039-FAM
+    - PE-FIN-039-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-005
+    sku_variante_intermedio: PE-INT-005-STD
+    nombre_componente: Masa de Pan Blanco
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-005
+    nombre_producto: Masa de Pan Blanco
+    sku_variante: PE-INT-005-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-040
+  nombre_receta: Receta Empanada de Queso Crema
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Queso Crema
+    sku_base: PE-FIN-040
+    variante_vinculada_sku: PE-FIN-040-IND
+    todas_las_variantes:
+    - PE-FIN-040-IND
+    - PE-FIN-040-CMB
+    - PE-FIN-040-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-6832
+    nombre_componente: Queso Crema Alpina
+    cantidad: 600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-041
+  nombre_receta: Receta Tarta de Moka
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Moka
+    sku_base: PE-FIN-041
+    variante_vinculada_sku: PE-FIN-041-IND
+    todas_las_variantes:
+    - PE-FIN-041-IND
+    - PE-FIN-041-MED
+    - PE-FIN-041-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-024
+    sku_variante_intermedio: PE-INT-024-STD
+    nombre_componente: Masa de Bizcocho Chocolate
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-035
+    sku_variante_intermedio: PE-INT-035-CUB
+    nombre_componente: Crema de Moka
+    cantidad: 900.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-045
+    sku_variante_intermedio: PE-INT-045-GAR
+    nombre_componente: Almíbar de Café
+    cantidad: 200.0
+    unidad: ml
+    unidad_medida_id: 5
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-024
+    nombre_producto: Masa de Bizcocho Chocolate
+    sku_variante: PE-INT-024-STD
+  - receta_subreceta_sku: PE-INT-035
+    nombre_producto: Crema de Moka
+    sku_variante: PE-INT-035-CUB
+  - receta_subreceta_sku: PE-INT-045
+    nombre_producto: Almíbar de Café
+    sku_variante: PE-INT-045-GAR
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-042
+  nombre_receta: Receta Pastelito de Vegetales
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pastelito de Vegetales
+    sku_base: PE-FIN-042
+    variante_vinculada_sku: PE-FIN-042-IND
+    todas_las_variantes:
+    - PE-FIN-042-IND
+    - PE-FIN-042-PK3
+    - PE-FIN-042-BD6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-025
+    sku_variante_intermedio: PE-INT-025-CUB
+    nombre_componente: Relleno de Vegetales Salteados
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-025
+    nombre_producto: Relleno de Vegetales Salteados
+    sku_variante: PE-INT-025-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-043
+  nombre_receta: Receta Galletas de Jengibre
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Galletas de Jengibre
+    sku_base: PE-FIN-043
+    variante_vinculada_sku: PE-FIN-043-PK6
+    todas_las_variantes:
+    - PE-FIN-043-PK6
+    - PE-FIN-043-PK12
+    - PE-FIN-043-LT24
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 paquetes
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-017
+    sku_variante_intermedio: PE-INT-017-STD
+    nombre_componente: Masa de Galletas Mantequilla
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-9321
+    nombre_componente: Jengibre Fresco Nestlé
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-3290
+    nombre_componente: Canela Molida Harina P.A.N.
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-017
+    nombre_producto: Masa de Galletas Mantequilla
+    sku_variante: PE-INT-017-STD
+  notas: 'Rendimiento: 10 paquetes. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-044
+  nombre_receta: Receta Pan de Ajo y Hierbas
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan de Ajo y Hierbas
+    sku_base: PE-FIN-044
+    variante_vinculada_sku: PE-FIN-044-EST
+    todas_las_variantes:
+    - PE-FIN-044-EST
+    - PE-FIN-044-FAM
+    - PE-FIN-044-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-005
+    sku_variante_intermedio: PE-INT-005-STD
+    nombre_componente: Masa de Pan Blanco
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HOR-4366
+    nombre_componente: Cebolla en Polvo Fleischmann
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-5237
+    nombre_componente: Pimienta Dulce Los Andes
+    cantidad: 50.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-005
+    nombre_producto: Masa de Pan Blanco
+    sku_variante: PE-INT-005-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-045
+  nombre_receta: Receta Cappuccino Artesanal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Cappuccino Artesanal
+    sku_base: PE-FIN-045
+    variante_vinculada_sku: PE-FIN-045-REG
+    todas_las_variantes:
+    - PE-FIN-045-REG
+    - PE-FIN-045-GRA
+    - PE-FIN-045-FAM
+  rendimiento:
+    cantidad: 2000.0
+    descripcion: 2000ml (aprox 8 porciones)
+  componentes:
+  - tipo: MateriaPrima
+    sku_componente: MP-ESE-2119
+    nombre_componente: Extracto de Café Nestlé
+    cantidad: 500.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2077
+    nombre_componente: Leche Descremada Campestre
+    cantidad: 1400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas: []
+  notas: 'Rendimiento: 2000ml (aprox 8 porciones). Generado automáticamente desde
+    Recetas.md y catálogo de productos.'
+- sku_receta: PE-FIN-046
+  nombre_receta: Receta Tarta de Caramelo
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Caramelo
+    sku_base: PE-FIN-046
+    variante_vinculada_sku: PE-FIN-046-IND
+    todas_las_variantes:
+    - PE-FIN-046-IND
+    - PE-FIN-046-MED
+    - PE-FIN-046-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-023
+    sku_variante_intermedio: PE-INT-023-STD
+    nombre_componente: Base de Galleta Triturada
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-048
+    sku_variante_intermedio: PE-INT-048-CUB
+    nombre_componente: Crema de Caramelo
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-006
+    sku_variante_intermedio: PE-INT-006-CUB
+    nombre_componente: Crema Chantilly
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-023
+    nombre_producto: Base de Galleta Triturada
+    sku_variante: PE-INT-023-STD
+  - receta_subreceta_sku: PE-INT-048
+    nombre_producto: Crema de Caramelo
+    sku_variante: PE-INT-048-CUB
+  - receta_subreceta_sku: PE-INT-006
+    nombre_producto: Crema Chantilly
+    sku_variante: PE-INT-006-CUB
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-047
+  nombre_receta: Receta Croissant de Nutella
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Croissant de Nutella
+    sku_base: PE-FIN-047
+    variante_vinculada_sku: PE-FIN-047-IND
+    todas_las_variantes:
+    - PE-FIN-047-IND
+    - PE-FIN-047-PK2
+    - PE-FIN-047-CJ4
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-008
+    sku_variante_intermedio: PE-INT-008-CUB
+    nombre_componente: Ganache de Chocolate
+    cantidad: 400.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-HAR-6376
+    nombre_componente: Harina de Almendras Nestlé
+    cantidad: 100.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-008
+    nombre_producto: Ganache de Chocolate
+    sku_variante: PE-INT-008-CUB
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-048
+  nombre_receta: Receta Pan Brioche Artesanal
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Brioche Artesanal
+    sku_base: PE-FIN-048
+    variante_vinculada_sku: PE-FIN-048-EST
+    todas_las_variantes:
+    - PE-FIN-048-EST
+    - PE-FIN-048-FAM
+    - PE-FIN-048-REB
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-005
+    sku_variante_intermedio: PE-INT-005-STD
+    nombre_componente: Masa de Pan Blanco
+    cantidad: 1200.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-LAC-2181
+    nombre_componente: Mantequilla con Sal Los Andes
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-8757
+    nombre_componente: Azúcar Morena Kraft
+    cantidad: 200.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-005
+    nombre_producto: Masa de Pan Blanco
+    sku_variante: PE-INT-005-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-049
+  nombre_receta: Receta Empanada de Jamón y Queso Crema
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Empanada de Jamón y Queso Crema
+    sku_base: PE-FIN-049
+    variante_vinculada_sku: PE-FIN-049-IND
+    todas_las_variantes:
+    - PE-FIN-049-IND
+    - PE-FIN-049-CMB
+    - PE-FIN-049-CJ6
+  rendimiento:
+    cantidad: 20.0
+    descripcion: 20 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-001
+    sku_variante_intermedio: PE-INT-001-STD
+    nombre_componente: Masa Hojaldre Clásica
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-029
+    sku_variante_intermedio: PE-INT-029-CUB
+    nombre_componente: Relleno de Jamón y Queso Crema
+    cantidad: 800.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-001
+    nombre_producto: Masa Hojaldre Clásica
+    sku_variante: PE-INT-001-STD
+  - receta_subreceta_sku: PE-INT-029
+    nombre_producto: Relleno de Jamón y Queso Crema
+    sku_variante: PE-INT-029-CUB
+  notas: 'Rendimiento: 20 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-050
+  nombre_receta: Receta Tarta de Frutos Rojos
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Tarta de Frutos Rojos
+    sku_base: PE-FIN-050
+    variante_vinculada_sku: PE-FIN-050-IND
+    todas_las_variantes:
+    - PE-FIN-050-IND
+    - PE-FIN-050-MED
+    - PE-FIN-050-GRA
+  rendimiento:
+    cantidad: 1.0
+    descripcion: 1 torta
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-009
+    sku_variante_intermedio: PE-INT-009-STD
+    nombre_componente: Masa de Bizcocho Vainilla
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-030
+    sku_variante_intermedio: PE-INT-030-CUB
+    nombre_componente: Crema de Fresa
+    cantidad: 700.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-011
+    sku_variante_intermedio: PE-INT-011-GAR
+    nombre_componente: Almíbar de Frutas Rojas
+    cantidad: 200.0
+    unidad: ml
+    unidad_medida_id: 5
+  - tipo: MateriaPrima
+    sku_componente: MP-CON-5058
+    nombre_componente: Frutos del Bosque Mix Los Andes
+    cantidad: 300.0
+    unidad: g
+    unidad_medida_id: 2
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-009
+    nombre_producto: Masa de Bizcocho Vainilla
+    sku_variante: PE-INT-009-STD
+  - receta_subreceta_sku: PE-INT-030
+    nombre_producto: Crema de Fresa
+    sku_variante: PE-INT-030-CUB
+  - receta_subreceta_sku: PE-INT-011
+    nombre_producto: Almíbar de Frutas Rojas
+    sku_variante: PE-INT-011-GAR
+  notas: 'Rendimiento: 1 torta. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'
+- sku_receta: PE-FIN-051
+  nombre_receta: Receta Pan Canilla
+  tipo_producto: PRODUCTO_FINAL
+  producto_asociado:
+    nombre_producto: Pan Canilla
+    sku_base: PE-FIN-051
+    variante_vinculada_sku: PE-FIN-051-UNI
+    todas_las_variantes:
+    - PE-FIN-051-UNI
+    - PE-FIN-051-BL3
+    - PE-FIN-051-BL5
+  rendimiento:
+    cantidad: 10.0
+    descripcion: 10 unidades
+  componentes:
+  - tipo: ProductoIntermedio
+    sku_componente: PE-INT-051
+    sku_variante_intermedio: PE-INT-051-STD
+    nombre_componente: Masa Pan de Guayaba
+    cantidad: 5600.0
+    unidad: g
+    unidad_medida_id: 2
+  - tipo: MateriaPrima
+    sku_componente: MP-CAR-0001
+    nombre_componente: Jamón Ahumado
+    cantidad: 4000.0
+    unidad: g
+    unidad_medida_id: 1
+  - tipo: MateriaPrima
+    sku_componente: MP-CAR-0002
+    nombre_componente: Tocineta Ahumada
+    cantidad: 1000.0
+    unidad: g
+    unidad_medida_id: 1
+  - tipo: MateriaPrima
+    sku_componente: MP-VEG-0001
+    nombre_componente: Aceitunas Rellenas
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 1
+  - tipo: MateriaPrima
+    sku_componente: MP-SEC-4969
+    nombre_componente: Pasas de Corinto Imperial
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 1
+  - tipo: MateriaPrima
+    sku_componente: MP-DUL-0002
+    nombre_componente: Papelón
+    cantidad: 500.0
+    unidad: g
+    unidad_medida_id: 1
+  - tipo: MateriaPrima
+    sku_componente: MP-ESP-0003
+    nombre_componente: Mostaza Preparada
+    cantidad: 220.0
+    unidad: g
+    unidad_medida_id: 5
+  recetas_relacionadas:
+  - receta_subreceta_sku: PE-INT-051
+    nombre_producto: Masa Pan de Guayaba
+    sku_variante: PE-INT-051-STD
+  notas: 'Rendimiento: 10 unidades. Generado automáticamente desde Recetas.md y catálogo
+    de productos.'

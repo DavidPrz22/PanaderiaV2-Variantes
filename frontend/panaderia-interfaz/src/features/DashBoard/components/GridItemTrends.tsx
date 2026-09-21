@@ -82,7 +82,7 @@ export const GridItemTrends = () => {
               format: (value) => formatCompactCurrency(Number(value)),
             }}
             gridYValues={5} // Limit number of grid lines to reduce clutter
-            tooltip={({ data, value, color }) => (
+            tooltip={({ data, value }) => (
               <div className="bg-white px-3 py-2 shadow-xl rounded-lg border border-slate-100 text-sm z-50">
                 <strong className="text-slate-700">{data.date}</strong>
                 <div className="text-slate-500 mt-1">

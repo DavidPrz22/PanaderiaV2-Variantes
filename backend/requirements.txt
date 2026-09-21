@@ -5,3 +5,4 @@ djangorestframework_simplejwt==5.5.0
 python-dotenv==1.1.1
 psycopg2==2.9.10
 reportlab==4.4.7
+PyYAML==6.0.1

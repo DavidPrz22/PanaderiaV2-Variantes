@@ -5,7 +5,7 @@ import {
   createUpdateLoteProductosReventa,
   deleteLoteProductosReventa,
   changeEstadoLoteProductosReventa,
-  uploadCSV
+  uploadYAML
 } from "../../api/api";
 import type { TProductosReventaSchema, TLoteProductosReventaSchema } from "../../schemas/schema";
 import {
@@ -195,17 +195,17 @@ export const useChangeEstadoLoteProductosReventa = (productoReventaId: number | 
 };
 
 
-export const useUploadCSVProductosReventaMuatation = () => {
+export const useUploadYAMLProductosReventaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (file: string) => uploadCSV(file),
+    mutationFn: (file: string) => uploadYAML(file),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: productosReventaQueryOptions.queryKey,
       });
     },
     onError: (error) => {
-      console.error("Error uploading CSV:", error);
+      console.error("Error uploading YAML:", error);
     },
   });
 }

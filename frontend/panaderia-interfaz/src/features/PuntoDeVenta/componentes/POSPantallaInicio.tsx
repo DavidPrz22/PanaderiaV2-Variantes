@@ -31,7 +31,7 @@ export const PosApertura = () => {
 
   const { data: { promedio } = { promedio: 0 } } = useBCVRateQuery();
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<TAperturaCaja>({
+  const { register, handleSubmit, setValue } = useForm<TAperturaCaja>({
     resolver: zodResolver(aperturaCajaSchema),
     defaultValues: {
       monto_inicial_usd: 0,
@@ -68,7 +68,7 @@ export const PosApertura = () => {
 
 
   const handleSumbitApertura = async (data: TAperturaCaja) => {
-    const res = await abrirCaja(data)
+    await abrirCaja(data)
     setOpenPOS(false)
   }
 

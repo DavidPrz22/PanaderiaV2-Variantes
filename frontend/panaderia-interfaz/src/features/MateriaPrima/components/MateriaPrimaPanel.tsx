@@ -4,7 +4,7 @@ import FilterSearch from "@/features/MateriaPrima/components/FilterSearch";
 import MateriaPrimaLista from "./MateriaPrimaLista";
 
 export default function MateriaPrimaPanel() {
-  const { showMateriaprimaForm, showMateriaprimaDetalles, isLoadingDetalles } =
+  const { showMateriaprimaForm, showMateriaprimaDetalles } =
     useMateriaPrimaContext();
 
   if (showMateriaprimaForm || showMateriaprimaDetalles) return <></>;
@@ -13,7 +13,7 @@ export default function MateriaPrimaPanel() {
     <>
       <div className="flex flex-col gap-6 h-full">
         <FilterSearch />
-        <MateriaPrimaLista isLoadingDetalles={isLoadingDetalles} />
+        <MateriaPrimaLista />
       </div>
     </>
   );

@@ -124,3 +124,13 @@ export const getRecetasSearch = async (
     return [];
   }
 };
+
+export const generarRecetas = async () => {
+  try {
+    const response = await apiClient.post("/api/produccion/recetas/generar-recetas/");
+    return response.data;
+  } catch (error) {
+    console.error("Error generating recipes:", error);
+    throw error;
+  }
+};

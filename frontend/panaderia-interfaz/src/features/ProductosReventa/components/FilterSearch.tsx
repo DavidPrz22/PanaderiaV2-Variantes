@@ -8,12 +8,12 @@ import { PackageX, TrendingDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { userHasPermission } from "@/features/Authentication/lib/utils";
 import { ImportCSV } from "@/components/ImportCSV";
-import { useUploadCSVProductosReventaMuatation } from '@/features/ProductosReventa/hooks/mutations/productosReventaMutations';
+import { useUploadYAMLProductosReventaMutation } from '@/features/ProductosReventa/hooks/mutations/productosReventaMutations';
 import DownloadSampleDataButton from "@/components/DownloadSampleDataButton";
 
 export default function FilterSearch() {
   const { setShowProductosReventaForm, bajoStockFilter, setBajoStockFilter, agotadosFilter, setAgotadosFilter } = useProductosReventaContext();
-  const { mutateAsync, isPending } = useUploadCSVProductosReventaMuatation()
+  const { mutateAsync, isPending } = useUploadYAMLProductosReventaMutation()
   const { user } = useAuth();
 
   const hasAddPermission = userHasPermission(user!, 'productos_reventa', 'add');
@@ -38,13 +38,34 @@ export default function FilterSearch() {
           <PackageX />
           Agotados
         </Button>
-        <DownloadSampleDataButton filePath="/DataProductosReventa.csv" fileName="DataProductosReventa.csv" />
+        <DownloadSampleDataButton filePath="/DataProductosReventa.yaml" fileName="DataProductosReventa.yaml" label="Ejemplo YAML" />
         {hasAddPermission && (
           <ImportCSV
-            descripcion="Selecciona un archivo CSV para importar los datos de los productos de reventa"
+            descripcion="Selecciona un archivo YAML para importar los datos de los productos de reventa"
             uploadFunction={mutateAsync}
             isPending={isPending}
-            csvContent={"nombre_producto,SKU,categoria_id,marca,precio_venta_usd,precio_compra_usd,punto_reorden,unidad_medida_base,proveedor_preferido,unidad_base_inventario,unidad_venta,factor_conversion,descripcion,perecedero\n"}
+            fileType="yaml"
+            csvContent={`- nombre_producto: ""
+  descripcion: ""
+  categoria_id: null
+  marca: ""
+  proveedor_preferido: null
+  unidad_base_inventario: null
+  unidad_venta: null
+  factor_conversion: 1.0
+  es_perecedero: false
+  variantes:
+    - nombre_variante: ""
+      SKU: ""
+      descripcion: ""
+      atributo: CANTIDAD
+      precio_venta_divisa: 0
+      precio_venta_local: 0
+      costo_divisa: 0
+      costo_local: 0
+      punto_reorden: 0
+      is_vendible: true
+`}
           />
         )}
         <div className="relative">

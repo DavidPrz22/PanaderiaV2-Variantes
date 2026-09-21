@@ -2,7 +2,6 @@ import { DeleteComponent } from "./DeleteComponent";
 import { ProductosReventaVariantesTable } from "./ProductosReventaVariantesTable";
 
 import { useProductosReventaContext } from "@/context/ProductosReventaContext";
-import { TitleDetails } from "@/components/TitleDetails";
 import { DetailsTable } from "./DetailsTable";
 import { useGetProductosReventaDetalles } from "../hooks/queries/queries";
 import { useEffect } from "react";

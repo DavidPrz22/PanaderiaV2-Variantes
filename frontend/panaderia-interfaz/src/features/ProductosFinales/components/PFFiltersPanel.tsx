@@ -15,8 +15,6 @@ export default function PFFiltersPanel() {
     setSelectedUnidadesVenta,
     selectedCategoriasProductoFinal,
     setSelectedCategoriasProductoFinal,
-    unidadesMedida,
-    categoriasProductoFinal,
     setProductosFinalesSearchTerm,
   } = useProductosFinalesContext();
   const { data: productosFinales } = useGetProductosFinales();
@@ -31,19 +29,15 @@ export default function PFFiltersPanel() {
     const fromProductos = allProductos
       .map((p: ProductoFinalItem) => p.unidad_venta_nombre)
       .filter(Boolean);
-    const fromContext = (unidadesMedida || []).map((u) => u.nombre_completo);
-    return Array.from(new Set([...fromProductos, ...fromContext])).sort();
-  }, [allProductos, unidadesMedida]);
+    return Array.from(new Set(fromProductos)).sort();
+  }, [allProductos]);
 
   const opcionesCategorias = useMemo(() => {
     const fromProductos = allProductos
       .map((p: ProductoFinalItem) => p.categoria_nombre)
       .filter(Boolean);
-    const fromContext = (categoriasProductoFinal || []).map(
-      (c) => c.nombre_categoria,
-    );
-    return Array.from(new Set([...fromProductos, ...fromContext])).sort();
-  }, [allProductos, categoriasProductoFinal]);
+    return Array.from(new Set(fromProductos)).sort();
+  }, [allProductos]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

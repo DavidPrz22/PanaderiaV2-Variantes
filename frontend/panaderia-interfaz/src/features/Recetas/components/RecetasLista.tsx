@@ -5,7 +5,6 @@ import { useRecetasQuery } from "../hooks/queries/queries";
 import { useRecetasContext } from "@/context/RecetasContext";
 import { useEffect, useMemo, useReducer } from "react";
 import { Paginator } from "@/components/Paginator";
-import type { RecetaInfo } from "../types/types";
 
 type PaginatorActions = "next" | "previous" | "base";
 
@@ -76,7 +75,7 @@ export default function RecetasLista({
   const currentPageData = recetasPagination?.pages[page]?.results || [];
 
   const displayData = useMemo(() => {
-    let data: RecetaInfo[] = currentPageData;
+    let data = currentPageData;
 
     if (searchTermFilter) {
       data = data.filter((item) =>
@@ -85,11 +84,11 @@ export default function RecetasLista({
     }
 
     if (recetaUnicaFiltro) {
-      data = data.filter((receta) => !receta.esCompuesta);
+      data = data.filter((receta) => !(receta as any).esCompuesta);
     }
 
     if (recetaCompuestaFiltro) {
-      data = data.filter((receta) => receta.esCompuesta);
+      data = data.filter((receta) => (receta as any).esCompuesta);
     }
 
     if (fechaSeleccionadaFiltro) {

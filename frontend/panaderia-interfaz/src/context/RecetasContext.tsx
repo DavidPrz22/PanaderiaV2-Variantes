@@ -1,7 +1,7 @@
 import type {
   productoElaboradoItem,
-  recetaDetallesItem,
-  recetaRelacionada,
+  RecetaDetalles,
+  RecetaRelacionada,
 } from "@/features/Recetas/types/types";
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import type { componenteListadosReceta, fechaSeleccionadaFiltro } from "@/features/Recetas/types/types";
@@ -26,8 +26,8 @@ type RecetasContextType = {
   setComponentesListadosReceta: (
     componentes: componenteListadosReceta[],
   ) => void;
-  recetaDetalles: recetaDetallesItem | null;
-  setRecetaDetalles: (recetaDetalles: recetaDetallesItem | null) => void;
+  recetaDetalles: RecetaDetalles | null;
+  setRecetaDetalles: (recetaDetalles: RecetaDetalles | null) => void;
   recetaDetallesLoading: boolean;
   setRecetaDetallesLoading: (loading: boolean) => void;
   enabledRecetaDetalles: boolean;
@@ -35,10 +35,10 @@ type RecetasContextType = {
   searchListRecetaListRef: React.RefObject<HTMLInputElement | null>;
   searchListActiveRecetaList: boolean;
   setSearchListActiveRecetaList: (active: boolean) => void;
-  searchListRecetaList: recetaRelacionada[];
-  setSearchListRecetaList: (recetaList: recetaRelacionada[]) => void;
-  recetasListadas: recetaRelacionada[];
-  setRecetasListadas: (recetasListadas: recetaRelacionada[]) => void;
+  searchListRecetaList: RecetaRelacionada[];
+  setSearchListRecetaList: (recetaList: RecetaRelacionada[]) => void;
+  recetasListadas: RecetaRelacionada[];
+  setRecetasListadas: (recetasListadas: RecetaRelacionada[]) => void;
   recetaUnicaFiltro: boolean;
   setRecetaUnicaFiltro: (recetaUnicaFiltro: boolean) => void;
   recetaCompuestaFiltro: boolean;
@@ -84,16 +84,16 @@ export const RecetasProvider = ({
 
   const searchListRecetaListRef = useRef<HTMLInputElement | null>(null);
   const [searchListActiveRecetaList, setSearchListActiveRecetaList] = useState(false);
-  const [searchListRecetaList, setSearchListRecetaList] = useState<recetaRelacionada[]>(
+  const [searchListRecetaList, setSearchListRecetaList] = useState<RecetaRelacionada[]>(
     [],
   );
 
-  const [recetasListadas, setRecetasListadas] = useState<recetaRelacionada[]>([]);
+  const [recetasListadas, setRecetasListadas] = useState<RecetaRelacionada[]>([]);
 
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   const [recetaDetalles, setRecetaDetalles] =
-    useState<recetaDetallesItem | null>(null);
+    useState<RecetaDetalles | null>(null);
 
   const [recetaDetallesLoading, setRecetaDetallesLoading] =
     useState<boolean>(false);

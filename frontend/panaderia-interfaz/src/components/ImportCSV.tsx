@@ -28,7 +28,7 @@ type ImportCSVProps = {
   csvContent: string,
   fileType?: 'csv' | 'yaml',
 }
-export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent, fileType = 'csv' }: ImportCSVProps) => {
+export const ImportCSV = ({ descripcion, uploadFunction, isPending, csvContent, fileType = 'yaml' }: ImportCSVProps) => {
 
   const [selectedFile, setSelectedFile] = useState<FileObject | null>(null)
   const [open, setOpen] = useState(false)

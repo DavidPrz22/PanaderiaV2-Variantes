@@ -12,9 +12,9 @@ import { useMateriaPrimaContext } from "@/context/MateriaPrimaContext";
 type PaginatorActions = "next" | "previous" | "base";
 
 export default function MateriaPrimaLista({
-  isLoadingDetalles,
+  isLoadingDetalles = false,
 }: {
-  isLoadingDetalles: boolean;
+  isLoadingDetalles?: boolean;
 }) {
   const {
     filteredApplied,

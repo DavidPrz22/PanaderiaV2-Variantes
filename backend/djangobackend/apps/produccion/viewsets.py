@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import transaction
+from django.core.management import call_command
 from apps.produccion.models import Produccion, DetalleProduccionConsumos
 from apps.produccion.models import Recetas, RecetasDetalles, RelacionesRecetas
 from apps.inventario.models import (
@@ -268,6 +269,21 @@ class RecetasViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(recetas, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'], url_path='generar-recetas')
+    def generar_recetas(self, request):
+        try:
+            call_command('register_recetas')
+            return Response(
+                {'message': 'Recetas generadas exitosamente'},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Error generating recipes: {str(e)}")
+            return Response(
+                {'error': f'Error al generar recetas: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class ProduccionesViewSet(viewsets.ModelViewSet):
