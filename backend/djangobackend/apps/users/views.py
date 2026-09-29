@@ -59,8 +59,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 refresh_token,
                 max_age=864000,                    # 10 days
                 httponly=True,                     # Security: No JS access
-                secure=settings.DEBUG,                      # Allow HTTP in development
-                samesite='None' if not settings.DEBUG else 'Lax',
+                secure=not settings.DEBUG,                      # Allow HTTP in development
+                samesite='None' if not settings.DEBUG else 'Lax',  # CSRF protection
                 domain=None,                      # Auto-determine domain
                 path="/",                         # Available site-wide
             )
