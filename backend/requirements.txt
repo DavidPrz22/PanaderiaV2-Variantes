@@ -6,3 +6,5 @@ python-dotenv==1.1.1
 psycopg2==2.9.10
 reportlab==4.4.7
 PyYAML==6.0.1
+drf-spectacular==0.29.0
+gunicorn==23.0.0

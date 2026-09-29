@@ -28,13 +28,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7-9@3mthi-+)4)1pjpmzu+44em^*ib+%0md)&#z)ag2t!6q98x'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # REST_FRAMEWORK = { }
@@ -115,15 +113,7 @@ MIDDLEWARE = [
 
 tmpFrontend = os.getenv('FRONTEND_URL')
 
-CORS_ALLOWED_ORIGINS = [
-    origin for origin in [
-        tmpFrontend,
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5556",
-        "http://localhost:3000",
-    ] if origin
-]
+CORS_ALLOWED_ORIGINS  = [ origin for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if origin ]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -140,6 +130,8 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
 
 ROOT_URLCONF = 'djangobackend.urls'
 
@@ -211,7 +203,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -232,3 +224,7 @@ CACHES = {
         }
     }
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
