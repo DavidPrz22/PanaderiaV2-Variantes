@@ -39,6 +39,7 @@ export const createCliente = async (data: {
 export const getClientes = async () => {
     try {
     const response = await apiClient.get<ClientesResponse[]>("/api/ventas/clientes/");
+        console.log('getClientes response:', response.data);
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<{ detail?: string; errors?: string[] }>;
