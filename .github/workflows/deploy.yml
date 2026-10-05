@@ -65,7 +65,7 @@ jobs:
             python manage.py migrate
 
             echo "🎨 Collecting static files..."
-            python manage.py collectstatic --noinput --quiet
+            python manage.py collectstatic --noinput
 
             echo "🔄 Restarting Gunicorn..."
             sudo systemctl restart panaderia
