@@ -53,13 +53,13 @@ export const AtributosProductosSchema = z.object({
 export const ClienteSchema = z.object({
     id: z.number(),
     nombre_cliente: z.string(),
-    apellido_cliente: z.string().nullable(),
-    email: z.string().nullable(),
-    telefono: z.string().nullable(),
-    rif_cedula: z.string().nullable(),
+    apellido_cliente: z.string().nullish(),
+    email: z.string().nullish(),
+    telefono: z.string().nullish(),
+    rif_cedula: z.string().nullish(),
     fecha_registro: z.string(),
-    notas: z.string().nullable(),
-});
+    notas: z.string().nullish(),
+}).passthrough();
 
 export const MetodoDePagoSchema = z.object({
     id: z.number(),
