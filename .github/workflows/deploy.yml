@@ -1,0 +1,109 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm deployment'
+        required: true
+        type: string
+
+jobs:
+  test-backend:
+    name: Test Backend (Django)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'backend/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Run Django tests
+        run: |
+          cd backend/djangobackend
+          python manage.py test
+        env:
+          DATABASE_URL: sqlite:///test.db
+          DEBUG: 'true'
+          SECRET_KEY: test-secret-key-for-ci
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          CORS_ALLOWED_ORIGINS: http://localhost:3000
+
+  test-frontend:
+    name: Test Frontend (Build & Lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/panaderia-system/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd frontend/panaderia-system
+          npm ci
+
+      - name: Run ESLint
+        run: |
+          cd frontend/panaderia-system
+          npm run lint
+
+      - name: Build production bundle
+        run: |
+          cd frontend/panaderia-system
+          npm run build
+        env:
+          VITE_API_URL: https://panaderiaapiservice.duckdns.org
+
+  deploy:
+    name: Deploy to Droplet
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'deploy'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST || '165.22.184.244' }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "📥 Pulling latest code..."
+            cd /srv/panaderia
+            git pull origin main
+
+            echo "📦 Installing dependencies..."
+            cd backend
+            source venv/bin/activate
+            pip install -r requirements.txt --quiet
+
+            echo "🗄️  Running migrations..."
+            cd djangobackend
+            python manage.py migrate
+
+            echo "🎨 Collecting static files..."
+            python manage.py collectstatic --noinput --quiet
+
+            echo "🔄 Restarting Gunicorn..."
+            sudo systemctl restart panaderia
+            sleep 5
+
+            echo "🏥 Health check..."
+            if curl -f -s -X POST http://localhost/api/token/ -H 'Content-Type: application/json' -d '{}' | grep -q '400\|200'; then
+              echo "✅ Deployment successful!"
+            else
+              echo "❌ Health check failed!"
+              exit 1
+            fi

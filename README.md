@@ -472,8 +472,85 @@ npm run preview  # Preview production build
 
 ---
 
+## Deployment
+
+### Production Server (DigitalOcean Droplet)
+
+**Stack:** Django 5.2 + Gunicorn + Nginx + Let's Encrypt HTTPS on Ubuntu 24.04
+
+| Component | Location |
+|-----------|----------|
+| API | `https://panaderiaapiservice.duckdns.org` |
+| Frontend | `https://panaderia-variantes.netlify.app` |
+| Database | Neon serverless Postgres (AWS us-east-2) |
+| App code | `/srv/panaderia` |
+| Virtual env | `/srv/panaderia/backend/venv` |
+| Static files | `/srv/panaderia/backend/djangobackend/staticfiles` |
+| Gunicorn socket | `/run/panaderia.sock` |
+
+### Update Runbook
+
+```bash
+# SSH into droplet
+ssh root@<droplet-ip>
+
+# Pull latest code
+cd /srv/panaderia
+git pull origin main
+
+# Activate venv and install dependencies
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Apply migrations (if any)
+cd djangobackend
+python manage.py migrate
+
+# Collect static files
+python manage.py collectstatic --noinput
+
+# Restart Gunicorn
+sudo systemctl restart panaderia
+
+# Verify
+sudo systemctl status panaderia
+curl -I https://panaderiaapiservice.duckdns.org/api/token/
+```
+
+### Logs
+
+```bash
+# Gunicorn / Django logs
+sudo journalctl -u panaderia -f
+
+# Nginx access/error logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+### Backups
+
+Neon provides point-in-time restore (24h retention on free tier). For additional safety:
+
+```bash
+# Weekly database dump (add to crontab)
+0 3 * * 0 cd /srv/panaderia/backend/djangobackend && /srv/panaderia/backend/venv/bin/python manage.py dumpdata --indent 2 > /root/backups/panaderia-$(date +\%Y\%m\%d).json
+```
+
+### Certificate Renewal
+
+Let's Encrypt certificates auto-renew via systemd timer. Verify:
+```bash
+sudo certbot renew --dry-run
+sudo systemctl list-timers | grep certbot
+```
+
+---
+
 ## Roadmap
 
+- [x] Production deployment (DigitalOcean + HTTPS)
 - [ ] Real-time WebSocket notifications for low stock alerts
 - [ ] Barcode/QR code scanning for POS and inventory operations
 - [ ] Mobile app (React Native) for warehouse operations
