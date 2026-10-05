@@ -56,6 +56,7 @@ export const ClienteSchema = z.object({
     apellido_cliente: z.string().nullable(),
     email: z.string().nullable(),
     telefono: z.string().nullable(),
+    rif_cedula: z.string().nullable(),
     fecha_registro: z.string(),
     notas: z.string().nullable(),
 });
