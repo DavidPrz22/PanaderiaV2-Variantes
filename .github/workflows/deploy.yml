@@ -29,7 +29,7 @@ jobs:
       - name: Run Django tests
         run: |
           cd backend/djangobackend
-          python manage.py test apps.inventario apps.ventas apps.compras apps.produccion apps.dashboard apps.users apps.core apps.transformacion apps.reportes --verbosity=2
+          python manage.py test --verbosity=2
         env:
           DATABASE_URL: sqlite:///test.db
           DEBUG: 'true'
